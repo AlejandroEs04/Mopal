@@ -17,10 +17,12 @@ const getAllPurchase = async(req, res) => {
             purchases[i].Products = productsArray;
 
             for(let j = 0; j<purchases[i].Products.length;j++) {
-                purchases[i].Products[j].Discounts = productDiscount?.filter(discount => discount.ProductoID === purchases[i].Products[j].Folio &&
+                purchases[i].Products[j].Discounts = productDiscount?.filter(discount => discount.ProductID === purchases[i].Products[j].Folio &&
                     +discount.AssemblyGroup === +purchases[i].Products[j].AssemblyGroup &&
                     +discount.PurchaseID === +purchases[i].Folio
                 )
+
+                console.log(purchases[i].Products[j].Discounts)
             }
         }
 

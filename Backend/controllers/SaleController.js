@@ -17,7 +17,7 @@ const getAllSales = async(req, res) => {
             sales[i].Products = productsArray
 
             for(let j = 0; j<sales[i].Products.length;j++) {
-                sales[i].Products[j].Discounts = productDiscount?.filter(discount => discount.ProductoID === sales[i].Products[j].Folio &&
+                sales[i].Products[j].Discounts = productDiscount?.filter(discount => discount.ProductID === sales[i].Products[j].Folio &&
                     +discount.AssemblyGroup === +sales[i].Products[j].AssemblyGroup &&
                     +discount.SaleID === +sales[i].Folio
                 )
