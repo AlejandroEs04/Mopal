@@ -1,0 +1,19 @@
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    aspect-ratio: 4;
+    --_g: no-repeat radial-gradient(circle closest-side,#b3b3b3 90%,#3d3d3d00);
+    --_gray: no-repeat radial-gradient(circle closest-side,#818181 90%,#3d3d3d00);
+    --_black: no-repeat radial-gradient(circle closest-side,#2c2c2c 90%,#3d3d3d00);
+    background: 
+      var(--_g) 0%   50%,
+      var(--_gray) 50%  50%,
+      var(--_black) 100% 50%;
+    background-size: calc(100%/3) 100%;
+    animation: l7 1s infinite linear;
+  }
+  @keyframes l7 {
+      33%{background-size:calc(100%/3) 0%  ,calc(100%/3) 100%,calc(100%/3) 100%}
+      50%{background-size:calc(100%/3) 100%,calc(100%/3) 0%  ,calc(100%/3) 100%}
+      66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
+  }

@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+}
+
+nav {
+    background-color: #242526;
+    position: fixed;
+    width: 100%;
+    z-index: 999;
+    height: 65px;
+}
+
+nav .wrapper {
+    padding: 8px 30px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+.wrapper .logo a {
+    color: #fff;
+    text-decoration: none;
+}
+.logo a img {
+    max-width: 200px;
+}
+.wrapper .navLinks {
+    display: inline-flex;
+}
+.navLinks li {
+    list-style: none;
+}
+.navLinks li a {
+    color: #a3a3a3;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 300;
+    padding: 2px 10px;
+    transition: all 0.3s ease;
+}
+.navLinks li a:hover {
+    color: #f2f2f2;
+}
+.navLinks .dropMenu {
+    background-color: #242526;
+    width: 140px;
+    top: 85px;
+    line-height: 45px;
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+}
+.navLinks li:hover .dropMenu, 
+.navLinks li:hover .megaBox {
+    top: 65px;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease;
+}
+.dropMenu li a {
+    width: 100%;
+    display: block;
+    padding: 0 0 0 15px;
+    font-weight: 300;
+    border-radius: 0px;
+}
+.megaBox {
+    position: absolute;
+    top: 80px;
+    width: 100%;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.megaBox .content {
+    background-color: #242526;
+    padding: 25px 20px;
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.content .row {
+    width: calc(25% - 30px);
+    line-height: 30px;
+}
+.content .row header {
+    color: #f2f2f2;
+    font-size: 20px;
+    font-weight: 500;
+}
+.content .row .megaLinks {
+    margin-left: -40px;
+    border-left: 1px solid rgba(255, 255, 255, 0.09);
+}
+.content .row:nth-child(1),
+.content .row:nth-child(2) {
+    border-left: 0px;
+}
+.row .megaLinks li {
+    padding: 0 20px;
+}
+.row .megaLinks li a {
+    padding: 0 20px;
+    color: #d9d9d9;
+    font-size: 17px;
+    display: block;
+}
+.navLinks .mobileItem {
+    display: none;
+}
+.wrapper .btn {
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: none;
+}
+.wrapper .btn.cancelBtn {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+}
+
+
+@media screen and (max-width: 970px) {
+    .wrapper .btn {
+        display: block;
+    }
+    .wrapper .navLinks {
+        position: fixed;
+        height: 100vh;
+        width: 100%;
+        max-width: 350px;
+        background-color: #242526;
+        display: block;
+        top: 0;
+        left: -100%;
+        overflow-y: auto;
+        line-height: 50px;
+        padding: 50px 10px;
+        box-shadow: 0 15px 15px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+    #menuBtn:checked ~ .navLinks {
+        left: 0;
+    }
+    #menuBtn:checked ~ .btn.menuBtn {
+        display: none;
+    }
+    .navLinks::-webkit-scrollbar {
+        width: 0px;
+    }
+    .wrapper .navLinks li {
+        margin: 15px 10px;
+    }
+    .navLinks li a {
+        padding: 0 20px;
+        display: block;
+        font-size: 20px;
+        color: #f2f2f2;
+        transition: all 0.3s ease;
+    }
+    .navLinks li a:hover {
+        background-color: #3A3B3C;
+        border-radius: 5px;
+    }
+    .navLinks .dropMenu {
+        position: static;
+        opacity: 1;
+        visibility: visible;
+        top: 65px;
+        padding-left: 20px;
+        width: 100%;
+        max-height: 0px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    #showDrop:checked ~ .dropMenu, 
+    #showMega:checked ~ .megaBox {
+        max-height: 100%;
+    }
+    .navLinks .dropMenu li {
+        margin: 0;
+    }
+    .navLinks .dropMenu li a {
+        font-size: 18px;
+        border-radius: 5px;
+    }
+    .navLinks .desktopItem {
+        display: none;
+    }
+    .navLinks .mobileItem {
+        display: block;
+        font-size: 20px;
+        color: #f2f2f2;
+        font-weight: 500;
+        padding-left: 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    .navLinks .mobileItem:hover {
+        background-color: #3A3B3C;
+    }
+    .megaBox {
+        position: static;
+        top: 65px;
+        width: 100%;
+        opacity: 1;
+        visibility: visible;
+        padding: 0 20px;
+        max-height: 0px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .megaBox .content {
+        background-color: #242526;
+        flex-direction: column;
+        padding: 20px 20px 0 20px;
+    }
+    .megaBox .content .row {
+        width: 100%;
+        margin-bottom: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .megaBox .content .row:nth-child(1) {
+        border-top: 0PX;
+    }
+    .content .row .megaLinks {
+        border-left: 0px;
+        padding-left: 15px;
+    }
+    .row .megaLinks li {
+        margin: 0;
+    }
+    .content .row header {
+        font-size: 19px;
+    }
+}
+
+.wrapper input {
+    display: none;
+}

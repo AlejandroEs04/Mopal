@@ -1,0 +1,11 @@
+h1, h2 {
+    font-weight: 700;
+}
+h2 {
+    color: var(--primary);
+}
+.btnAgregar {
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 700;
+}

@@ -1,0 +1,9 @@
+.filtrosContainer .filtrosContainerHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.filtrosContainer .filtrosContainerHeader button {
+    background-color: transparent;
+    border: none;
+}
