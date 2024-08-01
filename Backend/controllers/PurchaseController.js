@@ -21,8 +21,6 @@ const getAllPurchase = async(req, res) => {
                     +discount.AssemblyGroup === +purchases[i].Products[j].AssemblyGroup &&
                     +discount.PurchaseID === +purchases[i].Folio
                 )
-
-                console.log(purchases[i].Products[j].Discounts)
             }
         }
 

@@ -7,7 +7,7 @@ import ProductFormTr from './ProductFormTr'
 import { v4 as uuidv4 } from 'uuid'
 import formatearDinero from '../helpers/formatearDinero'
 
-const ProductTableForm = ({ productsArray, setProductsArray, sale, setShow, setProductFolio, productFolio, discounts, onShow }) => {
+const ProductTableForm = ({ productsArray, setProductsArray, sale, setShow, setProductFolio, productFolio, discounts, onShow, searchBar = true }) => {
     const [addDiscounts, setAddDiscounts] = useState(false)
     const { products, handleAddProduct } = useApp();
 
@@ -72,17 +72,19 @@ const ProductTableForm = ({ productsArray, setProductsArray, sale, setShow, setP
 
     return (
         <>
-            <div className="d-flex align-items-center gap-2">
-                <Select 
-                    options={options} 
-                    onChange={handleSelectChange} 
-                    className="w-100"
-                    value={selectedOption}
-                />
-                <div>
-                    <button onClick={() => handleAddProductArray(productFolio)} type="button" className="btn bgPrimary text-nowrap">+ Agregar Producto</button>
+            {searchBar && (
+                <div className="d-flex align-items-center gap-2">
+                    <Select 
+                        options={options} 
+                        onChange={handleSelectChange} 
+                        className="w-100"
+                        value={selectedOption}
+                    />
+                    <div>
+                        <button onClick={() => handleAddProductArray(productFolio)} type="button" className="btn bgPrimary text-nowrap">+ Agregar Producto</button>
+                    </div>
                 </div>
-            </div>
+            )}
 
             <Scroll>
                 <table className="table table-hover mt-2">

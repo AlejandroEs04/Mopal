@@ -5,7 +5,7 @@ import Scroll from "./Scroll"
 import discountsArray from "../data/discounts"
 import { v4 as uuidv4 } from 'uuid'
 
-const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray, handleRemoveProductArray, setShow, setProductFolio, discounts, addDiscount }) => {
+const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray, handleRemoveProductArray, setShow, setProductFolio, discounts }) => {
     const [productFolioObservation, setProductFolioObservation] = useState('')
     const [currentDiscount, setCurrentDiscount] = useState(0);
     const [showProductAccesories, setShowProductAccesories] = useState(false)
@@ -16,6 +16,8 @@ const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray,
         if(currentDiscount <= 0) {
             return
         }
+
+        console.log(product)
 
         product.Discounts.push({
             id: uuidv4(), 

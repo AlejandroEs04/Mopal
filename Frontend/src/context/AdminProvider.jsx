@@ -186,7 +186,6 @@ const AdminProvider = ({children}) => {
         if(purchase.Folio === "") {
             try {
                 setLoading(true)
-                console.log(import.meta.env.VITE_API_URL)
                 const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/purchases`, { purchase : purchase }, config);
                 setAlerta({
                   error: false, 
@@ -283,8 +282,6 @@ const AdminProvider = ({children}) => {
     }
 
     const handleAfterDeletePurchase = (item) => {
-        console.log(purchases)
-
         const newArray = purchases?.map(purchase => {
             if(+purchase.Folio === +item.Folio) {
                 return item

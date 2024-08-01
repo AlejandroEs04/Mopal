@@ -14,8 +14,6 @@ io.on('connection', socket => {
     console.log("New client connected:", socket.id);
 
     socket.on('newProduct', product => {
-        console.log(product)
-
         io.emit('productCreated', product)
     })
 });

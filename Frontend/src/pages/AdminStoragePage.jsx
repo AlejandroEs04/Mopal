@@ -46,10 +46,10 @@ const AdminStoragePage = () => {
                         <p className='m-0'>Ver los pedidos pendientes por recibir</p>
                     </div>
                 </Link>
-                <Link to={'sales'} className='boxLink col-xl-3 col-md-4'>
+                <Link to={'requests'} className='boxLink col-xl-3 col-md-4'>
                     <div id='bgGreen' className='btnBgStorage rounded shadow'>
-                        <h3 className='m-0'>Ver ventas</h3>
-                        <p className='m-0'>Ver las entregas pendientes de ventas</p>
+                        <h3 className='m-0'>Ver Solicitudes</h3>
+                        <p className='m-0'>Ver las entregas pendientes de solicitudes</p>
                     </div>
                 </Link>
             </div>

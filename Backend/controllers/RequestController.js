@@ -1,5 +1,6 @@
 import { io } from "../index.js";
 import Request from "../models/Request.js"
+import RequestProductDiscount from "../models/RequestProductDiscount.js";
 import UserInfo from "../models/UserInfo.js";
 import Product from "../models/Product.js";
 import RequestProduct from "../models/RequestProduct.js";
@@ -11,13 +12,20 @@ import { requestAcepted, requestCanceled, requestEmail } from "../helpers/email.
 const getAllRequest = async(req, res) => {
     const requestObj = new Request();
     const request = await requestObj.getAllView('RequestInfoView');
+    const productDiscount = await requestObj.getAllView('RequestProductDiscount');
 
     const requestProductsObj = await new RequestProductView().getAll();
 
     for(let i = 0;i<request.length;i++) {
         const productsArray = requestProductsObj.filter(product => product.RequestID === request[i].ID)
-
         request[i].Products = productsArray
+
+        for(let j = 0; j<request[i].Products.length;j++) {
+            request[i].Products[j].Discounts = productDiscount?.filter(discount => discount.ProductID === request[i].Products[j].Folio &&
+                +discount.AssemblyGroup === +request[i].Products[j].AssemblyGroup &&
+                +discount.RequestID === +request[i].ID
+            )
+        }
     }
 
     if(request) {
@@ -34,6 +42,7 @@ const getOneRequest = async(req, res) => {
 
     const requestObj = new Request();
     const requestProductsObj = await new RequestProductView().getAll();
+    const productDiscount = await requestObj.getAllView('RequestProductDiscount');
     
     const request = await requestObj.getByElementView('RequestInfoView', 'ID', +id)
 
@@ -41,6 +50,13 @@ const getOneRequest = async(req, res) => {
 
     if(products.length > 0) {
         request.Products = products
+
+        for(let j = 0; j<request.Products.length;j++) {
+            request.Products[j].Discounts = productDiscount?.filter(discount => discount.ProductID === request.Products[j].Folio &&
+                +discount.AssemblyGroup === +request.Products[j].AssemblyGroup &&
+                +discount.RequestID === +request.ID
+            )
+        }
     }
 
     if(request) {
@@ -160,11 +176,15 @@ const acceptRequest = async(req, res) => {
     const requestObj = new Request();
     const productObj = new Product();
     const requestProductsObj = new RequestProduct();
+    const requestProductDiscountObj = new RequestProductDiscount();
 
     const requestProduct = await requestProductsObj.getByElementArray('RequestID', +id);
 
+    const discounts = []
+
     if(edited) {
         for(let i=0; i<requestOld.Products.length; i++) {
+            requestOld.Products[i].ProductFolio = requestOld.Products[i].Folio;
             const productNewObj = new RequestProduct(requestOld.Products[i]);
 
             const sqlUpdateRequestProduct = `
@@ -174,11 +194,21 @@ const acceptRequest = async(req, res) => {
                         Assembly = '${productNewObj.Assembly}',
                         Quantity = ${productNewObj.Quantity}, 
                         PricePerUnit = ${productNewObj.PricePerUnit}, 
-                        Percentage = ${productNewObj.Percentage}
+                        Discount = ${productNewObj.Discount}
                 WHERE RequestID = ${productNewObj.RequestID}
             `
 
+            for(let j = 0; j<requestOld.Products[i].Discounts.length; j++) {
+                discounts.push(new RequestProductDiscount({
+                    Discount: +requestOld.Products[i].Discounts[j].Discount, 
+                    ProductID: requestOld.Products[i].Folio, 
+                    AssemblyGroup: requestOld.Products[i].AssemblyGroup, 
+                    RequestID: requestOld.Products[i].RequestID
+                }))
+            }
+
             const response = await productObj.exectQuery(sqlUpdateRequestProduct);
+            await requestProductDiscountObj.addMany(discounts)
 
             if(!response) {
                 return res.status(500).json({

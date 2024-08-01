@@ -24,8 +24,6 @@ const InfoRequestPage = () => {
         handleGetRequest();
     }, [request])
 
-    console.log(requestN)
-
     return (
         <div className="container my-4">
             <button onClick={() => navigate(-1)} className="backBtn mb-2">

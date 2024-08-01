@@ -11,11 +11,12 @@ import RequestInfoTr from "../components/RequestInfoTr";
 import formatearDinero from "../helpers/formatearDinero";
 import generateQuotation from "../helpers/generateQuotation";
 import getRequestStatusName from "../helpers/getRequestStatusName";
+import ProductTableForm from "../components/ProductTableForm";
 
 const AdminRequestPage = () => {
     const [request, setRequest] = useState({});
     const [products, setProducts] = useState([]);
-    const [edited, setEdited] = useState(false);
+    const [edited, setEdited] = useState(true);
     const [ID, setID] = useState(0);
     const [show, setShow] = useState(false);
     const [showAccept, setShowAccept] = useState(false);
@@ -257,50 +258,12 @@ const AdminRequestPage = () => {
                     ) : (
                         <>
                             <h2 className="text textPrimary">Informacion de los productos solicitados</h2>
-                            <Scroll>
-                                <table className="table table-hover">
-                                    <thead className="table-light">
-                                        <tr>
-                                            <th>Folio</th>
-                                            <th>Nombre</th>
-                                            <th>Cantidad Solicitado</th>
-                                            <th>Stock Disponible</th>
-                                            <th>Assembly Group</th>
-                                            <th>Precio Lista</th>
-                                            <th>Porcentaje (%)</th>
-                                            <th>Importe</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {products?.sort((a, b) => a.AssemblyGroup-b.AssemblyGroup).map(product => (
-                                            <RequestInfoTr 
-                                                product={product}
-                                                request={request}
-                                                setRequest={setRequest}
-                                                key={product.ProductFolio}
-                                                setEdited={setEdited}
-                                            />
-                                        ))}
-
-                                        <tr>
-                                            <td colSpan={6} className="table-active"></td>
-                                            <th>Subtotal</th>
-                                            <td>{formatearDinero(+subtotal)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colSpan={6} className="table-active"></td>
-                                            <th>IVA (%)</th>
-                                            <td>{formatearDinero(+iva)}</td>
-                                        </tr>
-                                        <tr>
-                                            <td colSpan={6} className="table-active"></td>
-                                            <th>Importe</th>
-                                            <td>{formatearDinero(+total)}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </Scroll>
+                            <ProductTableForm 
+                                productsArray={products}
+                                setProductsArray={setRequest}
+                                sale={request}
+                                searchBar={false}
+                            />
 
                             <h2 className="text textPrimary mt-4">Informacion del solicitante</h2>
                             <p className="mb-1 fw-bold fs-6">Nombre del usuario: <span className="fw-medium">{request?.UserFullName}</span></p>

@@ -5,8 +5,6 @@ const RequestInfoTr = ({ product, request, setRequest, setEdited }) => {
     const [percentage, setPercentage] = useState(product.Percentage)
     const [pricePerUnit, setPricePerUnit] = useState(+product.PricePerUnit === 0 ? product.ListPrice : product.PricePerUnit)
 
-    console.log(product)
-
     const handleChange = (folio, e) => {
         const products = request.Products.map(product => product.ProductFolio === folio ? {
             ...product, 

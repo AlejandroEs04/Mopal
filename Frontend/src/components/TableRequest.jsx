@@ -24,13 +24,18 @@ const TableRequest = ({ items, startIndex, endIndex, actionStorage = false }) =>
                 <td colSpan="6">No hay solicitudes pendientes por entregar</td>
               </tr>
             )}
-            {items?.slice(startIndex, endIndex).map(requestInfo => requestInfo.Status === 2 && (
+            {items?.slice(startIndex, endIndex).map(requestInfo => (
               <tr onDoubleClick={() => navigate(`/admin/request/${requestInfo.ID}`)} key={requestInfo.ID}>
                 <td>{requestInfo.ID}</td>
                 <td>{requestInfo?.CustomerName ?? requestInfo?.SupplierName ?? 'Interno'}</td>
                 <td className="text-nowrap">{requestInfo.UserFullName}</td>
                 <td className="text-nowrap">{requestInfo.Email}</td>
-                <td className={`text-danger text-nowrap`}>En espera</td>
+                <td className={`text-danger text-nowrap`}>
+                  {requestInfo.Status === 1 && 'Pendiente'}
+                  {requestInfo.Status === 2 && 'En espera'}
+                  {requestInfo.Status === 3 && 'En camino'}
+                  {requestInfo.Status === 4 && 'Entregado'}
+                </td>
                 <td>
                     <div className="d-flex justify-content-start gap-2">
                         <Link to={`/admin/request/${requestInfo.ID}`} className='btn btn-primary btn-sm text-nowrap'>

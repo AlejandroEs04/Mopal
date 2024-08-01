@@ -24,7 +24,7 @@ export const UserTr = ({user, setId, setShow, show}) => {
     try {
       setLoading(true)
       const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/users/recovery/${id}`, config);
-      console.log(data)
+
       setAlerta({
         error: false, 
         msg : data.msg

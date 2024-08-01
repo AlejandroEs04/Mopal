@@ -20,8 +20,6 @@ const ProductPage = () => {
     setProduct(product)
   }, [pathname, productsList])
 
-  console.log(product)
-
   return (
     <div className="">
       {product?.ImageHeaderURL && (
