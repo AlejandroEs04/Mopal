@@ -1,76 +1,65 @@
-import { Line } from 'react-chartjs-2'
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-} from 'chart.js'
 import useAdmin from '../hooks/useAdmin'
-import { useMemo } from 'react';
-
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend
-);
-
-export const options = {
-    responsive: true,
-    plugins: {
-        legend: {
-            position: 'top',
-        },
-        title: {
-            display: true,
-            text: 'Chart.js Line Chart',
-        },
-    },
-};
-
-const labels = ['Enero', 'Febrero', 'Marzo']
+import TableProductQuantity from '../components/TableProductQuantity';
+import BarContainer from '../components/BarContainer';
+import { getPeriod } from '../helpers/getCurrentPeriod';
+import Loader from '../components/Loader';
+import SaleStadistics from '../components/SaleStadistics';
 
 const Statistics = () => {
     const { reportInfo } = useAdmin();
+    const period = getPeriod()
 
-    const seasons = useMemo(() => reportInfo?.salesPerPeriodo?.map(periodo => {
-        const total = periodo?.Products?.reduce((total, product) => total + product.Quantity, 0)
-        return total
-    }), [reportInfo])
+    if(!reportInfo.products) {
+        return <Loader />
+    }
 
-    const data = {
-        labels,
-        datasets: [
-            {
-                label: 'Dataset 1',
-                data: seasons,
-                borderColor: 'rgb(255, 99, 132)',
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
-                label: 'Dataset 2',
-                borderColor: 'rgb(53, 162, 235)',
-                backgroundColor: 'rgba(53, 162, 235, 0.5)',
-            },
-        ],
-    };
+    const { items_movements, items_analyze_by_period } = reportInfo.products.summary
+
+    const major_items = items_movements?.major_items?.filter(item => item.date === period)
+    const minor_items = items_movements?.minor_items?.filter(item => item.date === period)
+
+    const itemsFiltered = items_analyze_by_period?.filter(item => item.date === period)
+
+    const information = itemsFiltered?.map(product => {
+        return product.quantity
+    })
+    const labels = itemsFiltered?.map(product => {
+        return product.item_id
+    })
 
     return (
-        <div className="mt-2">
+        <div className="mt-2 mb-5">
             <h1>Estadisticas</h1>
             <p>Analisis de todos los movimientos realizados</p>
+            
+            <BarContainer 
+                title='Productos vendidos en el periodo actual'
+                labels={labels}
+                information={information}
+            />
 
-            <Line 
-                options={options}
-                data={data}
-            /> 
+            <div className='row g-5 mt-2'>  
+                <div className='col-md-6'>
+                    <TableProductQuantity 
+                        text='Productos Mas Vendidos'
+                        items={major_items}
+                        className='text-success'
+                    />
+                </div>
+
+                <div className='col-md-6'>
+                    <TableProductQuantity 
+                        text='Productos Menos Vendidos'
+                        items={minor_items}
+                        className='text-danger'
+                    />
+                </div>
+            </div>
+
+            
+            <SaleStadistics />
+
+            <h4 className='mt-1'>Clientes con mayores compras</h4>
         </div>
     )
 }

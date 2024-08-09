@@ -45,17 +45,20 @@ const getProductsSaleTotal = async(req, res) => {
             formatedSales.push({
                 id : sales[i].Folio, 
                 date : sales[i].SaleDate, 
+                user_id : sales[i].CustomerID,
+                amount : +sales[i].Amount,
                 products : formatedProducts
             })
         }
     }
 
     try {
-        const { data : productsInfo } = await axios.post(`${process.env.INVENTORY_API_URL}/analysis/total_products`, formatedSales)
-        const { data : salesInfo } = await axios.post(`${process.env.INVENTORY_API_URL}/analysis/actions_period`, formatedSales)
+        const { data : productsInfo } = await axios.post(`${process.env.INVENTORY_API_URL}/product-analysis`, formatedSales)
+        const { data : salesInfo } = await axios.post(`${process.env.INVENTORY_API_URL}/action-analysis`, formatedSales)
+
         return res.status(201).json({
-            products : productsInfo, 
-            sales: salesInfo
+            products : productsInfo,
+            sales : salesInfo
         })
     } catch (error) {
         console.log(error)

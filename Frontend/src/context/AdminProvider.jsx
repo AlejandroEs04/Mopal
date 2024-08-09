@@ -72,7 +72,7 @@ const AdminProvider = ({children}) => {
     
     const handleGetReport = async() => {
         try {
-            const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/report`);
+            const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/report/products_total`);
             setReportInfo(data)
         } catch (error) {
             console.log(error)
