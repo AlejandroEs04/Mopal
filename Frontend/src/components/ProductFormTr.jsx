@@ -106,7 +106,7 @@ const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray,
                                     name="Observations" 
                                     id="observations" 
                                     className="form-control w-100"
-                                    defaultValue={product.Observations}
+                                    value={product.Observations}
                                     onChange={e => handleChangeInfo(e, product.Folio)}
                                 ></textarea>
                             ) : product.Observations}

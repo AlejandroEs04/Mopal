@@ -23,7 +23,7 @@ const AdminProvider = ({children}) => {
     const [requestNew, setRequestNew] = useState([]);
     const [specifications, setSpecifications] = useState([]);
     const [sales, setSales] = useState([]);
-    const [reportInfo, setReportInfo] = useState([]);
+    const [reportInfo, setReportInfo] = useState({});
 
     const handleGetUsers = async() => {
         const token = localStorage.getItem('token');
@@ -71,11 +71,28 @@ const AdminProvider = ({children}) => {
     }
     
     const handleGetReport = async() => {
+        setLoading(true)
+
         try {
             const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/report/products_total`);
             setReportInfo(data)
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleGetReportInformation = async(filters, type) => {
+        setLoading(true)
+
+        try {
+            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/report/${type}`, filters);
+            return data
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -683,7 +700,8 @@ const AdminProvider = ({children}) => {
                 handleUpdateSale,
                 handleDeleteSaleProduct, 
                 sendRequestQuotation, 
-                sendQuotationPdf
+                sendQuotationPdf, 
+                handleGetReportInformation
             }}
         >
             {children}

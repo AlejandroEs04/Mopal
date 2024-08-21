@@ -39,6 +39,13 @@ const AppProvider = ({children}) => {
 
     const [language, setLanguage] = useState(false);
 
+    const [modalShow, setModalShow] = useState(false);
+    const [modalInfo, setModalInfo] = useState({
+        type: 1, 
+        title: 'Modal', 
+        text: 'Este es un modal'
+    })
+
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -370,7 +377,11 @@ const AppProvider = ({children}) => {
                 handleDeteleRequest, 
                 handleSaveUser, 
                 user, 
-                setUser
+                setUser, 
+                modalShow, 
+                setModalShow, 
+                modalInfo, 
+                setModalInfo
             }}
         >
             {children}

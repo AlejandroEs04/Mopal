@@ -566,3 +566,72 @@ body::-webkit-scrollbar-thumb {
 table tr .table-yellow {
     background-color: rgba(255, 236, 65, 0.486);
 }
+
+.modal-container {
+    position: absolute;
+}
+.modal-backgound {
+    background-color: black;
+    width: 100%;
+}
+.modal {
+    background-color: var(--white);
+}
+
+.form-select-options {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow: hidden;
+}
+.form-select-options .input-container {
+    border: var(--gray) 0.5px solid;
+    border-radius: 5px;
+    display: flex;
+}
+.form-select-options .input-container .input-box {
+    padding: 6px 10px;
+    border-radius: 5px;
+    width: 100%;
+}
+.form-select-options .input-box {
+    border: none;
+}
+.form-select-options .options-box {
+    border: var(--gray) 0.5px solid;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    max-height: 120px;
+}
+.form-select-options .options-box button {
+    padding: 5px 10px;
+    width: 100%;
+    text-align: start;
+    
+}
+.form-select-options .options-box button:hover {
+    background-color: #5e5e5e0e;
+}
+.form-select-options .options-box::-webkit-scrollbar, .scroll-y-view::-webkit-scrollbar {
+    background-color: transparent;
+    width: 5px;
+}
+.form-select-options .options-box::-webkit-scrollbar-thumb, .scroll-y-view::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.384);
+    border-radius: 10px;
+
+    transition: all 1s ease;
+}
+.form-select-options .options-box::-webkit-scrollbar-thumb:hover, .scroll-y-view::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.685);
+}
+
+.scroll-y-view {
+    max-height: 350px;
+    border: 1px solid #3b3b3b28;
+    border-radius: 10px;
+    padding: 2px;
+    overflow-y: auto;
+}

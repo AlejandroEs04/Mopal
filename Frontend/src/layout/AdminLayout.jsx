@@ -6,9 +6,13 @@ import AdminHeader from "../components/AdminHeader";
 import AdminNav from "../components/AdminNav";
 import Toast from "../components/Toast";
 import Loader from "../components/Loader";
+import CenterModalContainer from "../components/CenterModalContainer";
+import useAdmin from "../hooks/useAdmin";
+import useApp from "../hooks/useApp";
 
 const AdminLayout = () => {
   const { auth, loading } = useAuth();
+  const { modalShow, setModalShow, modalInfo } = useApp()
   const { pathname } = useLocation();
 
   const navigate = useNavigate();
@@ -39,6 +43,11 @@ const AdminLayout = () => {
             <Outlet />
           </main>
 
+          <CenterModalContainer 
+            show={modalShow}
+            onHide={() => setModalShow(false)}
+            modalInfo={modalInfo}
+          />
           <Toast />
         </>
       ) : navigate(auth.ID ? '/' : '/login')}

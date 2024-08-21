@@ -38,7 +38,7 @@ const BarContainer = ({ labels, information }) => {
             {
                 label: 'Cantidad',
                 data: information,
-                backgroundColor: 'rgb(127, 133, 255, 0.7)',
+                backgroundColor: 'rgba(0, 80, 197, 0.8)',
             },
         ],
     };

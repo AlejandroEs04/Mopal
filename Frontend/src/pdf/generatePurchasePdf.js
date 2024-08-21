@@ -76,7 +76,6 @@ const generatePurchasePdf = (ordenCompra, subtotal, iva, total, save = false) =>
             doc.setFontSize(6)
             doc.setFont("helvetica", "italic");
             doc.text('Carlos Salazar Poniente 1930, Monterrey Centro, Del Monterrey, Monterrey, Nuevo Leon, Mexico, CP. 64000', 15, 290)
-            
         }
     })
     var finalY = doc.previousAutoTable.finalY;
