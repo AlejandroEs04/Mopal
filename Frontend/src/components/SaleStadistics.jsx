@@ -58,11 +58,18 @@ const SaleStadistics = () => {
 
     return (
         <>
-            <h2 className='mt-4 border-top pt-4' id='salesSeccion'>Ventas realizadas</h2>
-            <button
-                onClick={() => handleModalState()}
-                className='btn btn-secondary btn-sm'
-            >Obtener reporte</button>
+            <div className='d-flex justify-content-between mt-4 pt-4 border-top align-items-center'>
+                <div>
+                    <h2 id='salesSeccion'>Ventas realizadas</h2>
+                </div>
+                
+                <div>
+                    <button
+                        onClick={() => handleModalState()}
+                        className='btn btn-primary btn-sm'
+                    >Obtener reporte</button>
+                </div>
+            </div>
             <p>Podras ver la informacion de las ventas realizadas del periodo <span className='fw-bold'>{periodSelected}</span></p>
             <LineGraphContainer labels={labels} information={salesGraphInformation} />
 

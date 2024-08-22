@@ -162,7 +162,7 @@ const InfoPurchasePage = () => {
                                     </td>
                                     <td>{product.AssemblyGroup === 0 ? 'N/A' : product.AssemblyGroup ?? 'N/A'}</td>
                                     <td>{product.Quantity}</td>
-                                    <td>{product.Observation ?? 'N/A'}</td>
+                                    <td>{product.Observations ?? 'N/A'}</td>
                                     <td>{formatearDinero(+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount)) + " " + purchase?.Acronym}</td>
                                     <td>{formatearDinero(+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) + (+handleGetImporte(product.ListPrice, product.Quantity, product.Discount) * .16)) + " " + purchase?.Acronym}</td>
                                 </tr>

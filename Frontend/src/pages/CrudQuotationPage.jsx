@@ -49,7 +49,7 @@ const CrudQuotationPage = () => {
     const { id } = useParams();
     const { pathname } = useLocation()
 
-    const { users, customers, sales, handleToggleSaleStatus, alerta, setAlerta, handleGenerateSale, handleDeleteSaleProduct, loading } = useAdmin();
+    const { users, customers, sales, handleToggleSaleStatus, alerta, setAlerta, handleGenerateSale, handleUpdateSale, handleDeleteSaleProduct, loading } = useAdmin();
 
     // Inicializar Select
     const customerOptions = customers?.map(customer => {
@@ -180,7 +180,7 @@ const CrudQuotationPage = () => {
                         <button
                             disabled={checkInfo()}
                             className={`btn ${checkInfo() ? 'bg-transparent text-success' : 'btn-success'} w-100`}
-                            onClick={() => handleGenerateSale(sale)}
+                            onClick={() => id ? handleUpdateSale(sale) : handleGenerateSale(sale)}
                         >
                             {sale.Folio ? 'Editar' : 'Generar'} Cotizacion
                         </button>

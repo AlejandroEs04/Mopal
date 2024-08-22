@@ -162,6 +162,10 @@ const updatePurchase = async(req, res) => {
                 return res.status(500).json({status : 500, msg: "Hubo un error al actualizar los productos"})
             }
         } else {
+            const productUpdating = new PurchaseProduct({
+                ...purchase.Products[i]
+            })
+
             const QuantityNew = purchase.Products[i].Quantity
             const DiscountNew = purchase.Products[i].Discount
             if(QuantityNew !== product[0].Quantity || DiscountNew !== product[0].Discount) {
@@ -170,7 +174,8 @@ const updatePurchase = async(req, res) => {
                 const sqlUpdatePurchaseProducto = `
                     UPDATE PurchaseProduct 
                     SET Quantity = ${QuantityNew},
-                    Discount = ${DiscountNew}
+                    Discount = ${DiscountNew}, 
+                    Observations = '${productUpdating.Observations}'
                     WHERE ProductFolio = '${purchase.Products[i].Folio}' AND PurchaseFolio = ${purchaseObj.Folio}
                 `
 
@@ -198,7 +203,9 @@ const updatePurchase = async(req, res) => {
         }
     }
 
-    await PurchaseProductDiscountObj.addMany(discounts)
+    if(discounts.length > 0) {
+        await PurchaseProductDiscountObj.addMany(discounts)
+    }
 
     const response = await purchaseObj.updateOne(purchaseObj)
 

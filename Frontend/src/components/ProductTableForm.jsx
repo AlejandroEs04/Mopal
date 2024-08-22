@@ -9,6 +9,7 @@ import formatearDinero from '../helpers/formatearDinero'
 
 const ProductTableForm = ({ productsArray, setProductsArray, sale, setShow, setProductFolio, productFolio, discounts, onShow, searchBar = true }) => {
     const [addDiscounts, setAddDiscounts] = useState(false)
+    const [productFolioObservation, setProductFolioObservation] = useState('')
     const { products, handleAddProduct } = useApp();
 
     const { id } = useParams();
@@ -130,9 +131,10 @@ const ProductTableForm = ({ productsArray, setProductsArray, sale, setShow, setP
                                 handleAddProductArray={handleAddProductArray}
                                 handleRemoveProductArray={handleRemoveProductArray}
                                 setShow={setShow}
-                                array={productsArray}
                                 discounts={discounts}
                                 addDiscount={addDiscounts}
+                                productFolioObservation={productFolioObservation}
+                                setProductFolioObservation={setProductFolioObservation}
                             /> 
                         ))}
 

@@ -74,7 +74,7 @@ const TablePurchases = ({ purchase, startIndex, endIndex, actionStorage = false 
                   <td colSpan="6">No hay compras pendientes por recibir</td>
                 </tr>
               )}
-              {purchase?.slice(startIndex, endIndex).map(Purchase => (
+              {purchase?.slice(startIndex, endIndex).sort((a,b) => b.Folio-a.Folio).map(Purchase => (
                 <tr onDoubleClick={() => navigate(`/info/purchases/${Purchase.Folio}`)} key={Purchase.Folio}>
                   <td>{Purchase.Folio}</td>
                   <td className="text-nowrap">{Purchase.BusinessName}</td>

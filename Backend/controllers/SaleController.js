@@ -88,7 +88,10 @@ const addNewSale = async(req, res) => {
     const saleProductObj = new SaleProduct();
 
     const responseProducts = await saleProductObj.addMany(productsArray);
-    await saleProductDiscountObj.addMany(discounts)
+
+    if(discounts.length > 0) {
+        await saleProductDiscountObj.addMany(discounts)
+    }
 
     if(responseProducts) {
         io.emit('saleUpdate');
@@ -110,21 +113,41 @@ const updateSale = async(req, res) => {
     const saleObj = new Sale(sale)
     const saleProductObj = new SaleProduct();
     const productoObj = new Product();
+    const saleProductDiscountObj = new SaleProductDiscount()
 
-    if(+saleObj.StatusID >= 2) {
+    const discounts = [];
+
         for(let i = 0;i < sale.Products.length; i++) {
+            const sqlRemoveDiscounts = `
+                DELETE FROM SaleProductDiscount
+                WHERE SaleID = ${sale.Folio}
+            `
+
+            await saleProductObj.exectQuery(sqlRemoveDiscounts)
+
             const sqlGetProducts = `
                 SELECT * FROM SaleProduct 
                 WHERE ProductFolio = '${sale.Products[i].Folio}' AND SaleFolio = ${saleObj.Folio}
             `
             const product = await saleProductObj.exectQueryInfo(sqlGetProducts);
     
+            for(let j = 0; j<sale.Products[i].Discounts.length; j++) {
+                discounts.push(new SaleProductDiscount({
+                    Discount: +sale.Products[i].Discounts[j].Discount, 
+                    ProductID: sale.Products[i].Folio, 
+                    AssemblyGroup: sale.Products[i].AssemblyGroup, 
+                    SaleID: sale.Folio
+                }))
+            }
+
             if(product.length === 0) {
                 const productNew = new SaleProduct({
                     SaleFolio : saleObj.Folio, 
                     ProductFolio : sale.Products[i].Folio, 
                     Quantity : +sale.Products[i].Quantity, 
-                    Percentage : +sale.Products[i].Percentage ?? 0
+                    PricePerUnit : +sale.Products[i].PricePerUnit,
+                    Discount : +sale.Products[i].Discount ?? 0, 
+                    Observations: sale.Products[i].Observations
                 })
     
                 const resNewProduct = await saleProductObj.addOne(productNew)
@@ -150,14 +173,15 @@ const updateSale = async(req, res) => {
                 }
             } else {
                 const QuantityNew = +sale.Products[i].Quantity
-                const PercentageNew = +sale.Products[i].Percentage
-                if(QuantityNew !== product[0].Quantity || PercentageNew !== product[0].Percentage) {
+                const DiscountNew = +sale.Products[i].Discount
+                if(QuantityNew !== product[0].Quantity || DiscountNew !== product[0].Discount) {
                     const saleProduct = new SaleProduct(sale.Products[i])
     
                     const sqlUpdateSaleProducto = `
                         UPDATE SaleProduct 
                         SET Quantity = ${+QuantityNew},
-                        Percentage = ${+PercentageNew}
+                        Discount = ${+DiscountNew}, 
+                        Observations = '${sale.Products[i].Observations}'
                         WHERE ProductFolio = '${sale.Products[i].Folio}' AND SaleFolio = ${saleObj.Folio}
                     `
     
@@ -184,9 +208,11 @@ const updateSale = async(req, res) => {
                     }
                 }
             }
-        }
     }
 
+    if(discounts.length > 0) {
+        await saleProductDiscountObj.addMany(discounts)
+    }
     const response = await saleObj.updateOne(saleObj)
 
     if(response) {

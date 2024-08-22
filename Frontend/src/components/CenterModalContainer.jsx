@@ -21,7 +21,7 @@ const CenterModalContainer = (props) => {
                 </>
             </Modal.Body>
             <Modal.Footer>
-                <Button onClick={props.onHide}>Cerrar</Button>
+                <Button variant='danger' onClick={props.onHide}>Cerrar</Button>
             </Modal.Footer>
         </Modal>
     )

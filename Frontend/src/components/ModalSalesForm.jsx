@@ -6,6 +6,7 @@ import Loader from './Loader'
 import formatearFecha from '../helpers/formatearFecha'
 import formatearDinero from '../helpers/formatearDinero'
 import { JsonToExcel } from 'react-json-to-excel'
+import generateReport from '../pdf/generateReport'
 
 const ModalSalesForm = () => {
     const [formInformation, setFormInformation] = useState({
@@ -58,7 +59,18 @@ const ModalSalesForm = () => {
         return total
     }
 
-    console.log(reportInfo)
+    const handleReset = () => {
+        setFormInformation({
+            id: null, 
+            products: [], 
+            fromDate: null, 
+            toDate: null, 
+            user: null, 
+            trader: null
+        })
+
+        setReportInfo(null)
+    }
 
     return !loading ? reportInfo ? (
             <>
@@ -120,12 +132,17 @@ const ModalSalesForm = () => {
                     ))}
                 </div>
 
-                <JsonToExcel
-                    title="Descargar Excel"
-                    data={reportInfo}
-                    btnClassName={'btn p-1 px-2 mt-4'}
-                    fileName={`sales_report_${new Date()}`}
-                />
+                <div className='d-flex gap-2 mt-3'>
+                    <button
+                        className='btn btn-primary'
+                        onClick={() => generateReport(reportInfo, 'Reporte de ventas', 'Reportes de las ventas realizadas e informacion relevante')}
+                    >Descargar</button>
+
+                    <button
+                        className='btn btn-danger'
+                        onClick={handleReset}
+                    >Reiniciar</button>
+                </div>
             </>
         ) : (
             <form
@@ -213,7 +230,7 @@ const ModalSalesForm = () => {
                     </select>
                 </div>
 
-                <button type='submit' className='btn btn-dark w-100 mt-2'>Obtener reporte</button>
+                <button type='submit' className='btn btn-primary w-100 mt-2'>Obtener reporte</button>
             </form>
         ): <Loader />
 }

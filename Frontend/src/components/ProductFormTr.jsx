@@ -5,8 +5,19 @@ import Scroll from "./Scroll"
 import discountsArray from "../data/discounts"
 import { v4 as uuidv4 } from 'uuid'
 
-const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray, handleRemoveProductArray, setShow, setProductFolio, discounts }) => {
-    const [productFolioObservation, setProductFolioObservation] = useState('')
+const ProductFormTr = ({ 
+        product, 
+        sale, 
+        handleChangeInfo, 
+        handleAddProductArray, 
+        handleRemoveProductArray, 
+        setShow, 
+        setProductFolio, 
+        discounts ,
+        productFolioObservation, 
+        setProductFolioObservation
+    }) => {
+    const [currentObservation, setCurrentObservation] = useState(product.Observations)
     const [currentDiscount, setCurrentDiscount] = useState(0);
     const [showProductAccesories, setShowProductAccesories] = useState(false)
 
@@ -16,8 +27,6 @@ const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray,
         if(currentDiscount <= 0) {
             return
         }
-
-        console.log(product)
 
         product.Discounts.push({
             id: uuidv4(), 
@@ -54,6 +63,18 @@ const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray,
         })
 
         handleChangeDiscount()
+    }
+
+    const handleSaveObservation = () => {
+        const e = {
+            target: {
+                name: 'Observations', 
+                value: currentObservation
+            }
+        }
+
+        handleChangeInfo(e, product.Folio)
+        setProductFolioObservation('')
     }
     
     return (
@@ -106,8 +127,8 @@ const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray,
                                     name="Observations" 
                                     id="observations" 
                                     className="form-control w-100"
-                                    value={product.Observations}
-                                    onChange={e => handleChangeInfo(e, product.Folio)}
+                                    value={currentObservation}
+                                    onChange={e => setCurrentObservation(e.target.value)}
                                 ></textarea>
                             ) : product.Observations}
                         </div>
@@ -117,7 +138,13 @@ const ProductFormTr = ({ product, sale, handleChangeInfo, handleAddProductArray,
                 <td>
                     <div>
                         <button
-                            onClick={() => productFolioObservation === '' ? setProductFolioObservation(product.Folio) : setProductFolioObservation('')}
+                            onClick={() => {
+                                if(product.Folio === productFolioObservation) {
+                                    handleSaveObservation()
+                                } else {
+                                    setProductFolioObservation(product.Folio) 
+                                }
+                            }}
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="iconTable text-primary">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125" />

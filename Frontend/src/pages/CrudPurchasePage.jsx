@@ -1,7 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
-import formatearFecha from "../helpers/formatearFecha";
 import axios from "axios";
 import Select from 'react-select';
 import PurchasePdf from "../pdf/PurchasePdf";
@@ -33,6 +32,7 @@ const CrudPurchasePage = () => {
 
     const handleChangeInfo = (e) => {
         const { name, value } = e.target;
+        console.log(value)
         const isNumber = name.includes['SupplierID', 'SupplierUserID', 'CurrencyID', 'StatusID', 'UserID', 'Amount']
 
         setPurchase({
@@ -236,6 +236,8 @@ const CrudPurchasePage = () => {
     useEffect(() => {
         checkInfo()
     }, [purchase])
+
+    console.log(purchase)
 
     return (
         <>
