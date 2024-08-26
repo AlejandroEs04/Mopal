@@ -1,50 +1,45 @@
 import { io } from "../index.js";
 import Request from "../models/Request.js"
 import RequestProductDiscount from "../models/RequestProductDiscount.js";
-import UserInfo from "../models/UserInfo.js";
 import Product from "../models/Product.js";
 import RequestProduct from "../models/RequestProduct.js";
-import RequestProductView from "../models/RequestProductView.js";
 import Supplier from "../models/Supplier.js";
 import Customer from "../models/Customer.js";
 import { requestAcepted, requestCanceled, requestEmail } from "../helpers/email.js";
+import User from "../models/User.js";
 
 const getAllRequest = async(req, res) => {
-    const requestObj = new Request();
-    const request = await requestObj.getAllView('RequestInfoView');
-    const productDiscount = await requestObj.getAllView('RequestProductDiscount');
+    const requestObj = new Request()
+    const requests = await requestObj.getAllRequestInfo()
+    const productDiscount = await requestObj.getAllTable('RequestProductDiscount')
+    const requestProducts = await requestObj.getRequestProductInfo()
 
-    const requestProductsObj = await new RequestProductView().getAll();
+    for(let i = 0;i<requests.length;i++) {
+        requests[i].Products = requestProducts.filter(product => +product.RequestID === +requests[i].ID)
 
-    for(let i = 0;i<request.length;i++) {
-        const productsArray = requestProductsObj.filter(product => product.RequestID === request[i].ID)
-        request[i].Products = productsArray
-
-        for(let j = 0; j<request[i].Products.length;j++) {
-            request[i].Products[j].Discounts = productDiscount?.filter(discount => discount.ProductID === request[i].Products[j].Folio &&
-                +discount.AssemblyGroup === +request[i].Products[j].AssemblyGroup &&
-                +discount.RequestID === +request[i].ID
+        for(let j = 0; j<requests[i].Products.length;j++) {
+            requests[i].Products[j].Discounts = productDiscount?.filter(discount => discount.ProductID === requests[i].Products[j].Folio &&
+                +discount.AssemblyGroup === +requests[i].Products[j].AssemblyGroup &&
+                +discount.RequestID === +requests[i].ID
             )
         }
     }
 
-    if(request) {
+    if(requests) {
         return res.status(200).json({
             status : 200, 
             msg : "Ok", 
-            request
+            requests
         })
     }
 } 
 
 const getOneRequest = async(req, res) => {
     const { id } = req.params
-
     const requestObj = new Request();
-    const requestProductsObj = await new RequestProductView().getAll();
-    const productDiscount = await requestObj.getAllView('RequestProductDiscount');
-    
-    const request = await requestObj.getByElementView('RequestInfoView', 'ID', +id)
+    const request = await requestObj.getRequestByID(+id)
+    const requestProductsObj = await requestObj.getRequestProductInfo();
+    const productDiscount = await requestObj.getAllTable('RequestProductDiscount')
 
     const products = requestProductsObj.filter(product => product.RequestID === +id)
 
@@ -80,14 +75,14 @@ const getUserRequest = async(req, res) => {
     const requestProducts = await new RequestProduct().getAll()
     const productObj = new Product()
 
-    const requests = await requestObj.getByElementViewArray('RequestInfoView', 'UserID', +user.ID);
+    const requests = await requestObj.getAllRequestInfo(user.ID);
 
     for(let i=0;i<requests.length;i++) {
         const products = requestProducts?.filter(product => product.RequestID === requests[i].ID)
         requests[i].Products = products
 
         for(let j=0;j<requests[i].Products.length;j++) {
-            const product = await productObj.getByElementView('ProductInfo', 'Folio', requests[i].Products[j].ProductFolio)
+            const product = await productObj.getByFolioProductInfo(requests[i].Products[j].ProductFolio)
             requests[i].Products[j].Name = product.Name
             requests[i].Products[j].ListPrice = product.ListPrice
             requests[i].Products[j].Cost = product.Cost
@@ -242,8 +237,8 @@ const acceptRequest = async(req, res) => {
     let response
 
     const reqUser = await requestObj.getByElement('ID', +id);
-    const userObj = new UserInfo();
-    const user = await userObj.getByElement('ID', reqUser.UserID)
+    const userObj = new User();
+    const user = await userObj.getUserByID(reqUser.UserID)
 
     switch (+requestOld.ActionID) {
         case 1 : 
@@ -285,8 +280,8 @@ const cancelRequest = async(req, res) => {
     const requestObj = new Request()
 
     const reqUser = await requestObj.getByElement('ID', +id);
-    const userObj = new UserInfo();
-    const user = await userObj.getByElement('ID', reqUser.UserID)
+    const userObj = new User();
+    const user = await userObj.getUserByID(reqUser.UserID)
     
     await requestCanceled({
         FullName : user.FullName, 

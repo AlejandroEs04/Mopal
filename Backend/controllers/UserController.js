@@ -5,10 +5,9 @@ import { io } from "../index.js";
 import CustomerUser from "../models/CustomerUser.js";
 import SupplierUser from "../models/SupplierUser.js";
 import User from "../models/User.js"
-import UserInfo from "../models/UserInfo.js";
 
 const getAllUsers = async(req, res) => {
-    const userObj = new UserInfo;
+    const userObj = new User();
     const users = await userObj.getAll();
 
     if(users) {
@@ -25,9 +24,9 @@ const getAllUsers = async(req, res) => {
 
 const getOneUser = async(req, res) => {
     const { id } = req.params;
-    const userObj = new UserInfo();
+    const userObj = new User();
 
-    const user = await userObj.getByID(id);
+    const user = await userObj.getUserByID(id);
 
     if(user) {
         return res.status(200).json({

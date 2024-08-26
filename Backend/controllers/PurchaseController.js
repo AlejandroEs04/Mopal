@@ -7,9 +7,9 @@ import Product from "../models/Product.js";
 const getAllPurchase = async(req, res) => {
     const purchaseObj = new Purchase();
 
-    const purchases = await purchaseObj.getAllView('PurchaseInfo')
-    const products = await purchaseObj.getAllView('PurchaseProductInfo')
-    const productDiscount = await purchaseObj.getAllView('PurchaseProductDiscount')
+    const purchases = await purchaseObj.getAllTable('PurchaseInfo')
+    const products = await purchaseObj.getAllTable('PurchaseProductInfo')
+    const productDiscount = await purchaseObj.getAllTable('PurchaseProductDiscount')
 
     if(purchases) {
         for(let i=0;i<purchases.length;i++) {
@@ -73,7 +73,6 @@ const addNewPurchase = async(req, res) => {
         }
 
         const product = await productObj.getByFolio(productsArray[i].ProductFolio);
-
         const res = await productObj.updateOneColumn(productsArray[i].ProductFolio, 'StockOnWay', (+product.StockOnWay + +productsArray[i].Quantity))
 
         if(!res) {
@@ -87,7 +86,10 @@ const addNewPurchase = async(req, res) => {
     const purchaseProductObj = new PurchaseProduct();
 
     const responseProducts = await purchaseProductObj.addMany(productsArray);
-    await PurchaseProductDiscountObj.addMany(discounts)
+
+    if(discounts.length > 0) {
+        await PurchaseProductDiscountObj.addMany(discounts)
+    }
 
     if(responseProducts) {
         io.emit('purchaseUpdate', { update: true })

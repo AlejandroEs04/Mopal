@@ -46,7 +46,6 @@ const getProductsSaleTotal = async(req, res) => {
             sales : salesInfo
         })
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ msg: "Hubo un error" })
     }
 }

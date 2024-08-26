@@ -16,7 +16,7 @@ class ActiveRecord {
         }
     }
 
-    async getAllView(name) {
+    async getAllTable(name) {
         const query = `SELECT * FROM ${name}`;
         try {
             const [results, fields] = await pool.execute(query);
@@ -61,7 +61,7 @@ class ActiveRecord {
         }
     }
     
-    async getByElementView(name, element, value) {
+    async getByElementTable(name, element, value) {
         const query = `SELECT * FROM ${name} WHERE ${element} = ?`;
 
         try {
@@ -73,7 +73,7 @@ class ActiveRecord {
         }
     }
     
-    async getByElementViewArray(name, element, value) {
+    async getByElementTableArray(name, element, value) {
         const query = `SELECT * FROM ${name} WHERE ${element} = ?`;
 
         try {

@@ -1,15 +1,15 @@
 import jwt from "jsonwebtoken";
-import UserInfo from "../models/UserInfo.js";
+import User from "../models/User.js";
 
 const checkAuth = async(req, res, next) => {
-    const userObj = new UserInfo()
+    const userObj = new User()
     let token;
 
     if(req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
         try {
             token = req.headers.authorization.split(' ')[1]
             const decoded = jwt.verify(token, process.env.JWT_SECRET)
-            const user = await userObj.getByID(decoded.id)
+            const user = await userObj.getUserByID(decoded.id)
             const { Password, ...userAuth } = user;
 
             req.user = userAuth;

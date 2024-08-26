@@ -4,16 +4,9 @@ import Product from "../models/Product.js"
 import DetProAcc from "../models/DetProAcc.js";
 
 const getAllProduct = async(req, res) => {
-    const productObj = new Product();
-
-    const products = await productObj.getAllView('ProductInfo');
-    const allAccesories = await productObj.getAllView('ProductAccessoryView')
+    const products = await new Product().getAllProductInfo();
 
     if(products) {
-        for(let i = 0; i < products.length; i++) {
-            products[i].accessories = allAccesories.filter(accesory => accesory.ProductFolio === products[i].Folio)
-        } 
-
         return res.status(200).json({
             status : 200, 
             msg : "Ok", 

@@ -32,7 +32,6 @@ const CrudPurchasePage = () => {
 
     const handleChangeInfo = (e) => {
         const { name, value } = e.target;
-        console.log(value)
         const isNumber = name.includes['SupplierID', 'SupplierUserID', 'CurrencyID', 'StatusID', 'UserID', 'Amount']
 
         setPurchase({
@@ -237,8 +236,6 @@ const CrudPurchasePage = () => {
         checkInfo()
     }, [purchase])
 
-    console.log(purchase)
-
     return (
         <>
             <div className="container mt-4">
@@ -315,24 +312,23 @@ const CrudPurchasePage = () => {
                         />
                     </div>
 
-                    {supplierUsers.length > 0 && (
-                        <div className="col-lg-4 d-flex flex-column">
-                            <label htmlFor="user">Usuario</label>
-                            <select 
-                                disabled={id} 
-                                id="user" 
-                                name="SupplierUserID"
-                                className="form-select" 
-                                value={purchase.SupplierUserID} 
-                                onChange={e => handleChangeInfo(e)}
-                            >
-                                <option value={0}>Sin Contacto</option>
-                                {supplierUsers?.map(user => (
-                                    <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="user">Usuario</label>
+                        <select 
+                            disabled={id || supplierUsers.length === 0} 
+                            id="user" 
+                            name="SupplierUserID"
+                            className="form-select" 
+                            value={purchase.SupplierUserID} 
+                            onChange={e => handleChangeInfo(e)}
+                        >
+                            <option value={0}>Sin Contacto</option>
+                            {supplierUsers?.map(user => (
+                                <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
+                            ))}
+                        </select>
+                    </div>
+                    
 
                     <InputContainer 
                         label="Fecha de la compra"
@@ -341,6 +337,16 @@ const CrudPurchasePage = () => {
                         type="date"
                         placeholder="Fecha de la compra"
                         value={purchase.PurchaseDate}
+                        handleAction={handleChangeInfo}
+                    />
+
+                    <InputContainer 
+                        label="Fecha de entrega estimada"
+                        name="DeliveryDate"
+                        id="deliveryDate"
+                        type="date"
+                        placeholder="Fecha de entrega estimada"
+                        value={purchase.DeliveryDate}
                         handleAction={handleChangeInfo}
                     />
                     

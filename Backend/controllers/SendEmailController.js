@@ -1,17 +1,16 @@
 import { quotationSend } from "../helpers/email.js";
 import Request from "../models/Request.js";
-import RequestProductView from "../models/RequestProductView.js";
-import UserInfo from "../models/UserInfo.js";
+import User from "../models/User.js";
 
 const sendEmailQuotation = async(req, res) => {
     const { id } = req.params
 
     const pdfBuffer = req.file.buffer;
-    const requestProductsObj = new RequestProductView();
-    const request = await new Request().getByID(id)
-    const user = await new UserInfo().getByID(request.UserID);
+    const requestObj = new Request();
+    const request = await requestObj.getByID(id)
+    const user = await new User().getUserByID(request.UserID);
 
-    const products = await requestProductsObj.getByElementArray('RequestID', +id)
+    const products = await requestObj.getRequestProductInfo(+id)
     
     try {
         await quotationSend({

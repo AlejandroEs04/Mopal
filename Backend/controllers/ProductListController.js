@@ -2,7 +2,7 @@ import ProductList from "../models/ProductList.js"
 import DetProSpe from "../models/DetProSpe.js";
 
 const getAllProductList = async(req, res) => {
-    const productListObj = await new ProductList().getAllView('ProductListView');
+    const productListObj = await new ProductList().getAllTable('ProductListView');
     
     if(productListObj?.length > 0) {
         return res.status(200).json({

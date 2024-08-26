@@ -70,15 +70,6 @@ const AppProvider = ({children}) => {
         }
     }
 
-    const handleGetProductsList = async() => {
-        try {
-            const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/productsList`);
-            setProductsList(data.productLists)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     const handleGetClassifications = async() => {
         try {
             const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/classifications`);
@@ -322,7 +313,6 @@ const AppProvider = ({children}) => {
         handleGetClassifications();
         handleGetSpecification();
         handleGetProducts();
-        handleGetProductsList();
         getUserRequest();
 
         socket.on('saleUpdate', response => {

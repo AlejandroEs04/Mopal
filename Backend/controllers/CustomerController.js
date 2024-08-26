@@ -2,7 +2,7 @@ import Customer from "../models/Customer.js"
 
 const getAllCustomers = async(req, res) => {
     const customerObj = new Customer();
-    const users = await customerObj.getAllView('CustomerUserView')
+    const users = await customerObj.getAllTable('CustomerUserView')
     const customers = await customerObj.getAll();
 
     if(customers.length > 0 && users.length > 0) {

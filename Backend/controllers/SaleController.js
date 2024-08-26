@@ -7,9 +7,9 @@ import SaleProductDiscount from "../models/SaleProductDiscount.js"
 const getAllSales = async(req, res) => {
     const saleObj = new Sale();
 
-    const sales = await saleObj.getAllView('SaleInfo')
-    const products = await saleObj.getAllView('SaleProductInfo');
-    const productDiscount = await saleObj.getAllView('SaleProductDiscount')
+    const sales = await saleObj.getAllTable('SaleInfo')
+    const products = await saleObj.getAllTable('SaleProductInfo');
+    const productDiscount = await saleObj.getAllTable('SaleProductDiscount')
 
     if(sales && products) {
         for(let i=0; i<sales.length; i++) {

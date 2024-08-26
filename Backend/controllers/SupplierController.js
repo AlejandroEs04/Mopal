@@ -2,7 +2,7 @@ import Supplier from "../models/Supplier.js"
 
 const getAllSupplier = async(req, res) => {
     const supplierObj = new Supplier();
-    const users = await supplierObj.getAllView('SupplierUserView')
+    const users = await supplierObj.getAllTable('SupplierUserView')
     const suppliers = await supplierObj.getAll();
 
     if(suppliers.length > 0 && users.length > 0) {

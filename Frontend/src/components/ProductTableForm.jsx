@@ -97,7 +97,6 @@ const ProductTableForm = ({ productsArray, setProductsArray, sale, setShow, setP
                             <th>Stock</th>
                             <th>Cantidad</th>
                             <th className="text-nowrap" colSpan={2}>Descuento (%)</th>
-                            {/*<th className="text-nowrap">Porcentaje (%)</th>*/}
                             <th>Importe</th>
                             <th>Ensamble</th>
                             <th colSpan={2}>Observaciones</th>

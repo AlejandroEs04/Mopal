@@ -55,7 +55,7 @@ const AdminProvider = ({children}) => {
 
         try {
             const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/request`, config);
-            setRequest(data.request.reverse())
+            setRequest(data.requests.reverse())
         } catch (error) {
             console.log(error)
         }
