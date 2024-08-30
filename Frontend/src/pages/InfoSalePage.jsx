@@ -59,6 +59,8 @@ const InfoSalePage = () => {
         handleGetSale();
     }, [sales, id])
 
+    console.log(sale)
+
     return (
         <div className="container my-4">
             <div className="d-flex justify-content-between mb-4">
@@ -139,7 +141,7 @@ const InfoSalePage = () => {
                         Estado: <span className={`${+sale?.StatusID === 1 && 'text-success'} ${+sale?.StatusID === 2 && 'text-danger'} ${+sale?.StatusID === 3 && 'text-warning'} ${+sale?.StatusID === 4 && 'text-success'} fw-normal`}>{sale?.Status}</span>
                     </p>
                     <p className="mb-1 fw-bold">Activo: <span className={`fw-normal ${sale?.Active === 1 ? 'text-success' : 'text-danger'}`}>{sale?.Active === 1 ? 'Activo' : 'Inactivo'}</span></p>
-                    <p className="mb-1 fw-bold">Observaciones: <span className="fw-normal">{sale?.Observation}</span></p>
+                    <p className="mb-1 fw-bold">Observaciones: <span className="fw-normal">{sale?.Observations}</span></p>
 
                     <h3 className="mt-4">Informacion del cliente</h3>
                     <p className="mb-1 fw-bold">Direccion de entrega: <span className="fw-normal">{sale?.Address}</span></p>

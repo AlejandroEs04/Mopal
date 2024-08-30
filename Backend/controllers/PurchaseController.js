@@ -67,7 +67,7 @@ const addNewPurchase = async(req, res) => {
             discounts.push(new PurchaseProductDiscount({
                 Discount: +purchase.Products[i].Discounts[j].Discount, 
                 ProductID: productsArray[i].ProductFolio, 
-                AssemblyGroup: productsArray[i].AssemblyGroup, 
+                AssemblyGroup: productsArray[i].AssemblyGroup ?? null, 
                 PurchaseID: productsArray[i].PurchaseFolio
             }))
         }
@@ -289,7 +289,7 @@ const deletePurchase = async(req, res) => {
 }
 
 const deletePurchaseProduct = async(req, res) => {
-    const { purchaseId, productId } = req.params
+    const { purchaseId, productId, assemblyGroup } = req.params
     const productoObj = new Product();
     const purchaseProductObj = new PurchaseProduct();
 

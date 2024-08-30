@@ -49,7 +49,8 @@ class Product extends ActiveRecord {
             products[i] = {
                 ...products[i], 
                 Type: types.filter(type => +type.ID === +products[i].TypeID)[0].Name, 
-                Classification: classifications.filter(classification => +classification.ID === +products[i].ClassificationID)[0].Name
+                Classification: classifications.filter(classification => +classification.ID === +products[i].ClassificationID)[0].Name, 
+                accessories
             }
         }
 

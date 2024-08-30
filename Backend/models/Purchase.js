@@ -15,6 +15,7 @@ class Purchase extends ActiveRecord {
         this.Amount = purchase?.Amount;
         this.Active = purchase?.Active ?? true;
         this.Observation = purchase?.Observation ?? "";
+        this.InternObservation = purchase?.InternObservation ?? "";
     }
 }
 

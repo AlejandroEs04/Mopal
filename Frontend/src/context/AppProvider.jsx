@@ -271,6 +271,59 @@ const AppProvider = ({children}) => {
         }
     }
 
+    const handleGenerateProduct = (array, folio, quantity = 1, assembly = '', assemblyGroup = null) => {
+        // Copiar arreglo
+        let productsArray = array
+
+        // Obtener el producto
+        const product = products?.filter(product => product.Folio === folio)[0]
+
+        // Identificar si se crea un grupo
+        let AssemblyGroup = assemblyGroup
+
+        if(assembly) {
+            if(!assemblyGroup) {
+                AssemblyGroup = +assemblyCount + 1
+
+                const productsNew = productsArray.map(product => {
+                    if(product.ProductFolio === assembly && !product.AssemblyGroup) {
+                        product.AssemblyGroup = AssemblyGroup
+                    }
+                    return product
+                })
+                
+                setAssemblyCount(AssemblyGroup)
+
+                productsArray = productsNew;
+            }
+        }
+
+        // Crear producto
+        const newProduct = {
+            ProductFolio : folio, 
+            Folio : folio, 
+            Name : product.Name, 
+            PricePerUnit : +product.ListPrice,
+            Percentage : 100,
+            Discount : 0,
+            Quantity : +quantity, 
+            Stock : +product.StockAvaible,
+            Accesories : product.accessories, 
+            Assembly : assembly, 
+            AssemblyGroup, 
+            Observations : '', 
+            Discounts: []
+        }
+
+        const existArray = productsArray?.filter(product => product.ProductFolio === folio && product.AssemblyGroup === assemblyGroup)
+        
+        if(existArray?.length === 0) {
+            return newProduct
+        } else {
+            return null
+        }
+    }
+
     const handleSaveUser = async(user) => {
         const token = localStorage.getItem('token');
     
@@ -371,7 +424,8 @@ const AppProvider = ({children}) => {
                 modalShow, 
                 setModalShow, 
                 modalInfo, 
-                setModalInfo
+                setModalInfo, 
+                handleGenerateProduct
             }}
         >
             {children}

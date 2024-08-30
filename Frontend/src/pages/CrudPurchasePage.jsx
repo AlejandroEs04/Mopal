@@ -12,6 +12,7 @@ import formatearFechaInput from "../helpers/formatearFechaInput";
 import useAuth from "../hooks/useAuth";
 import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
+import ProductTableView from "../components/ProductTableView";
 
 const initialState = {
     Folio : 0,
@@ -23,7 +24,8 @@ const initialState = {
     UserID : 0, 
     Amount : 0, 
     Active : true, 
-    Observation : '', 
+    Observation : '',
+    InternObservation: '', 
     Products : []
 }
 
@@ -45,13 +47,14 @@ const CrudPurchasePage = () => {
     const [show, setShow] = useState(false);
     const [modalShow, setModalShow] = useState(false);
     const [productFolio, setProductFolio] = useState('');
+    const [productGroup, setProductGroup] = useState('');
     const [discount, setDiscount] = useState(0)
 
     const [selectedSupplierOption, setSelectedSupplierOption] = useState(null)
 
     const { id } = useParams()
 
-    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, handleAddProduct } = useAdmin();
+    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, products } = useAdmin();
     const { auth } = useAuth();
 
     const [edit, setEdit] = useState(false);
@@ -91,7 +94,7 @@ const CrudPurchasePage = () => {
         try {
             setLoading(true)
 
-            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/purchases/${id}/${productFolio}`, config);
+            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/purchases/${id}/${productFolio}/${productGroup}`, config);
             
             setAlerta({
                 error: false, 
@@ -229,7 +232,7 @@ const CrudPurchasePage = () => {
     const checkInfo = useCallback(() => {
         return +purchase.UserID === 0 ||
             +purchase.SupplierID === 0 ||
-            +purchase.Products.length === 0
+            +purchase?.Products?.length === 0
     }, [purchase])
     
     useEffect(() => {
@@ -383,28 +386,39 @@ const CrudPurchasePage = () => {
                         disable
                     />  
 
-                    <div className="col-12 d-flex flex-column mb-2">
+                    <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="observaciones">Observaciones</label>
                         <textarea 
                             name="Observation"
                             id="observaciones" 
-                            rows={5} 
+                            rows={4} 
                             className="form-control" 
                             value={purchase.Observation} 
                             onChange={e => handleChangeInfo(e)}
                         ></textarea>
                     </div>
+                    <div className="col-md-6 d-flex flex-column mb-2">
+                        <label htmlFor="InternObservation">Observaciones (Internas)</label>
+                        <textarea 
+                            name="InternObservation"
+                            id="InternObservation" 
+                            rows={4} 
+                            className="form-control" 
+                            value={purchase.InternObservation} 
+                            onChange={e => handleChangeInfo(e)}
+                        ></textarea>
+                    </div>
                 </form>
 
-                <ProductTableForm 
-                    productsArray={purchase.Products}
-                    onShow={() => setModalShow(true)}
-                    setProductsArray={setPurchase}
-                    setShow={setShow}
-                    setProductFolio={setProductFolio}
-                    productFolio={productFolio}
-                    sale={purchase}
+                <ProductTableView 
+                    searchBar
+                    action={purchase}
+                    setAction={setPurchase}
                     discounts={supplierDiscounts}
+                    setShow={() => setModalShow(!modalShow)}
+                    setDeleteProductId={setProductFolio}
+                    setDeleteProductGroup={setProductGroup}
+                    showDeletePop={setShow}
                 />
 
                 <DeletePop 
