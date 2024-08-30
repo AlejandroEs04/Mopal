@@ -22,7 +22,7 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
                 `${cotizacion.Products[i].Quantity}`, 
                 'Pieza',
                 `${cotizacion.Products[i].Folio}`, 
-                `${cotizacion.Products[i].Name}\n${cotizacion.Products[i].Description}\n\n${cotizacion?.Observation}`, 
+                `${cotizacion.Products[i].Name}\n${cotizacion.Products[i].Description}\n\n${cotizacion?.Products[i].Observations}`, 
                `${formatearDinero(+cotizacion.Products[i].PricePerUnit - (+cotizacion.Products[i].PricePerUnit * (+cotizacion.Products[i].Discount / 100)))}`, 
                 `${formatearDinero((+cotizacion.Products[i].PricePerUnit * +cotizacion.Products[i].Quantity) - ((+cotizacion.Products[i].PricePerUnit * +cotizacion.Products[i].Quantity) * (+cotizacion.Products[i].Discount / 100)))}`, 
                 'USD'
@@ -95,11 +95,13 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
 
     var finalY = doc.previousAutoTable.finalY;
 
+    doc.setFontSize(10);
+
     doc.setFont("helvetica", "bold");
     doc.text("Observaciones", 15, finalY + 10)
     doc.setFont("helvetica", "normal");
 
-    const lines = doc.splitTextToSize(cotizacion.Observation, 90);
+    const lines = doc.splitTextToSize(cotizacion.Observation.length > 0 ? cotizacion.Observation : 'No hay observaciones', 90);
 
     const x = 15;
     const y = finalY + 16;

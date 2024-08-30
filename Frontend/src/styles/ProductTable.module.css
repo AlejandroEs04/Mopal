@@ -1,0 +1,36 @@
+.table td.limited_content {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    resize: vertical;
+}
+.input_table {
+    border: 0.5px solid gray;
+    border-radius: 5px;
+    padding: 1px 5px;
+    min-width: 3.5rem;
+    width: auto;
+    max-width: 5rem;
+}
+.textarea_table {
+    border: 0.5px solid gray;
+    border-radius: 5px;
+    padding: 1px 5px;
+    min-width: 5rem;
+    width: auto;
+    max-width: 10rem;
+}
+.btn_add {
+    background-color: #225dff;
+    border-radius: 5px;
+    padding: 1px;
+    transition: all ease-in-out 0.2s;
+}
+.btn_add:hover {
+    background-color: #2e53bb;
+}
+.btn_add svg {
+    width: auto;
+    height: auto;
+}

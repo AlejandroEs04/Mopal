@@ -22,7 +22,7 @@ const generatePurchasePdf = (ordenCompra, subtotal, iva, total, save = false) =>
                 `${ordenCompra.Products[i].Quantity}`, 
                 `Unidad`, 
                 `${ordenCompra.Products[i].Folio}`, 
-                `${ordenCompra.Products[i].Name}\n${ordenCompra?.Products[i]?.Description}`, 
+                `${ordenCompra.Products[i].Name}\n${ordenCompra?.Products[i]?.Description}\n\n${ordenCompra?.Products[i]?.Observations}`, 
                 `${formatearDinero(+ordenCompra.Products[i].PricePerUnit - (+ordenCompra.Products[i].PricePerUnit * (+ordenCompra.Products[i].Discount / 100)))}`, 
                 `${formatearDinero((+ordenCompra.Products[i].PricePerUnit * +ordenCompra.Products[i].Quantity) - ((+ordenCompra.Products[i].PricePerUnit * +ordenCompra.Products[i].Quantity) * (+ordenCompra.Products[i].Discount / 100)))}`, 
             ]

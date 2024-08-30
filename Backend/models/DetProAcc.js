@@ -7,8 +7,8 @@ class DetProAcc extends ActiveRecord {
         super();
         this.ProductFolio = accesory?.ProductFolio
         this.AccessoryFolio = accesory?.AccessoryFolio
-        this.Piece = accesory?.Piece ?? null
-        this.QuantityPiece = accesory?.Quantity ?? null
+        this.Piece = accesory?.Piece ?? 0
+        this.QuantityPiece = accesory?.Quantity ?? 0
     }
 }
 

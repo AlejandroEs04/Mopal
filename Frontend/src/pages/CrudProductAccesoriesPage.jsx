@@ -26,7 +26,7 @@ const CrudProductAccesoriesPage = () => {
 
     const existAccesoriy = product?.accessories?.filter(accesory => accesory.Folio === newAccesory.Folio)
 
-    if(existAccesoriy.length > 0) {
+    if(existAccesoriy) {
       setAlerta({
         error: true, 
         msg: "El accesorio ya existe"
@@ -122,6 +122,8 @@ const CrudProductAccesoriesPage = () => {
 
     setAccesoriesOptions(options)
   }, [accesories])
+
+  console.log(product)
 
   return (
     <div className='my-4'>

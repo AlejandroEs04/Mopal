@@ -1,5 +1,9 @@
+import { type } from "os"
+
 const getType = (valor) => {
-    if(typeof valor === 'string' || typeof valor === 'object') {
+    if(valor === null) {
+        return 'null'
+    } else if(typeof valor === 'string' || typeof valor === 'object') {
         return "'" + valor + "'"
     } else {
         return valor

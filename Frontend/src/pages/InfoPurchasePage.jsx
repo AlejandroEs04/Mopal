@@ -113,6 +113,7 @@ const InfoPurchasePage = () => {
                         Estado: <span className={`${+purchase?.StatusID === 1 && 'text-danger'} ${+purchase?.StatusID === 2 && 'text-success'} fw-normal`}>{purchase?.Status}</span>
                     </p>
                     <p className="mb-1 fw-bold">Observaciones: <span className="fw-normal">{purchase?.Observation}</span></p>
+                    <p className="mb-1 fw-bold">Observaciones (Internas): <span className="fw-normal">{purchase?.InternObservation}</span></p>
 
                     <h4 className="mt-4">Informacion del proveedor</h4>
                     <p className="mb-1 fw-bold">Direccion de entrega: <span className="fw-normal">{purchase?.Address}</span></p>

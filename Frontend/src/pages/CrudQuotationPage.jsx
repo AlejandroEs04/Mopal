@@ -10,6 +10,7 @@ import findLastID from "../helpers/findLastID ";
 import DeletePop from "../components/DeletePop";
 import ProductTableForm from "../components/ProductTableForm";
 import InputContainer from "../components/InputContainer";
+import ProductTableView from "../components/ProductTableView";
 
 const initialState = {
     Folio : '',
@@ -41,8 +42,10 @@ const CrudQuotationPage = () => {
     }
 
     const [customerUsers, setCustomerUsers] = useState([])
+    const [customerDiscounts, setCustomerDiscounts] = useState([])
     const [show, setShow] = useState(false);
     const [productFolio, setProductFolio] = useState('');
+    const [productGroup, setProductGroup] = useState('');
     
     const [selectedCustomerOption, setSelectedCustomerOption] = useState(null)
     
@@ -286,13 +289,13 @@ const CrudQuotationPage = () => {
                 </div>
             </form>
 
-            <ProductTableForm 
-                productsArray={sale.Products}
-                setProductsArray={setSale}
-                sale={sale}
-                setShow={setShow}
-                setProductFolio={setProductFolio}
-                productFolio={productFolio}
+            <ProductTableView 
+                searchBar
+                action={sale}
+                setAction={setSale}
+                setDeleteProductId={setProductFolio}
+                setDeleteProductGroup={setProductGroup}
+                showDeletePop={setShow}
             />
 
             <DeletePop 

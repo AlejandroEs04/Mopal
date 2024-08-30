@@ -11,6 +11,7 @@ import InputContainer from "../components/InputContainer";
 import Spinner from "../components/Spinner";
 import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
+import ProductTableView from "../components/ProductTableView";
 
 const initialState = {
     Folio : '',
@@ -44,6 +45,7 @@ const CrudSalePage = () => {
     const [modalShow, setModalShow] = useState(false);
     const [show, setShow] = useState(false);
     const [productFolio, setProductFolio] = useState('');
+    const [productGroup, setProductGroup] = useState('');
     const [discount, setDiscount] = useState(0)
     
     
@@ -328,15 +330,15 @@ const CrudSalePage = () => {
                     </div>
                 </form>
 
-                <ProductTableForm 
-                    productsArray={sale.Products}
-                    onShow={() => setModalShow(true)}
-                    setProductsArray={setSale}
-                    sale={sale}
-                    setShow={setShow}
-                    setProductFolio={setProductFolio}
-                    productFolio={productFolio}
+                <ProductTableView 
+                    searchBar
+                    action={sale}
+                    setAction={setSale}
                     discounts={customerDiscounts}
+                    setShow={() => setModalShow(!modalShow)}
+                    setDeleteProductId={setProductFolio}
+                    setDeleteProductGroup={setProductGroup}
+                    showDeletePop={setShow}
                 />
 
                 <DeletePop 
