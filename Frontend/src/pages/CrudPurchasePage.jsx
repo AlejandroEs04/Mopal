@@ -343,7 +343,7 @@ const CrudPurchasePage = () => {
                         handleAction={handleChangeInfo}
                     />
 
-                    <InputContainer 
+                    {/* <InputContainer 
                         label="Fecha de entrega estimada"
                         name="DeliveryDate"
                         id="deliveryDate"
@@ -351,7 +351,7 @@ const CrudPurchasePage = () => {
                         placeholder="Fecha de entrega estimada"
                         value={purchase.DeliveryDate}
                         handleAction={handleChangeInfo}
-                    />
+                    /> */}
                     
                     <div className="col-lg-4 col-md-6 d-flex flex-column">
                         <label htmlFor="currency">Tipo de cambio</label>
@@ -373,18 +373,10 @@ const CrudPurchasePage = () => {
                         >
                             <option value="0">Seleccione el usuario</option>
                             {users?.map(user => user.RolID <= 5 && user.Active === 1 && (
-                                <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.FullName}`}</option>
+                                <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.Name + ' ' + user.LastName}`}</option>
                             ))}
                         </select>
                     </div>
-                    
-                    <InputContainer 
-                        label="Total"
-                        type="text"
-                        value={purchase.Amount}
-                        isMoney
-                        disable
-                    />  
 
                     <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="observaciones">Observaciones</label>

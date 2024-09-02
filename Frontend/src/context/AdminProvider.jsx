@@ -546,7 +546,7 @@ const AdminProvider = ({children}) => {
         }
     }
 
-    const handleDeleteSaleProduct = async(id, productFolio) => {
+    const handleDeleteSaleProduct = async(id, productFolio, productGroup) => {
         const token = localStorage.getItem('token');
 
         const config = {
@@ -559,7 +559,7 @@ const AdminProvider = ({children}) => {
         try {
             setLoading(true)
 
-            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}`, config);
+            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}/${productGroup}`, config);
             
             setAlerta({
                 error: false, 

@@ -6,7 +6,6 @@ import formatearFechaInput from "../helpers/formatearFechaInput";
 import findNextID from "../helpers/findNextID";
 import findLastID from "../helpers/findLastID ";
 import DeletePop from "../components/DeletePop";
-import ProductTableForm from "../components/ProductTableForm";
 import InputContainer from "../components/InputContainer";
 import Spinner from "../components/Spinner";
 import AdminModal from "../components/AdminModal";
@@ -24,6 +23,7 @@ const initialState = {
     Amount : 0, 
     Active : true, 
     Observation : '', 
+    InternObservation: '', 
     Products : []
 }
 
@@ -77,7 +77,7 @@ const CrudSalePage = () => {
     };
 
     const handleDeleteProduct = () => {
-        handleDeleteSaleProduct(id, productFolio)
+        handleDeleteSaleProduct(id, productFolio, productGroup)
     }
 
     const handleGetSales = () => {
@@ -255,25 +255,22 @@ const CrudSalePage = () => {
                         />
                     </div>
 
-                    {customerUsers.length > 0 && (
-                        <div className="col-lg-4 d-flex flex-column">
-                            <label htmlFor="user">Usuario</label>
-                            <select 
-                                disabled={sale.Folio} 
-                                id="user" 
-                                name="CustomerUserID" 
-                                className="form-select" 
-                                value={sale.CustomerUserID} 
-                                onChange={e => handleChangeInfo(e)}
-                            >
-                                <option value={0}>Sin Contacto</option>
-                                {customerUsers?.map(user => (
-                                    <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
-                                ))}
-                            </select>
-                        </div>
-                    )}
-
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="user">Usuario</label>
+                        <select 
+                            disabled={sale.Folio || customerUsers.length === 0} 
+                            id="user" 
+                            name="CustomerUserID" 
+                            className="form-select" 
+                            value={sale.CustomerUserID} 
+                            onChange={e => handleChangeInfo(e)}
+                        >
+                            <option value={0}>Sin Contacto</option>
+                            {customerUsers?.map(user => (
+                                <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
+                            ))}
+                        </select>
+                    </div>
 
                     <InputContainer 
                         label="Fecha de la cotizacion"
@@ -304,29 +301,33 @@ const CrudSalePage = () => {
                         >
                             <option value="0">Seleccione el usuario</option>
                             {users?.map(user => user.RolID <= 5 && user.Active === 1 && (
-                                <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.FullName}`}</option>
+                                <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.Name + ' ' + user.LastName}`}</option>
                             ))}
                         </select>
                     </div>
 
-                    <InputContainer 
-                        label="Total"
-                        type="text"
-                        value={sale.Amount}
-                        isMoney
-                        disable
-                    />
-
-                    <div className="col-12 d-flex flex-column mb-2">
+                    <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="observaciones">Observaciones</label>
                         <textarea 
                             name="Observation"
                             id="observaciones" 
-                            rows={5} 
+                            rows={4} 
                             className="form-control" 
                             value={sale.Observation} 
                             onChange={e => { handleChangeInfo(e)}}>    
                         </textarea>
+                    </div>
+
+                    <div className="col-md-6 d-flex flex-column mb-2">
+                        <label htmlFor="InternObservation">Observaciones (Internas)</label>
+                        <textarea 
+                            name="InternObservation"
+                            id="InternObservation" 
+                            rows={4} 
+                            className="form-control" 
+                            value={sale.InternObservation} 
+                            onChange={e => handleChangeInfo(e)}
+                        ></textarea>
                     </div>
                 </form>
 

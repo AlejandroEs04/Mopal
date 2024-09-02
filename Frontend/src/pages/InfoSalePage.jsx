@@ -59,8 +59,6 @@ const InfoSalePage = () => {
         handleGetSale();
     }, [sales, id])
 
-    console.log(sale)
-
     return (
         <div className="container my-4">
             <div className="d-flex justify-content-between mb-4">
@@ -141,7 +139,8 @@ const InfoSalePage = () => {
                         Estado: <span className={`${+sale?.StatusID === 1 && 'text-success'} ${+sale?.StatusID === 2 && 'text-danger'} ${+sale?.StatusID === 3 && 'text-warning'} ${+sale?.StatusID === 4 && 'text-success'} fw-normal`}>{sale?.Status}</span>
                     </p>
                     <p className="mb-1 fw-bold">Activo: <span className={`fw-normal ${sale?.Active === 1 ? 'text-success' : 'text-danger'}`}>{sale?.Active === 1 ? 'Activo' : 'Inactivo'}</span></p>
-                    <p className="mb-1 fw-bold">Observaciones: <span className="fw-normal">{sale?.Observations}</span></p>
+                    <p className="mb-1 fw-bold">Observaciones: <span className="fw-normal">{sale?.Observation}</span></p>
+                    <p className="mb-1 fw-bold">Observaciones (Internas): <span className="fw-normal">{sale?.InternObservation}</span></p>
 
                     <h3 className="mt-4">Informacion del cliente</h3>
                     <p className="mb-1 fw-bold">Direccion de entrega: <span className="fw-normal">{sale?.Address}</span></p>
@@ -184,7 +183,7 @@ const InfoSalePage = () => {
                                         <td>{`${product.Discount}%`}</td>
                                         <td>{`${product.Discounts.map(discount => `+${(+discount.Discount).toFixed(0)}`)}`}</td>
                                         <td>{product.Quantity}</td>
-                                        <td>{product.Observations !== '' ? product.Observations : 'No hay observaciones'}</td>
+                                        <td>{product.Observations}</td>
                                         <td className="text-nowrap">{formatearDinero(+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount)) + " " + sale?.Acronym}</td>
                                         <td className="text-nowrap">{formatearDinero(+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) + (+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) * .16)) + " " + sale?.Acronym}</td>
                                     </tr>
