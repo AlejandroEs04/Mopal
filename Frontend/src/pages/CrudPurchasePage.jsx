@@ -54,7 +54,7 @@ const CrudPurchasePage = () => {
 
     const { id } = useParams()
 
-    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, products } = useAdmin();
+    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta } = useAdmin();
     const { auth } = useAuth();
 
     const [edit, setEdit] = useState(false);
@@ -80,6 +80,22 @@ const CrudPurchasePage = () => {
             setSelectedSupplierOption(selected)
         }
     };
+
+    const handleDeleteProduct = () => {
+        if(id) {
+            const currentPurchaseProducts = purchases.filter(purchase => +purchase.Folio === +id)[0].Products
+            
+            if(currentPurchaseProducts.filter(product => product.Folio === productFolio && product.AssemblyGroup === productGroup).length > 0) {
+                handleDeleteSaleProduct()
+                return
+            }
+        }
+        
+        setPurchase({
+            ...purchase, 
+            Products: purchase.Products.filter(product => !(product.AssemblyGroup === productGroup && product.Folio === productFolio))
+        })
+    }
 
     const handleDeleteSaleProduct = async() => {
         const token = localStorage.getItem('token');
@@ -419,7 +435,7 @@ const CrudPurchasePage = () => {
                     setFolio={setProductFolio}
                     text={`¿Quieres eliminar el producto ${productFolio}?`}
                     header="Eliminar Producto"
-                    handleFunction={handleDeleteSaleProduct}
+                    handleFunction={handleDeleteProduct}
                 />
             </div>
 

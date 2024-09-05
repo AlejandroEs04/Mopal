@@ -180,7 +180,7 @@ const InfoSalePage = () => {
                                         <td className="text-nowrap">{product.Folio}</td>
                                         <td>{product.AssemblyGroup === 0 ? 'N/A' : product.AssemblyGroup ?? 'N/A'}</td>
                                         <td>{formatearDinero(+product.PricePerUnit)}</td>
-                                        <td>{`${product.Discount}%`}</td>
+                                        <td>{`${+product.Discount}%`}</td>
                                         <td>{`${product.Discounts.map(discount => `+${(+discount.Discount).toFixed(0)}`)}`}</td>
                                         <td>{product.Quantity}</td>
                                         <td>{product.Observations}</td>

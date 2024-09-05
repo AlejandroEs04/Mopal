@@ -3,12 +3,14 @@ import { Link, useLocation } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
 import PaginationList from "../components/PaginationList";
 import SearchBar from "../components/SearchBar";
+import useApp from "../hooks/useApp";
 
 const AdminSalePage = () => {
     const [showFilters, setShowFilters] = useState(false)
     const [saleFiltered, setSaleFiltered] = useState([])
     const { pathname } = useLocation();
     const { sales, alerta, handleFilter } = useAdmin()
+    const { setModalShow, setModalInfo, modalInfo } = useApp();
 
     const handleGetStatusSales = () => {
         const filtered = sales?.filter(sale => sale.StatusID > 1 && sale.Active === 1)
@@ -27,16 +29,40 @@ const AdminSalePage = () => {
         }
     }
 
+    const handleModalState = () => {
+        setModalShow(true)
+
+        setModalInfo({
+            ...modalInfo, 
+            title: 'Obtener Reporte de ventas', 
+            type: 1, 
+            text: 'Llena el siguiente formulario para poder obtener el reporte de ventas segun sus filtros'
+        })
+    }
+
     useEffect(() => {
         setSaleFiltered(handleGetStatusSales)
     }, [sales])
 
     return (
         <div className="mt-2">
-            <h1 className='m-0'>Ventas</h1>
-            {pathname && (
-                <Link to={`${pathname}/form`} className='btnAgregar fs-5'>+ Generar nueva venta</Link>
-            )}
+            <div className="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 className='m-0'>Ventas</h1>
+                    {pathname && (
+                        <Link to={`${pathname}/form`} className='btnAgregar fs-5'>+ Generar nueva venta</Link>
+                    )}
+                </div>
+
+                <div>
+                    <button
+                        onClick={() => handleModalState()}
+                        className="btn btn-primary btn-sm"
+                    >
+                        Obtener Reporte
+                    </button>
+                </div>
+            </div>
             
             <div className="mt-2 mb-3">
                 <SearchBar 

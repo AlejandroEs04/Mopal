@@ -230,13 +230,6 @@ const deletePurchase = async(req, res) => {
     const purchaseProductObj = new PurchaseProduct();
 
     const purchase = await purchaseObj.getByFolio(id);
-    
-    /**if(purchase.StatusID === 2) {
-        return res.status(400).json({
-            status : 400, 
-            msg : "La compra se ha recibido, no se puede eliminar"
-        })
-    }*/
 
     const purchaseProducts = await purchaseProductObj.getByElementArray('PurchaseFolio', +id);
     for(let i=0;i<purchaseProducts.length;i++) {
@@ -248,14 +241,14 @@ const deletePurchase = async(req, res) => {
             sqlUpdateStock = `
                 UPDATE Product 
                 SET 
-                    StockOnWay = ${product.StockOnWay - purchaseProducts[i].Quantity}
+                    StockOnWay = StockOnWay - ${purchaseProducts[i].Quantity}
                 WHERE Folio = '${purchaseProducts[i].ProductFolio}'
             `
         } else if (purchase.StatusID === 2) {
             sqlUpdateStock = `
                 UPDATE Product 
                 SET 
-                    StockAvaible = ${product.StockAvaible - purchaseProducts[i].Quantity}
+                    StockAvaible = StockAvaible - ${purchaseProducts[i].Quantity}
                 WHERE Folio = '${purchaseProducts[i].ProductFolio}'
             `
         }
@@ -305,7 +298,7 @@ const deletePurchaseProduct = async(req, res) => {
     const sqlUpdateStock = `
         UPDATE Product 
         SET 
-            StockOnWay = ${+producto.StockOnWay - purchase[0].Quantity}
+            StockOnWay = StockOnWay - ${purchase[0].Quantity}
         WHERE Folio = '${producto.Folio}'
     `
     
@@ -347,8 +340,8 @@ const changeStatus = async(req, res) => {
             const sqlUpdateStock = `
                 UPDATE Product 
                 SET 
-                    StockAvaible = ${product.StockAvaible + products[i].Quantity}, 
-                    StockOnWay = ${product.StockOnWay - products[i].Quantity}
+                    StockAvaible = StockAvaible + ${products[i].Quantity}, 
+                    StockOnWay = StockOnWay - ${products[i].Quantity}
                 WHERE Folio = '${product.Folio}'
             `
 
@@ -364,8 +357,6 @@ const changeStatus = async(req, res) => {
     }
 
     const response = await purchaseObj.updateOneColumn(id, "StatusID", statusId)
-
-    const purchaseNew = await purchaseObj.getByElement('Folio', +id);
 
     if(response) {
         io.emit('purchaseUpdate', { update: true });

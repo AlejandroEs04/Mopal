@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import Scroll from './Scroll'
 import Select from 'react-select'
@@ -28,8 +28,6 @@ const ProductTableView = ({
     const [newProductAcount, setNewProductAcount] = useState(0)
     const { products, handleGenerateProduct } = useApp();
 
-    const { id } = useParams()
-
     const options = products.map(product => {
         const productNew = {
             value : product.Folio, 
@@ -54,14 +52,6 @@ const ProductTableView = ({
                     product
                 ]
             })
-    }
-
-    const handleRemoveProductList = (id, group) => {
-        const products = action.Products.filter(product => product.Folio !== id || product.AssemblyGroup !== group)
-        setAction({
-            ...action, 
-            Products: products
-        })
     }
 
     const handleAddDiscount = (id, group) => {
@@ -244,13 +234,9 @@ const ProductTableView = ({
                                     <div className="d-flex justify-content-between">
                                         <button 
                                             onClick={() => {
-                                                if(id) {
-                                                    setDeleteProductId(item.Folio)
-                                                    setDeleteProductGroup(item.AssemblyGroup)
-                                                    showDeletePop(true)
-                                                } else {
-                                                    handleRemoveProductList(item.Folio, item.AssemblyGroup ?? null)
-                                                }
+                                                setDeleteProductId(item.Folio)
+                                                setDeleteProductGroup(item.AssemblyGroup)
+                                                showDeletePop(true)
                                             }}
                                             className="text-danger p-0 w-100 text-center"
                                         >
@@ -293,7 +279,7 @@ const ProductTableView = ({
                             <td>{formatearDinero(+subtotal)}</td>
                         </tr>
                         <tr>
-                            <td colSpan={11} className='text-end fw-bold'>iVA:</td>
+                            <td colSpan={11} className='text-end fw-bold'>IVA:</td>
                             <td>{formatearDinero(+iva)}</td>
                         </tr>
                         <tr>

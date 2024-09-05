@@ -1,6 +1,7 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ModalSalesForm from './ModalSalesForm';
+import ModalPurchaseForm from './ModalPurchaseForm';
 
 const CenterModalContainer = (props) => {
     return (
@@ -18,6 +19,7 @@ const CenterModalContainer = (props) => {
             <Modal.Body>
                 <>
                     {props.modalInfo.type === 1 && <ModalSalesForm />}
+                    {props.modalInfo.type === 2 && <ModalPurchaseForm />}
                 </>
             </Modal.Body>
             <Modal.Footer>
