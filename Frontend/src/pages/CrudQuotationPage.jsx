@@ -135,6 +135,8 @@ const CrudQuotationPage = () => {
     useEffect(() => {
         const customerItem = customers?.filter(customer => customer.ID === sale.CustomerID);
 
+        console.log(customerItem)
+
         // if(customerItem[0]?.Users === undefined) {
         //     return
         // }
