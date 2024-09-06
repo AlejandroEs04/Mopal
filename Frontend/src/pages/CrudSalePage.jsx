@@ -134,7 +134,11 @@ const CrudSalePage = () => {
     useEffect(() => {
         const customerItem = customers?.filter(customer => customer.ID === sale.CustomerID);
 
-        if(customerItem[0]?.Users.length > 0) {
+        if(customerItem[0]?.Users === undefined) {
+            return
+        }
+
+        if(customerItem[0]?.Users || customerItem[0]?.Users.length > 0) {
             setCustomerUsers(customerItem[0].Users)
             setCustomerDiscounts(customerItem[0].Discounts)
         } else {
