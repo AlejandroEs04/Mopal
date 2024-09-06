@@ -135,12 +135,18 @@ const CrudQuotationPage = () => {
     useEffect(() => {
         const customerItem = customers?.filter(customer => customer.ID === sale.CustomerID);
 
-        if(customerItem[0]?.Users.length > 0) {
-            setCustomerUsers(customerItem[0].Users)
-            setCustomerDiscounts(customerItem[0].Discounts)
-        } else {
-            setCustomerUsers([])
-        }
+        console.log(customerItem)
+
+        // if(customerItem[0]?.Users === undefined) {
+        //     return
+        // }
+
+        // if(customerItem[0]?.Users.length > 0) {
+        //     // setCustomerUsers(customerItem[0].Users)
+        //     setCustomerDiscounts(customerItem[0].Discounts)
+        // } else {
+        //     setCustomerUsers([])
+        // }
     }, [sale.CustomerID])
 
     useEffect(() => {
@@ -269,11 +275,11 @@ const CrudQuotationPage = () => {
                         
                     <div className="col-lg-4 d-flex flex-column">
                         <label htmlFor="user">Usuario</label>
-                        <select disabled={sale.Folio || customerUsers.length === 0} id="user" name="CustomerUserID" className="form-select" value={sale.CustomerUserID} onChange={e => handleChangeInfo(e)}>
+                        <select disabled={sale.Folio} id="user" name="CustomerUserID" className="form-select" value={sale.CustomerUserID} onChange={e => handleChangeInfo(e)}>
                             <option value={0}>Sin Contacto</option>
-                            {customerUsers?.map(user => (
+                            {/* {customerUsers?.map(user => (
                                 <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
-                            ))}
+                            ))} */}
                         </select>
                     </div>
 
