@@ -25,7 +25,7 @@ const generateReport = (report, title, information) => {
             startY: finalY,
             styles: { overflow: "linebreak", fontSize: 8 },
             bodyStyles: { valign: "top" },
-            theme: "striped"
+            theme: "grid"
         })
 
         finalY = doc.previousAutoTable.finalY + 5;
@@ -53,8 +53,8 @@ const generateReport = (report, title, information) => {
                 productRow[i] = [
                     sale.products[i].ProductFolio, 
                     sale.products[i].Name, 
-                    sale.products[i].Description, 
-                    sale.products[i].Discount, 
+                    sale.products[i].Description,       
+                    +sale.products[i].Discount, 
                     sale.products[i].Quantity, 
                     sale.products[i].PricePerUnit, 
                     getTotal(

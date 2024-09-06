@@ -153,7 +153,7 @@ const InfoPurchasePage = () => {
                                 <tr key={product.Folio}>
                                     <td>{product.Folio}</td>
                                     <td>{formatearDinero(+product.PricePerUnit)}</td>
-                                    <td>{`${product.Discount}%`}</td>
+                                    <td>{`${+product.Discount}%`}</td>
                                     <td>
                                         <div className="d-flex">
                                             {product?.Discounts?.map(discount => (
@@ -165,7 +165,7 @@ const InfoPurchasePage = () => {
                                     <td>{product.Quantity}</td>
                                     <td>{product.Observations ?? 'N/A'}</td>
                                     <td>{formatearDinero(+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount)) + " " + purchase?.Acronym}</td>
-                                    <td>{formatearDinero(+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) + (+handleGetImporte(product.ListPrice, product.Quantity, product.Discount) * .16)) + " " + purchase?.Acronym}</td>
+                                    <td>{formatearDinero(+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) + (+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) * .16)) + " " + purchase?.Acronym}</td>
                                 </tr>
                             ))}
 

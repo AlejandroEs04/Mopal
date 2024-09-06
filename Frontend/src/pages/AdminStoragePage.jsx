@@ -26,7 +26,7 @@ const AdminStoragePage = () => {
         const purchasesNew = purchases?.filter(purchase => purchase.Status === "Generada" && purchase.Active === 1);
         setPurchaseFiltered(purchasesNew)
         
-        const requestNew = request?.filter(request => request.Status === 2);
+        const requestNew = request?.filter(request => request.Status >= 2 && request.Status < 4);
         setRequestFiltered(requestNew)
     }, [sales, purchases])
 

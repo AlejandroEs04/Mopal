@@ -50,7 +50,7 @@ const addNewSale = async(req, res) => {
 
     const productsArray = []
     const discounts = []
-
+    
     for(let i = 0; i < sale.Products.length; i++) {
         productsArray[i] = new SaleProduct({
             ...sale.Products[i], 

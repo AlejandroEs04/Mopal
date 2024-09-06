@@ -1,13 +1,13 @@
-import { useState } from 'react'
-import useAdmin from '../hooks/useAdmin'
-import SelectOptions from './SelectOptions'
+import React, { useState } from 'react'
 import useApp from '../hooks/useApp'
-import Loader from './Loader'
-import formatearFecha from '../helpers/formatearFecha'
-import formatearDinero from '../helpers/formatearDinero'
-import generateReport from '../pdf/generateReport'
+import useAdmin from '../hooks/useAdmin';
+import Loader from './Loader';
+import SelectOptions from './SelectOptions';
+import formatearDinero from '../helpers/formatearDinero';
+import formatearFecha from '../helpers/formatearFecha';
+import generatePurchaseReport from '../pdf/generatePurchaseReport';
 
-const ModalSalesForm = () => {
+const ModalPurchaseForm = () => {
     const [formInformation, setFormInformation] = useState({
         id: null, 
         products: [], 
@@ -16,8 +16,8 @@ const ModalSalesForm = () => {
         user: null, 
         trader: null
     })
-    const [reportInfo, setReportInfo] = useState(null)
-    const { customers, users, handleGetReportInformation, loading } = useAdmin()
+    const [reportInfo, setReportInfo] = useState(null);
+    const { suppliers, users, loading, handleGetReportInformation } = useAdmin();
     const { products } = useApp()
 
     const handleChangeInfo = (e) => {
@@ -36,6 +36,8 @@ const ModalSalesForm = () => {
             ...formInformation, 
             [name] : isNumber ? +value : value
         })
+
+        
     }
 
     const handleDeleteProducts = (id) => {
@@ -47,7 +49,8 @@ const ModalSalesForm = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
-        const response = await handleGetReportInformation(formInformation, 'sale-report')
+        const response = await handleGetReportInformation(formInformation, 'purchase-report')
+        console.log(response)
         setReportInfo(response)
     }
 
@@ -73,11 +76,11 @@ const ModalSalesForm = () => {
 
     return !loading ? reportInfo ? (
         <>
-            <h2>Reporte de ventas</h2>
+            <h2>Reporte de compras</h2>
             <p>Aqui podras observar el reporte generado y descargar el excel</p>
 
             <div className='scroll-y-view'>
-                {reportInfo?.sales?.map(sale => (
+                {reportInfo?.purchases?.map(purchase => (
                     <div className='mb-4 border-bottom border-black'>
                         <table className='table table-sm'>
                             <thead className='table-light'>
@@ -85,18 +88,18 @@ const ModalSalesForm = () => {
                                     <th>Folio</th>
                                     <th>Fecha</th>
                                     <th>Importe total</th>
-                                    <th>Cliente</th>
+                                    <th>Proovedor</th>
                                     <th>Usuario</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <tr>
-                                    <td>{sale.Folio}</td>
-                                    <td>{formatearFecha(sale.SaleDate)}</td>
-                                    <td>{formatearDinero(+sale.Amount)}</td>
-                                    <td>{sale.CustomerID}</td>
-                                    <td>{sale.UserID}</td>
+                                    <td>{purchase.Folio}</td>
+                                    <td>{formatearFecha(purchase.PurchaseDate)}</td>
+                                    <td>{formatearDinero(+purchase.Amount)}</td>
+                                    <td>{purchase.SupplierID}</td>
+                                    <td>{purchase.UserID}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -115,7 +118,7 @@ const ModalSalesForm = () => {
                             </thead>
 
                             <tbody>
-                                {sale.products.map(product => (
+                                {purchase.products.map(product => (
                                     <tr>
                                         <td>{product.ProductFolio}</td>
                                         <td>{product.AssemblyGroup}</td>
@@ -134,7 +137,7 @@ const ModalSalesForm = () => {
             <div className='d-flex gap-2 mt-3'>
                 <button
                     className='btn btn-primary'
-                    onClick={() => generateReport(reportInfo, 'Reporte de ventas', 'Reportes de las ventas realizadas e informacion relevante')}
+                    onClick={() => generatePurchaseReport(reportInfo, 'Reporte de compras', 'Reportes de las compras realizadas e informacion relevante')}
                 >Descargar</button>
 
                 <button
@@ -148,23 +151,23 @@ const ModalSalesForm = () => {
             onSubmit={handleSubmit}
         >
             <div className='mt-2'>
-                <label htmlFor="customer">Cliente</label>
+                <label htmlFor="suppliers">Proovedor</label>
                 <select 
                     name="user" 
-                    id="customer" 
+                    id="suppliers" 
                     className='form-select'
                     value={formInformation.user}
                     onChange={handleChangeInfo}
                 >
-                    <option value="0">-- Seleccione un cliente --</option>
-                    {customers?.map(customer => (
-                        <option value={customer.ID}>{customer.BusinessName}</option>
+                    <option value="0">-- Seleccione un proovedor --</option>
+                    {suppliers?.map(supplier => (
+                        <option value={supplier.ID}>{supplier.BusinessName}</option>
                     ))}
                 </select>
             </div>
 
             <div className='mt-2'>
-                <label htmlFor="customer">Producto(s)</label>
+                <label htmlFor="products">Producto(s)</label>
                 <SelectOptions 
                     items={products}
                     onChange={handleChangeInfo}
@@ -234,4 +237,4 @@ const ModalSalesForm = () => {
     ): <Loader />
 }
 
-export default ModalSalesForm
+export default ModalPurchaseForm

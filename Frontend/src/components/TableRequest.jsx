@@ -30,7 +30,13 @@ const TableRequest = ({ items, startIndex, endIndex, actionStorage = false }) =>
                 <td>{requestInfo?.CustomerName ?? requestInfo?.SupplierName ?? 'Interno'}</td>
                 <td className="text-nowrap">{requestInfo.UserFullName}</td>
                 <td className="text-nowrap">{requestInfo.Email}</td>
-                <td className={`text-danger text-nowrap`}>
+                <td className={`
+                  ${requestInfo.Status === 1 && 'text-danger'}
+                  ${requestInfo.Status === 2 && 'text-danger'}
+                  ${requestInfo.Status === 3 && 'text-warning'}
+                  ${requestInfo.Status === 4 && 'text-success'}
+                  text-nowrap
+                `}>
                   {requestInfo.Status === 1 && 'Pendiente'}
                   {requestInfo.Status === 2 && 'En espera'}
                   {requestInfo.Status === 3 && 'En camino'}

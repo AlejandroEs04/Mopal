@@ -138,6 +138,8 @@ const getSaleReport = async(req, res) => {
     let saleProducts = await new SaleProduct().getAll();
     const productsDB = await new Product().getAll()
 
+    sales = sales.filter(sale => +sale.StatusID !== 1)
+
     if(id) {
         sales = sales.filter(sale => +sale.Folio === id)
     }
@@ -200,8 +202,77 @@ const getSaleReport = async(req, res) => {
     })
 }
 
+const getPurchaseReport = async(req, res) => {
+    const { user, trader, products = [], id, fromDate, toDate } = req.body
+    let purchases = await new Purchase().getAll();
+    let purchaseProducts = await new PurchaseProduct().getAll();
+    const productsDB = await new Product().getAll()
+
+    if(id) {
+        purchases = purchases.filter(purchase => +purchase.Folio === id)
+    }
+
+    if(user) {
+        purchases = purchases.filter(purchase => +purchase.SupplierID === user)
+    }
+
+    if(trader) {
+        purchases = purchases.filter(purchase => +purchase.UserID === trader)
+    }
+
+    if(fromDate && toDate) {
+        purchases = purchases.filter(purchase => 
+            new Date(purchase.PurchaseDate).getTime() >= new Date(fromDate).getTime() &&
+            new Date(purchase.PurchaseDate).getTime() <= new Date(toDate).getTime()
+        )
+    } else if(fromDate) {
+        purchases = purchases.filter(purchase => new Date(purchase.PurchaseDate).getTime() >= new Date(fromDate).getTime())
+    } else if(toDate) {
+        purchases = purchases.filter(purchase => new Date(purchase.PurchaseDate).getTime() <= new Date(toDate).getTime())
+    }
+
+    for(let i = 0; i<purchases.length; i++) {
+        const purchaseProduct = purchaseProducts.filter(product => {
+            if(product.PurchaseFolio === purchases[i].Folio && products.length != 0) {
+                if(products.includes(product.ProductFolio)) {
+                    return true
+                } else {
+                    return false
+                }
+            } else if(product.PurchaseFolio === purchases[i].Folio) {
+                return true
+            } else {
+                return false
+            }
+        })
+
+        const productsNew = purchaseProduct.map(product => {
+            const productCurrent = productsDB.map(productDB => {
+                if(productDB.Folio === product.ProductFolio) {
+                    return {
+                        ...product, 
+                        Name: productDB.Name, 
+                        Description: productDB.Description
+                    } 
+                }
+            })
+
+            return productCurrent.filter(item => item != undefined)[0]
+        })
+
+        purchases[i].products = productsNew
+    }
+
+    purchases = purchases.filter(purchase => purchase.products.length > 0)
+
+    return res.status(201).json({
+        purchases
+    })
+}
+
 export {
     getProductsSaleTotal, 
     getInventoryMovement, 
+    getPurchaseReport,
     getSaleReport
 }

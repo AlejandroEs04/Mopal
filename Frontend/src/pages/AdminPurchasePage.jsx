@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
 import PaginationList from "../components/PaginationList";
 import SearchBar from "../components/SearchBar";
+import useApp from "../hooks/useApp";
 
 const AdminPurchasePage = () => {
     const [showFilters, setShowFilters] = useState(false)
@@ -13,12 +14,24 @@ const AdminPurchasePage = () => {
 
     const { pathname } = useLocation();
     const { purchases, alerta, handleFilter } = useAdmin()
+    const { setModalShow, setModalInfo, modalInfo } = useApp()
 
     const handleFilterArray = (e) => {
         const filtered = handleFilter(purchases, e.target.name, e.target.value)
         setPurchaseFiltered(filtered)
     }
 
+    const handleModalState = () => {
+        setModalShow(true)
+
+        setModalInfo({
+            ...modalInfo, 
+            title: 'Obtener Reporte de compras', 
+            type: 2, 
+            text: 'Llena el siguiente formulario para poder obtener el reporte de compras segun sus filtros'
+        })
+    }
+    
     useEffect(() => {
         if(searchText !== "") {
             const filtered = purchases?.filter(purchase => {
@@ -60,10 +73,23 @@ const AdminPurchasePage = () => {
 
     return (
         <div className="mt-2">
-            <h1 className='m-0'>Compras</h1>
-            {pathname && (
-                <Link to={`form`} className='btnAgregar fs-5'>+ Generar nueva compra</Link>
-            )}
+            <div className="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 className='m-0'>Compras</h1>
+                    {pathname && (
+                        <Link to={`form`} className='btnAgregar fs-5'>+ Generar nueva compra</Link>
+                    )}
+                </div>
+                
+                <div>
+                    <button
+                        onClick={() => handleModalState()}
+                        className="btn btn-primary btn-sm"
+                    >
+                        Obtener Reporte
+                    </button>
+                </div>
+            </div>
 
             <SearchBar 
                 handleFunction={handleFilterArray}
