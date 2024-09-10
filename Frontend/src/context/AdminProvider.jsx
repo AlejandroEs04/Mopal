@@ -576,8 +576,22 @@ const AdminProvider = ({children}) => {
         }
     }
 
-    const sendRequestQuotation = async(id, request, subtotal, iva, total) => {
-        const pdfData = generateQuotation(request, subtotal, iva, total);
+    const handleSendRequestQuotation = async(id, request, subtotal, iva, total) => {
+        const pdfData = generateQuotationPdf(request, subtotal, iva, total);
+        const formData = new FormData();
+
+        formData.append('pdf', pdfData, 'archivo.pdf');
+
+        await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/requests/quotation/${id}`, formData);
+
+        setAlerta({
+            error: false, 
+            msg: "Correo enviado exitosamente"
+        })
+    }
+
+    const handleSendQuotation = async(id, quotation, subtotal, iva, total) => {
+        const pdfData = generateQuotation(quotation, subtotal, iva, total);
         const formData = new FormData();
 
         formData.append('pdf', pdfData, 'archivo.pdf');
@@ -596,12 +610,25 @@ const AdminProvider = ({children}) => {
 
         formData.append('pdf', pdfData, 'archivo.pdf');
 
-        await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/quotation/${folio}`, formData);
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/quotation/${folio}`, formData);
+    
+            setAlerta({
+                error: false, 
+                msg: "Correo enviado exitosamente"
+            })
+        } catch (error) {
+            setAlerta({
+                error: true, 
+                msg: error.response.data.msg
+            })
 
-        setAlerta({
-            error: false, 
-            msg: "Correo enviado exitosamente"
-        })
+            return
+        }
+
+        setTimeout(() => {
+            setAlerta(null)
+        }, 3000)
     }
 
     useEffect(() => {
@@ -699,9 +726,10 @@ const AdminProvider = ({children}) => {
                 handleGenerateSale, 
                 handleUpdateSale,
                 handleDeleteSaleProduct, 
-                sendRequestQuotation, 
+                handleSendQuotation, 
                 sendQuotationPdf, 
-                handleGetReportInformation
+                handleGetReportInformation, 
+                handleSendRequestQuotation
             }}
         >
             {children}

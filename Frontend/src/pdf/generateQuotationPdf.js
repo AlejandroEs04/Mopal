@@ -11,7 +11,7 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
 
     const rows = [];
 
-    for(let i = 0; i < cotizacion.Products.length+1; i++) {
+    for(let i = 0; i < cotizacion?.Products.length+1; i++) {
         if(i === cotizacion.Products.length) {
             rows[i] = ['', '', '', '', '', 'Subtotal:', formatearDinero(+subtotal), 'USD']
             rows[i+1] = ['', '', '', '', '', 'IVA:', formatearDinero(+iva), 'USD']
@@ -51,7 +51,7 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     doc.setTextColor(0);
     doc.setFontSize(10)
     doc.text('Emitida', 196, 33, null, null, "right")
-    doc.text(formatearFecha(cotizacion.SaleDate), 196, 38, null, null, "right")
+    doc.text(formatearFecha(cotizacion.SaleDate ?? formatearFecha(new Date())), 196, 38, null, null, "right")
     
     doc.setFontSize(12)
     doc.setFont("helvetica", "bold");

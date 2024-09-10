@@ -44,6 +44,11 @@ class User extends ActiveRecord {
 
     async getUserByID(id) {
         let user = await this.getByID(id)
+
+        if(!user) {
+            return
+        }
+
         const rols = await new Rol().getAll()
         const customerUsers = await new CustomerUser().getAll()
         const supplierUsers = await new SupplierUser().getAll()

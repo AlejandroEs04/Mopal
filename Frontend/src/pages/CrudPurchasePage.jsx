@@ -211,9 +211,14 @@ const CrudPurchasePage = () => {
     useEffect(() => {
         const supplierItem = suppliers?.filter(supplier => supplier.ID === purchase.SupplierID);
 
+        if(supplierItem[0]?.Discounts?.length > 0) {
+            setSupplierDiscounts(supplierItem[0].Discounts)
+        } else {
+            setSupplierDiscounts([])
+        }
+
         if(supplierItem[0]?.Users.length > 0) {
             setSupplierUsers(supplierItem[0].Users)
-            setSupplierDiscounts(supplierItem[0].Discounts)
         } else {
             setSupplierUsers([])
         }
