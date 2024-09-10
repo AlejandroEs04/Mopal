@@ -72,8 +72,8 @@ const addNewSale = async(req, res) => {
             const sqlUpdateStock = `
                 UPDATE Product 
                 SET 
-                    StockAvaible = ${productoOld.StockAvaible - productsArray[i].Quantity}, 
-                    StockOnHand = ${productoOld.StockOnHand + productsArray[i].Quantity}
+                    StockAvaible = StockAvaible - ${productsArray[i].Quantity}, 
+                    StockOnHand = StockOnHand + ${productsArray[i].Quantity}
                 WHERE Folio = '${productsArray[i].ProductFolio}'
             `
 
@@ -161,8 +161,8 @@ const updateSale = async(req, res) => {
                 const sqlUpdateStock = `
                     UPDATE Product 
                     SET 
-                        StockAvaible = ${productoOld.StockAvaible - productNew.Quantity}, 
-                        StockOnHand = ${productoOld.StockOnHand + productNew.Quantity}
+                        StockAvaible = StockAvaible - ${productNew.Quantity}, 
+                        StockOnHand = StockOnHand + ${productNew.Quantity}
                     WHERE Folio = '${productNew.ProductFolio}'
                 `
     
@@ -196,8 +196,8 @@ const updateSale = async(req, res) => {
                     const sqlUpdateStock = `
                         UPDATE Product 
                         SET 
-                            StockAvaible = ${(+producto.StockAvaible - (+QuantityNew - +product[0].Quantity))}, 
-                            StockOnHand = ${+producto.StockOnHand + (+QuantityNew - +product[0].Quantity)}
+                            StockAvaible = StockAvaible - ${+QuantityNew - +product[0].Quantity}, 
+                            StockOnHand = StockOnHand + ${+QuantityNew - +product[0].Quantity}
                         WHERE Folio = '${producto.Folio}'
                     `
     
@@ -244,8 +244,8 @@ const toggleSale = async(req, res) => {
             const sqlUpdateStock = `
                 UPDATE Product 
                 SET 
-                StockAvaible = ${+product.StockAvaible - +saleProducts[i].Quantity},
-                StockOnHand = ${+product.StockOnHand + +saleProducts[i].Quantity}
+                StockAvaible = StockAvaible - ${saleProducts[i].Quantity},
+                StockOnHand = StockOnHand + ${saleProducts[i].Quantity}
                 WHERE Folio = '${product.Folio}'
             `
 
@@ -306,15 +306,15 @@ const deleteSale = async(req, res) => {
                 sqlUpdateStock = `
                     UPDATE Product 
                     SET 
-                        StockAvaible = ${+product.StockAvaible + +saleProducts[i].Quantity},
-                        StockOnHand = ${+product.StockOnHand - +saleProducts[i].Quantity}
+                        StockAvaible = StockAvaible + ${saleProducts[i].Quantity},
+                        StockOnHand = StockOnHand - ${saleProducts[i].Quantity}
                     WHERE Folio = '${saleProducts[i].ProductFolio}'
                 `
             } else if (sale.StatusID === 4) {
                 sqlUpdateStock = `
                     UPDATE Product 
                     SET 
-                        StockAvaible = ${+product.StockAvaible + +saleProducts[i].Quantity}
+                        StockAvaible = StockAvaible + ${saleProducts[i].Quantity}
                     WHERE Folio = '${saleProducts[i].ProductFolio}'
                 `
             }
@@ -342,14 +342,17 @@ const deleteSale = async(req, res) => {
 }
 
 const deleteSaleProduct = async(req, res) => {
-    const { saleId, productId } = req.params
+    const { saleId, productId, group } = req.params
     const productoObj = new Product();
     const saleProductObj = new SaleProduct();
 
     const sqlGetProducts = `
         SELECT * FROM SaleProduct 
-        WHERE ProductFolio = '${productId}' AND SaleFolio = ${saleId}
+        WHERE ProductFolio = '${productId}' AND SaleFolio = ${saleId} AND AssemblyGroup = ${group}
     `
+
+    console.log(sqlGetProducts)
+    return
 
     const sale = await saleProductObj.exectQueryInfo(sqlGetProducts);
     
@@ -358,8 +361,8 @@ const deleteSaleProduct = async(req, res) => {
     const sqlUpdateStock = `
         UPDATE Product 
         SET 
-        StockAvaible = ${(+producto.StockAvaible + +sale[0].Quantity)}, 
-        StockOnHand = ${+producto.StockOnHand - +sale[0].Quantity}
+        StockAvaible = StockAvaible + ${sale[0].Quantity}, 
+        StockOnHand = StockOnHand - ${sale[0].Quantity}
         WHERE Folio = '${producto.Folio}'
     `
     

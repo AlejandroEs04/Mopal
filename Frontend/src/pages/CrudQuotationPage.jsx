@@ -276,9 +276,9 @@ const CrudQuotationPage = () => {
                         <label htmlFor="user">Usuario</label>
                         <select disabled={sale.Folio} id="user" name="CustomerUserID" className="form-select" value={sale.CustomerUserID} onChange={e => handleChangeInfo(e)}>
                             <option value={0}>Sin Contacto</option>
-                            {/* {customerUsers?.map(user => (
+                            {customerUsers?.map(user => (
                                 <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
-                            ))} */}
+                            ))}
                         </select>
                     </div>
 

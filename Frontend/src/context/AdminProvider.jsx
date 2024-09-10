@@ -559,7 +559,7 @@ const AdminProvider = ({children}) => {
         try {
             setLoading(true)
 
-            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}/${productGroup}`, config);
+            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}/${productGroup ?? 0}`, config);
             
             setAlerta({
                 error: false, 

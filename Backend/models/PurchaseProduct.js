@@ -8,9 +8,9 @@ class PurchaseProduct extends ActiveRecord {
         this.PurchaseFolio = purchaseProduct?.PurchaseFolio;
         this.ProductFolio = purchaseProduct?.ProductFolio;
         this.Assembly = purchaseProduct?.Assembly ?? null;
-        this.AssemblyGroup = purchaseProduct?.AssemblyGroup ?? null;
+        this.AssemblyGroup = purchaseProduct?.AssemblyGroup ?? 0;
         this.Quantity = purchaseProduct?.Quantity;
-        this.Discount = purchaseProduct?.Discount ?? 0;
+        this.Discount = purchaseProduct?.Discount ?? '0';
         this.PricePerUnit = purchaseProduct?.PricePerUnit;
         this.Observations = purchaseProduct?.Observations ?? '';
     }

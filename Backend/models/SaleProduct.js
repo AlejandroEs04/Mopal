@@ -8,7 +8,7 @@ class SaleProduct extends ActiveRecord {
         this.SaleFolio = saleProduct?.SaleFolio;
         this.ProductFolio = saleProduct?.ProductFolio;
         this.Assembly = saleProduct?.Assembly ?? '';
-        this.AssemblyGroup = saleProduct?.AssemblyGroup ?? '';
+        this.AssemblyGroup = saleProduct?.AssemblyGroup ?? 0;
         this.Quantity = saleProduct?.Quantity;
         this.Discount = saleProduct?.Discount ?? 0;
         this.PricePerUnit = saleProduct?.PricePerUnit;
