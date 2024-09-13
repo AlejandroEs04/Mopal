@@ -6,6 +6,7 @@ import DeletePop from "../components/DeletePop"
 import SearchBar from "../components/SearchBar"
 import QuotationTr from "../components/QuotationTr"
 import PaginationList from "../components/PaginationList"
+import useApp from "../hooks/useApp"
 
 const AdminQuotationPage = () => {
     const [showFilters, setShowFilters] = useState(false)
@@ -14,6 +15,7 @@ const AdminQuotationPage = () => {
     const [quotationsFiltered, setQuotationsFiltered] = useState([])
     const { pathname } = useLocation();
     const { sales, handleDeleteSale, alerta, handleFilter } = useAdmin();
+    const { setModalInfo, modalInfo, setModalShow } = useApp()
 
     const handleBtnDelete = () => {
         handleDeleteSale(folio)
@@ -37,16 +39,40 @@ const AdminQuotationPage = () => {
         }
     }
 
+    const handleModalState = () => {
+        setModalShow(true)
+
+        setModalInfo({
+            ...modalInfo, 
+            title: 'Obtener Reporte de cotizaciones', 
+            type: 3, 
+            text: 'Llena el siguiente formulario para poder obtener el reporte de cotizaciones segun sus filtros'
+        })
+    }
+
     useEffect(() => {
         setQuotationsFiltered(handleGetStatusSales)
     }, [sales])
 
     return (
         <div className="mt-2">
-            <h1 className={`m-0`}>Cotizaciones</h1>
-            {pathname && (
-                <Link to={`${pathname}/form`} className='btnAgregar fs-5'>+ Generar nueva cotizacion</Link>
-            )}
+            <div className="d-flex justify-content-between align-items-center">
+                <div>
+                    <h1 className={`m-0`}>Cotizaciones</h1>
+                    {pathname && (
+                        <Link to={`${pathname}/form`} className='btnAgregar fs-5'>+ Generar nueva cotizacion</Link>
+                    )}
+                </div>
+
+                <div>
+                    <button
+                        onClick={() => handleModalState()}
+                        className="btn btn-primary btn-sm"
+                    >
+                        Obtener Reporte
+                    </button>
+                </div>
+            </div>
 
             <div className="mt-2 mb-3">
                 <SearchBar 
