@@ -81,7 +81,7 @@ const AdminQuotationPage = () => {
             )}
 
             <PaginationList 
-                items={quotationsFiltered}
+                items={quotationsFiltered.sort((a, b) => b.Folio-a.Folio)}
                 type={1}
                 limit={15}
                 actionStorage={false}

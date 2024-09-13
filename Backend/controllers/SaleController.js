@@ -351,9 +351,6 @@ const deleteSaleProduct = async(req, res) => {
         WHERE ProductFolio = '${productId}' AND SaleFolio = ${saleId} AND AssemblyGroup = ${group}
     `
 
-    console.log(sqlGetProducts)
-    return
-
     const sale = await saleProductObj.exectQueryInfo(sqlGetProducts);
     
     const producto = await productoObj.getByFolio(productId);
@@ -372,7 +369,7 @@ const deleteSaleProduct = async(req, res) => {
         return res.status(500).json({status : 500, msg: "Hubo un error al actualizar los productos"})
     }
     
-    const sqlDeleteProduct = `DELETE FROM SaleProduct WHERE SaleFolio = ${saleId} AND ProductFolio = '${productId}'`
+    const sqlDeleteProduct = `DELETE FROM SaleProduct WHERE SaleFolio = ${saleId} AND ProductFolio = '${productId}' AND AssemblyGroup = ${group}`
     const response = saleProductObj.exectQuery(sqlDeleteProduct);
 
     if(response) {
