@@ -368,19 +368,19 @@ const AppProvider = ({children}) => {
         handleGetProducts();
         getUserRequest();
 
-        socket.on('saleUpdate', response => {
+        socket.on('saleUpdate', () => {
             handleGetProducts()
         })
 
-        socket.on('productsUpdate', response => {
+        socket.on('productsUpdate', () => {
             handleGetProducts()
         })
 
-        socket.on('purchaseUpdate', response => {
+        socket.on('purchaseUpdate', () => {
             handleGetProducts()
         })
 
-        socket.on('requestUpdate', response => {
+        socket.on('requestUpdate', () => {
             handleGetProducts()
             getUserRequest();
         })

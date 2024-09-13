@@ -18,7 +18,7 @@ const CenterModalContainer = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <>
-                    {props.modalInfo.type === 1 && <ModalSalesForm />}
+                    {(props.modalInfo.type === 1 || props.modalInfo.type === 3) && <ModalSalesForm type={props.modalInfo.type} />}
                     {props.modalInfo.type === 2 && <ModalPurchaseForm />}
                 </>
             </Modal.Body>

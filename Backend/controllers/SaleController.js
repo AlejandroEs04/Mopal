@@ -351,9 +351,6 @@ const deleteSaleProduct = async(req, res) => {
         WHERE ProductFolio = '${productId}' AND SaleFolio = ${saleId} AND AssemblyGroup = ${group}
     `
 
-    console.log(sqlGetProducts)
-    return
-
     const sale = await saleProductObj.exectQueryInfo(sqlGetProducts);
     
     const producto = await productoObj.getByFolio(productId);

@@ -7,7 +7,7 @@ import formatearFecha from '../helpers/formatearFecha'
 import formatearDinero from '../helpers/formatearDinero'
 import generateReport from '../pdf/generateReport'
 
-const ModalSalesForm = () => {
+const ModalSalesForm = ({ type }) => {
     const [formInformation, setFormInformation] = useState({
         id: null, 
         products: [], 
@@ -47,7 +47,7 @@ const ModalSalesForm = () => {
 
     const handleSubmit = async(e) => {
         e.preventDefault()
-        const response = await handleGetReportInformation(formInformation, 'sale-report')
+        const response = await handleGetReportInformation(formInformation, type === 1 ? 'sale-report' : 'quotation-report')
         setReportInfo(response)
     }
 
