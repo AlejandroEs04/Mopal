@@ -31,9 +31,7 @@ const CrudSupplierPage = () => {
 
     const checkInfo = useCallback(() => {
         return supplier?.BusinessName === '' ||
-        supplier?.Address === '' ||
-        supplier?.RFC === '' ||
-        supplier?.RFC?.length < 12
+        supplier?.Address === ''
     }, [supplier])
 
     useEffect(() => {

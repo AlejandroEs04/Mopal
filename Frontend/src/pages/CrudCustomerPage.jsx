@@ -30,9 +30,7 @@ const CrudCustomerPage = () => {
 
     const checkInfo = useCallback(() => {
         return customer.BusinessName === '' ||
-        customer.Address === '' ||
-        customer.RFC === '' ||
-        customer.RFC.length < 12
+        customer.Address === ''
     }, [customer])
 
     useEffect(() => {
