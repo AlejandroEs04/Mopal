@@ -7,7 +7,7 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     const doc = new jsPDF();
 
     // Crear Tabla Productos
-    const columns = ['#', 'Cant', 'Unid.', 'Clave', 'Descripcion', 'P.Unitario', 'Importe', 'Mon'];
+    const columns = ['#', 'Cant', 'Unid.', 'Descripcion', 'P.Unitario', 'Importe', 'Mon'];
 
     const rows = [];
 
@@ -21,8 +21,7 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
                 `${i+1}`, 
                 `${cotizacion.Products[i].Quantity}`, 
                 'Pieza',
-                `${cotizacion.Products[i].Folio}`, 
-                `${cotizacion.Products[i].Name}\n${cotizacion.Products[i].Description}\n\n${cotizacion?.Products[i].Observations}`, 
+                `${cotizacion.Products[i].Folio}\n${cotizacion.Products[i].Name}\n${cotizacion.Products[i].Description}\n\n${cotizacion?.Products[i].Observations}`, 
                `${formatearDinero(+cotizacion.Products[i].PricePerUnit - (+cotizacion.Products[i].PricePerUnit * (+cotizacion.Products[i].Discount / 100)))}`, 
                 `${formatearDinero((+cotizacion.Products[i].PricePerUnit * +cotizacion.Products[i].Quantity) - ((+cotizacion.Products[i].PricePerUnit * +cotizacion.Products[i].Quantity) * (+cotizacion.Products[i].Discount / 100)))}`, 
                 'USD'
