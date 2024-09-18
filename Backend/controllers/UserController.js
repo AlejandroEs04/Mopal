@@ -8,7 +8,12 @@ import User from "../models/User.js"
 
 const getAllUsers = async(req, res) => {
     const userObj = new User();
-    const users = await userObj.getAll();
+    let users = await userObj.getAll();
+
+    for(let i = 0;i<users.length;i++) {
+        const { Password, ...userCopy } = users[i];
+        users[i] = userCopy
+    }
 
     if(users) {
         return res.status(200).json({
