@@ -8,6 +8,7 @@ import findLastID from "../helpers/findLastID ";
 import findNextID from "../helpers/findNextID";
 import generateQuotationPdf from "../pdf/generateQuotationPdf";
 import Scroll from "../components/Scroll";
+import formatearFechaInput from "../helpers/formatearFechaInput";
 
 const InfoSalePage = () => {
     const [sale, setSale] = useState({});
@@ -134,7 +135,7 @@ const InfoSalePage = () => {
             ) : (
                 <div className="pb-4">
                     <p className="mb-1 fw-bold">Folio: <span className="fw-normal">{sale?.Folio}</span></p>
-                    <p className="mb-1 fw-bold">Fecha de la venta: <span className="fw-normal">{formatearFecha(sale?.SaleDate)}</span></p>
+                    <p className="mb-1 fw-bold">Fecha de la venta: <span className="fw-normal">{formatearFechaInput(sale?.SaleDate)}</span></p>
                     <p className="mb-1 fw-bold">
                         Estado: <span className={`${+sale?.StatusID === 1 && 'text-success'} ${+sale?.StatusID === 2 && 'text-danger'} ${+sale?.StatusID === 3 && 'text-warning'} ${+sale?.StatusID === 4 && 'text-success'} fw-normal`}>{sale?.Status}</span>
                     </p>
