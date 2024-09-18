@@ -162,7 +162,16 @@ const ProductTableView = ({
                             <tr key={item.Folio}>
                                 <td>{item.Folio}</td>
                                 <td>{item.Name}</td>
-                                <td>{formatearDinero(+item.PricePerUnit)}</td>
+                                <td>
+                                    <input 
+                                        type="number" 
+                                        name="PricePerUnit" 
+                                        id="pricePerUnit" 
+                                        value={item.PricePerUnit} 
+                                        className={`${styles.input_table}`}
+                                        onChange={e => handleChange(e, item.Folio, item.AssemblyGroup)}
+                                    />
+                                </td>
                                 <td>{item.AssemblyGroup !== 0 ? item.AssemblyGroup : 'N/A'}</td>
                                 <td>{item.Stock}</td>
                                 <td>
