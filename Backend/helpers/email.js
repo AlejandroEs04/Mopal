@@ -185,7 +185,7 @@ export const quotationSend = async(datos) => {
                 <tbody>
     `
 
-    for(let i = 0; i<Products.length;i++) {
+    for(let i = 0; i<Products?.length;i++) {
         msgHtml += `
             <tr>
                 <td style="vertical-align: top; padding: 0.3em; text-align: start;">${Products[i].Quantity}</td>

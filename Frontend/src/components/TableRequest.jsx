@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import Scroll from './Scroll'
+import getRequestStatusName from '../helpers/getRequestStatusName'
 
 const TableRequest = ({ items, startIndex, endIndex, actionStorage = false }) => {
   const navigate = useNavigate()
@@ -34,18 +35,15 @@ const TableRequest = ({ items, startIndex, endIndex, actionStorage = false }) =>
                   ${requestInfo.Status === 1 && 'text-danger'}
                   ${requestInfo.Status === 2 && 'text-danger'}
                   ${requestInfo.Status === 3 && 'text-warning'}
-                  ${requestInfo.Status === 4 && 'text-success'}
+                  ${(requestInfo.Status === 4 || requestInfo.Status === 5) && 'text-success'}
                   text-nowrap
                 `}>
-                  {requestInfo.Status === 1 && 'Pendiente'}
-                  {requestInfo.Status === 2 && 'En espera'}
-                  {requestInfo.Status === 3 && 'En camino'}
-                  {requestInfo.Status === 4 && 'Entregado'}
+                  {getRequestStatusName(requestInfo.Status)}
                 </td>
                 <td>
                     <div className="d-flex justify-content-start gap-2">
                         <Link to={`/admin/request/${requestInfo.ID}`} className='btn btn-primary btn-sm text-nowrap'>
-                            Ver informacion
+                          Ver informacion
                         </Link>
                     </div>
                 </td>

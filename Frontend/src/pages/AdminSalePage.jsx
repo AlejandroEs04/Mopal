@@ -111,7 +111,7 @@ const AdminSalePage = () => {
             )}
 
             <PaginationList 
-                items={saleFiltered}
+                items={saleFiltered.sort((a, b) => b.Folio-a.Folio)}
                 type={1}
                 limit={15}
                 actionStorage={false}

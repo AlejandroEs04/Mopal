@@ -21,7 +21,7 @@ const AdminRequestPage = () => {
     const [show, setShow] = useState(false);
     const [showAccept, setShowAccept] = useState(false);
     const { loading, setLoading } = useApp()
-    const { handleChangeStatus, alerta, setAlerta, sendRequestQuotation } = useAdmin();
+    const { handleChangeStatus, alerta, setAlerta, handleSendRequestQuotation } = useAdmin();
     const { id } = useParams();
 
     const subtotal = useMemo(() => request?.Products?.reduce((total, product) => total + ((product.Quantity * product.ListPrice) * (product.Percentage / 100)), 0), [request])
@@ -111,7 +111,7 @@ const AdminRequestPage = () => {
             const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/request/${id}`, { requestOld : request, edited }, config);
             
             if(request.ActionID === 1) {
-                sendRequestQuotation(id, request, subtotal, iva, total);
+                handleSendQuotation(id, request, subtotal, iva, total);
             } 
 
             setAlerta({
@@ -230,7 +230,7 @@ const AdminRequestPage = () => {
                             
                             <button
                                 className="btn btn-success w-100"
-                                onClick={() => sendRequestQuotation(id, request, subtotal, iva, total)}
+                                onClick={() => handleSendRequestQuotation(id, request, subtotal, iva, total)}
                             >
                                 Enviar Cotizacion
                             </button>

@@ -73,7 +73,15 @@ const addNewPurchase = async(req, res) => {
         }
 
         const product = await productObj.getByFolio(productsArray[i].ProductFolio);
-        const res = await productObj.updateOneColumn(productsArray[i].ProductFolio, 'StockOnWay', (+product.StockOnWay + +productsArray[i].Quantity))
+
+        const sqlUpdateStock = `
+                UPDATE Product 
+                SET 
+                    StockOnWay = StockOnWay + ${productsArray[i].Quantity}
+                WHERE Folio = '${productsArray[i].ProductFolio}'
+            `
+
+        await productObj.exectQuery(sqlUpdateStock);
 
         if(!res) {
             return res.status(500).json({
@@ -115,6 +123,7 @@ const updatePurchase = async(req, res) => {
     const discounts = [];
 
     for(let i = 0;i < purchase.Products.length; i++) {
+        // Empty discounts 
         const sqlRemoveDiscounts = `
             DELETE FROM PurchaseProductDiscount
             WHERE PurchaseID = ${purchaseObj.Folio}
@@ -124,7 +133,7 @@ const updatePurchase = async(req, res) => {
 
         const sqlGetProducts = `
             SELECT * FROM PurchaseProduct 
-            WHERE ProductFolio = '${purchase.Products[i].Folio}' AND PurchaseFolio = ${purchaseObj.Folio}
+            WHERE ProductFolio = '${purchase.Products[i].Folio}' AND PurchaseFolio = ${purchaseObj.Folio} AND AssemblyGroup = ${purchase.Products[i].AssemblyGroup ?? 0}
         `
         const product = await purchaseProductObj.exectQueryInfo(sqlGetProducts);
 
@@ -149,12 +158,10 @@ const updatePurchase = async(req, res) => {
                 return res.status(500).json({status : 500, msg: "Hubo un error al agregar un producto"})
             }
 
-            const productoOld = await productObj.getByFolio(productNew.ProductFolio);
-
             const sqlUpdateStock = `
                 UPDATE Product 
                 SET 
-                    StockOnWay = ${+productoOld.StockOnWay + +productNew.Quantity}
+                    StockOnWay = StockOnWay + ${+productNew.Quantity}
                 WHERE Folio = '${productNew.ProductFolio}'
             `
 
@@ -187,13 +194,11 @@ const updatePurchase = async(req, res) => {
                     return res.status(500).json({status : 500, msg: "Hubo un error al actualizar un producto"})
                 }
 
-                const producto = await productObj.getByFolio(purchase.Products[i].Folio);
-
                 const sqlUpdateStock = `
                     UPDATE Product 
                     SET 
-                        StockOnWay = ${+producto.StockOnWay + (+DiscountNew - +product[0].Discount)}
-                    WHERE Folio = '${producto.Folio}'
+                        StockOnWay = StockOnWay + ${purchase.Products[i].Quantity - product[0].Quantity}
+                    WHERE Folio = '${purchase.Products[i].Folio}'
                 `
 
                 const responseProduct = await productObj.exectQuery(sqlUpdateStock);
@@ -288,18 +293,16 @@ const deletePurchaseProduct = async(req, res) => {
 
     const sqlGetProducts = `
         SELECT * FROM PurchaseProduct 
-        WHERE ProductFolio = '${productId}' AND PurchaseFolio = ${purchaseId}
+        WHERE ProductFolio = '${productId}' AND PurchaseFolio = ${purchaseId} AND AssemblyGroup = ${assemblyGroup}
     `
 
     const purchase = await purchaseProductObj.exectQueryInfo(sqlGetProducts);
-    
-    const producto = await productoObj.getByFolio(productId);
-    
+
     const sqlUpdateStock = `
         UPDATE Product 
         SET 
             StockOnWay = StockOnWay - ${purchase[0].Quantity}
-        WHERE Folio = '${producto.Folio}'
+        WHERE Folio = '${purchase[0].ProductFolio}'
     `
     
     const responseProduct = await productoObj.exectQuery(sqlUpdateStock);
@@ -307,9 +310,14 @@ const deletePurchaseProduct = async(req, res) => {
     if(!responseProduct) {
         return res.status(500).json({status : 500, msg: "Hubo un error al actualizar los productos"})
     }
+
+    const sqlDeleteProductDiscounts = `DELETE FROM PurchaseProductDiscount WHERE PurchaseID = ${purchaseId} AND ProductID = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
+
+    await purchaseProductObj.exectQuery(sqlDeleteProductDiscounts)
     
-    const sqlDeleteProduct = `DELETE FROM PurchaseProduct WHERE PurchaseFolio = ${purchaseId} AND ProductFolio = '${productId}'`
-    const response = purchaseProductObj.exectQuery(sqlDeleteProduct);
+    const sqlDeleteProduct = `DELETE FROM PurchaseProduct WHERE PurchaseFolio = ${purchaseId} AND ProductFolio = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
+
+    const response = await purchaseProductObj.exectQuery(sqlDeleteProduct);
 
     if(response) {
         io.emit('purchaseUpdate', { update: true });

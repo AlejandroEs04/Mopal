@@ -202,6 +202,76 @@ const getSaleReport = async(req, res) => {
     })
 }
 
+const getQuotationReport = async(req, res) => {
+    const { user, trader, products = [], id, fromDate, toDate } = req.body
+    let sales = await new Sale().getAll();
+    let saleProducts = await new SaleProduct().getAll();
+    const productsDB = await new Product().getAll()
+
+    sales = sales.filter(sale => +sale.StatusID === 1)
+
+    if(id) {
+        sales = sales.filter(sale => +sale.Folio === id)
+    }
+
+    if(user) {
+        sales = sales.filter(sale => +sale.CustomerID === user)
+    }
+
+    if(trader) {
+        sales = sales.filter(sale => +sale.UserID === trader)
+    }
+
+    if(fromDate && toDate) {
+        sales = sales.filter(sale => 
+                new Date(sale.SaleDate).getTime() >= new Date(fromDate).getTime() &&
+                new Date(sale.SaleDate).getTime() <= new Date(toDate).getTime()
+        )
+    } else if(fromDate) {
+        sales = sales.filter(sale => new Date(sale.SaleDate).getTime() >= new Date(fromDate).getTime())
+    } else if(toDate) {
+        sales = sales.filter(sale => new Date(sale.SaleDate).getTime() <= new Date(toDate).getTime())
+    }
+
+    for(let i = 0; i<sales.length; i++) {
+        const saleProduct = saleProducts.filter(product => {
+            if(product.SaleFolio === sales[i].Folio && products.length != 0) {
+                if(products.includes(product.ProductFolio)) {
+                    return true
+                } else {
+                    return false
+                }
+            } else if(product.SaleFolio === sales[i].Folio) {
+                return true
+            } else {
+                return false
+            }
+        })
+
+        const productsNew = saleProduct.map(product => {
+            const productCurrent = productsDB.map(productDB => {
+                if(productDB.Folio === product.ProductFolio) {
+                    return {
+                        ...product, 
+                        Name: productDB.Name, 
+                        Description: productDB.Description
+                    } 
+                }
+            })
+
+            return productCurrent.filter(item => item != undefined)[0]
+        })
+
+        sales[i].products = productsNew
+    }
+
+    sales = sales.filter(sale => sale.products.length > 0)
+
+    return res.status(201).json({
+        sales
+    })
+}
+
 const getPurchaseReport = async(req, res) => {
     const { user, trader, products = [], id, fromDate, toDate } = req.body
     let purchases = await new Purchase().getAll();
@@ -274,5 +344,6 @@ export {
     getProductsSaleTotal, 
     getInventoryMovement, 
     getPurchaseReport,
-    getSaleReport
+    getSaleReport, 
+    getQuotationReport
 }

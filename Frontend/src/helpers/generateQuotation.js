@@ -11,15 +11,15 @@ const generateQuotation = (cotizacion, subtotal, iva, total, save = false) => {
 
     const rows = [];
 
-    for(let i = 0; i < cotizacion.products.length; i++) {
+    for(let i = 0; i < cotizacion.Products.length; i++) {
         rows[i] = [
             `${i+1}`, 
-            `${cotizacion.products[i].Quantity}`, 
+            `${cotizacion.Products[i].Quantity}`, 
             'Pieza',
-            `${cotizacion.products[i].ProductFolio}`, 
-            `${cotizacion.products[i].ProductName}\n${cotizacion.products[i].Description}`, 
-            `${formatearDinero(cotizacion.products[i].PricePerUnit * (cotizacion.products[i].Percentage / 100))}`, 
-            `${formatearDinero((cotizacion.products[i].PricePerUnit * cotizacion.products[i].Quantity ) * (cotizacion.products[i].Percentage / 100))}`, 
+            `${cotizacion.Products[i].ProductFolio}`, 
+            `${cotizacion.Products[i].ProductName}\n${cotizacion.Products[i].Description}`, 
+            `${formatearDinero(cotizacion.Products[i].PricePerUnit * (cotizacion.Products[i].Percentage / 100))}`, 
+            `${formatearDinero((cotizacion.Products[i].PricePerUnit * cotizacion.Products[i].Quantity ) * (cotizacion.Products[i].Percentage / 100))}`, 
             'USD'
         ]
     }
@@ -61,14 +61,14 @@ const generateQuotation = (cotizacion, subtotal, iva, total, save = false) => {
     
     doc.text('Atencion a:', 15, 75)
     
-    if(cotizacion.CustomerUserID) {
+    if(cotizacion?.CustomerUserID) {
         doc.text('Contacto:', 15, 82)
         doc.setFont("helvetica", "normal");
-        doc.text(cotizacion.CustomerUserName, 50, 82)
+        doc.text(cotizacion?.CustomerUserName, 50, 82)
     }
 
     doc.setFont("helvetica", "normal");
-    doc.text(cotizacion.UserFullName, 50, 75)
+    doc.text(cotizacion?.UserFullName, 50, 75)
 
     doc.autoTable(columns, rows, {
         startY: 88,

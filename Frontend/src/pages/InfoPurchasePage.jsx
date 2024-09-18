@@ -1,41 +1,25 @@
 import { useParams, Link } from "react-router-dom"
-import useAdmin from "../hooks/useAdmin";
 import { useEffect, useMemo, useState } from "react";
-import formatearDinero from "../helpers/formatearDinero";
+import useAdmin from "../hooks/useAdmin";
 import Spinner from "../components/Spinner";
+import Scroll from "../components/Scroll";
+import formatearDinero from "../helpers/formatearDinero";
 import formatearFecha from "../helpers/formatearFecha";
 import generatePurchasePdf from "../pdf/generatePurchasePdf";
-import Scroll from "../components/Scroll";
 import findLastID from "../helpers/findLastID ";
 import findNextID from "../helpers/findNextID";
 
 const InfoPurchasePage = () => {
     const [purchase, setPurchase] = useState({});
-
     const { id } = useParams();
     const { purchases, handleChangeStatus, alerta, loading } = useAdmin();
 
-    const handleGetPurchase = () => {
-        const purchaseNew = purchases?.filter(purchase => +purchase?.Folio === +id)
-        setPurchase(purchaseNew[0]);
-    }
-   
-    const handleGetImporte = (price, quantity, discount) => {
-        const importe = (price * quantity) - ((discount / 100) * (price * quantity))
-        return importe.toFixed(2)
-    }
+    const handleGetPurchase = () => setPurchase(purchases?.filter(purchase => +purchase?.Folio === +id)[0]);
 
-    const handleNextQuotation = () => {
-        if(purchases.length > 0) {
-            return findNextID(purchases, id)
-        }
-    }
-    
-    const handleLastQuotation = () => {
-        if(purchases.length > 0) {
-            return findLastID(purchases, id)
-        }
-    }
+    const handleGetImporte = (price, quantity, discount) => (price * quantity) - ((discount / 100) * (price * quantity)).toFixed(2)
+
+    const handleNextQuotation = () => purchases.length > 0 && findNextID(purchases, id)
+    const handleLastQuotation = () => purchases.length > 0 && findLastID(purchases, id)
 
     const subtotal = useMemo(() => purchase?.Products?.reduce((total, product) => total + (+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount)), 0), [purchase])
     const iva = useMemo(() => purchase?.Products?.reduce((total, product) => total + (+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) * .16), 0), [purchase])
@@ -161,6 +145,7 @@ const InfoPurchasePage = () => {
                                             ))}
                                         </div>
                                     </td>
+                                    {console.log(product)}
                                     <td>{product.AssemblyGroup === 0 ? 'N/A' : product.AssemblyGroup ?? 'N/A'}</td>
                                     <td>{product.Quantity}</td>
                                     <td>{product.Observations ?? 'N/A'}</td>
