@@ -5,6 +5,7 @@ import axios from "axios"
 import Scroll from "./Scroll"
 import Spinner from "./Spinner"
 import DeletePop from "./DeletePop"
+import formatearFechaInput from "../helpers/formatearFechaInput"
 
 const TableSales = ({ sales, startIndex, endIndex, actionStorage = false }) => {
   const [showPop, setShowPop] = useState(false);
@@ -27,6 +28,7 @@ const TableSales = ({ sales, startIndex, endIndex, actionStorage = false }) => {
             <thead className="table-light">
               <tr>
                 <th>Folio</th>
+                <th>Fecha</th>
                 <th>Cliente</th>
                 <th>Usuario</th>
                 <th>Status</th>
@@ -45,6 +47,7 @@ const TableSales = ({ sales, startIndex, endIndex, actionStorage = false }) => {
               {sales?.sort(function(a, b){b.Folio-a.Folio}).slice(startIndex, endIndex).map(sale => (
                 <tr onDoubleClick={() => navigate(`/info/sales/${sale.Folio}`)} key={sale.Folio}>
                   <td>{sale.Folio}</td>
+                  <td>{formatearFechaInput(sale.SaleDate)}</td>
                   <td className="text-nowrap">{sale.BusinessName}</td>
                   <td className="text-nowrap">{sale.User}</td>
                   <td className={`${sale.StatusID === 2 && 'text-danger'} ${sale.StatusID === 3 && 'text-primary'} ${sale.StatusID === 4 && 'text-success'}`}>{sale.Status}</td>
