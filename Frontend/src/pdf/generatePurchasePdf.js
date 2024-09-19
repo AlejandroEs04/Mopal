@@ -13,16 +13,25 @@ const generatePurchasePdf = (ordenCompra, subtotal, iva, total, save = false) =>
 
     for(let i = 0; i < ordenCompra.Products.length+1; i++) {
         if(i === ordenCompra.Products.length) {
-            rows[i] = ['', '', '', '', 'Subtotal:', formatearDinero(+subtotal), 'USD']
-            rows[i+1] = ['', '', '', '', 'IVA:', formatearDinero(+iva), 'USD']
-            rows[i+2] = ['', '', '', '', 'Total:', formatearDinero(+total), 'USD']
+            rows[i] = ['', '', '', '', '', 
+                { content: 'Subtotal:', styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: formatearDinero(+subtotal), styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+            ]
+            rows[i+1] = ['', '', '', '', '', 
+                { content: 'IVA:', styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: formatearDinero(+iva), styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+            ]
+            rows[i+2] = ['', '', '', '', '',
+                { content: 'Total:', styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: formatearDinero(+total), styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+            ]
         } else {
             rows[i] = [
                 `${i+1}`, 
                 `${ordenCompra.Products[i].Quantity}`, 
                 `Unidad`, 
                 `${ordenCompra.Products[i].Folio}`, 
-                `${ordenCompra.Products[i].Name}\n${ordenCompra?.Products[i]?.Description}\n\n${ordenCompra?.Products[i]?.Observations}`, 
+                `${ordenCompra.Products[i].Name}\n${ordenCompra?.Products[i]?.Description}${ordenCompra?.Products[i].Observations ? `\n\n${ordenCompra?.Products[i].Observations}` : ''}`, 
                 `${formatearDinero(+ordenCompra.Products[i].PricePerUnit - (+ordenCompra.Products[i].PricePerUnit * (+ordenCompra.Products[i].Discount / 100)))}`, 
                 `${formatearDinero((+ordenCompra.Products[i].PricePerUnit * +ordenCompra.Products[i].Quantity) - ((+ordenCompra.Products[i].PricePerUnit * +ordenCompra.Products[i].Quantity) * (+ordenCompra.Products[i].Discount / 100)))}`, 
             ]
@@ -91,7 +100,7 @@ const generatePurchasePdf = (ordenCompra, subtotal, iva, total, save = false) =>
     doc.text("Observaciones", 15, finalY + 10)
     doc.setFont("helvetica", "normal");
 
-    const lines = doc.splitTextToSize(ordenCompra.Observation, 90);
+    const lines = doc.splitTextToSize(ordenCompra.Observation.length > 0 ? ordenCompra.Observation : 'No hay observaciones', 90);
 
     const x = 15;
     const y = finalY + 16;

@@ -5,7 +5,7 @@ const getAllCustomers = async(req, res) => {
     const users = await customerObj.getAllTable('CustomerUserView')
     const customers = await customerObj.getAll();
 
-    if(customers.length > 0 && users.length > 0) {
+    if(customers.length > 0) {
         for(let i=0;i<customers.length;i++) {
             const sqlDiscounts = `
                 SELECT * FROM CustomerDiscount

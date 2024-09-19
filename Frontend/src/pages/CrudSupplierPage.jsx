@@ -77,7 +77,7 @@ const CrudSupplierPage = () => {
 
             if(supplierSelected)
                 setSupplier(supplierSelected)
-        }
+            }
     }, [suppliers])
     
     return (
