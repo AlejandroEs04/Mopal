@@ -58,11 +58,11 @@ const AdminNav = () => {
                   <li className={`${pathname === '/admin/storage' && styles.linkActive}`}><Link className={styles.link} to="/admin/storage">Pedidos</Link></li>
                 ) : null}
 
-                {(auth.RolID === 2 || auth.RolID === 4 || auth.RolID === 5) && (
+                {(auth.RolID === 1 | auth.RolID === 2 | auth.RolID === 5) && (
                   <li className={`${pathname === '/admin/suppliers' && styles.linkActive}`}><Link className={styles.link} to="/admin/suppliers">Proveedores</Link></li>
                 )}
 
-                {(auth.RolID === 1 || auth.RolID === 5 || auth.RolID === 3 && (
+                {(auth.RolID === 1 | auth.RolID === 3 | auth.RolID === 5 && (
                   <li className={`${pathname === '/admin/customers' && styles.linkActive}`}><Link className={styles.link} to="/admin/customers">Clientes</Link></li>
                 ))}
                 
