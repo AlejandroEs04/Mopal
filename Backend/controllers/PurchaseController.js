@@ -291,44 +291,52 @@ const deletePurchaseProduct = async(req, res) => {
     const productoObj = new Product();
     const purchaseProductObj = new PurchaseProduct();
 
-    const sqlGetProducts = `
-        SELECT * FROM PurchaseProduct 
-        WHERE ProductFolio = '${productId}' AND PurchaseFolio = ${purchaseId} AND AssemblyGroup = ${assemblyGroup}
-    `
-
-    const purchase = await purchaseProductObj.exectQueryInfo(sqlGetProducts);
-
-    const sqlUpdateStock = `
-        UPDATE Product 
-        SET 
-            StockOnWay = StockOnWay - ${purchase[0].Quantity}
-        WHERE Folio = '${purchase[0].ProductFolio}'
-    `
+    try {
+        
+        const sqlGetProducts = `
+            SELECT * FROM PurchaseProduct 
+            WHERE ProductFolio = '${productId}' AND PurchaseFolio = ${purchaseId} AND AssemblyGroup = ${assemblyGroup}
+        `
     
-    const responseProduct = await productoObj.exectQuery(sqlUpdateStock);
+        const purchase = await purchaseProductObj.exectQueryInfo(sqlGetProducts);
     
-    if(!responseProduct) {
-        return res.status(500).json({status : 500, msg: "Hubo un error al actualizar los productos"})
-    }
-
-    const sqlDeleteProductDiscounts = `DELETE FROM PurchaseProductDiscount WHERE PurchaseID = ${purchaseId} AND ProductID = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
-
-    await purchaseProductObj.exectQuery(sqlDeleteProductDiscounts)
+        const sqlUpdateStock = `
+            UPDATE Product 
+            SET 
+                StockOnWay = StockOnWay - ${purchase[0].Quantity}
+            WHERE Folio = '${purchase[0].ProductFolio}'
+        `
+        
+        const responseProduct = await productoObj.exectQuery(sqlUpdateStock);
+        
+        if(!responseProduct) {
+            return res.status(500).json({status : 500, msg: "Hubo un error al actualizar los productos"})
+        }
     
-    const sqlDeleteProduct = `DELETE FROM PurchaseProduct WHERE PurchaseFolio = ${purchaseId} AND ProductFolio = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
-
-    const response = await purchaseProductObj.exectQuery(sqlDeleteProduct);
-
-    if(response) {
-        io.emit('purchaseUpdate', { update: true });
-
-        return res.status(200).json({
-            status : 200, 
-            msg: "Producto eliminado con exito"
+        const sqlDeleteProductDiscounts = `DELETE FROM PurchaseProductDiscount WHERE PurchaseID = ${purchaseId} AND ProductID = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
+    
+        await purchaseProductObj.exectQuery(sqlDeleteProductDiscounts)
+        
+        const sqlDeleteProduct = `DELETE FROM PurchaseProduct WHERE PurchaseFolio = ${purchaseId} AND ProductFolio = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
+    
+        const response = await purchaseProductObj.exectQuery(sqlDeleteProduct);
+    
+        if(response) {
+            io.emit('purchaseUpdate', { update: true });
+    
+            return res.status(200).json({
+                status : 200, 
+                msg: "Producto eliminado con exito"
+            })
+        } else {
+            return res.status(500).json({status : 500, msg: "Hubo un error al eliminar el producto"})
+        }
+    } catch (error) {
+        return res.status(500).json({
+            msg: "La venta no puede quedar sin productos"
         })
-    } else {
-        return res.status(500).json({status : 500, msg: "Hubo un error al eliminar el producto"})
     }
+
 }
 
 const changeStatus = async(req, res) => {

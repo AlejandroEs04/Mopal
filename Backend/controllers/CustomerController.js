@@ -71,7 +71,27 @@ const addNewCustomer = async(req, res) => {
     }
 }
 
+const updateCustomer = async(req, res) => {
+    const { customer } = req.body
+    const customerObj = new Customer(customer)
+
+    console.log(customerObj)
+
+    const response = await customerObj.updateOne(customerObj);
+
+    if(response) {
+        return res.status(200).json({
+            status : 200, 
+            msg: "Cliente actualizado correctamente"
+        })
+    } else {
+        const error = new Error("Hubo un error")
+        return res.status(500).json({status : 500, msg: error})
+    }
+}
+
 export {
     getAllCustomers, 
-    addNewCustomer
+    addNewCustomer, 
+    updateCustomer
 }

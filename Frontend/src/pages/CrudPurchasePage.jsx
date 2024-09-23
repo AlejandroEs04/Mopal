@@ -54,7 +54,7 @@ const CrudPurchasePage = () => {
 
     const { id } = useParams()
 
-    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta } = useAdmin();
+    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, handleSetAlerta } = useAdmin();
     const { auth } = useAuth();
 
     const [edit, setEdit] = useState(false);
@@ -122,6 +122,7 @@ const CrudPurchasePage = () => {
             }, 5000)
         } catch (error) {
             console.log(error)
+            
         } finally {
             setLoading(false)
         }

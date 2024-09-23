@@ -13,8 +13,6 @@ const DiscountsForm = ({supplier, type}) => {
     const [discount, setDiscount] = useState('')
     const [currentDiscount, setCurrentDiscount] = useState(initialState)
 
-    console.log(supplier)
-
     const { setAlerta, alerta, setLoading } = useAdmin();
 
     const handleSetFavorite = async(id) => {
