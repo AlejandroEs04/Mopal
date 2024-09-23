@@ -54,6 +54,7 @@ import AdminTypePage from "./pages/AdminTypePage.jsx";
 import CrudTypePage from "./pages/CrudTypePage.jsx";
 import Statistics from "./pages/Statistics.jsx";
 import StorageRequests from "./pages/StorageRequests.jsx";
+import UserPage from "./pages/UserPage.jsx";
 
 function App() {
   const [isConnected, setIsConnected] = useState(socket.connected);
@@ -131,6 +132,7 @@ function App() {
               <Route path="customers/form" element={<CrudCustomerPage />} />
               <Route path="customers/form/:id" element={<CrudCustomerPage />} />
               <Route path="statistics" element={<Statistics />} />
+              <Route path="user" element={<UserPage />} />
             </Route>
 
             <Route path="/info" element={<AdminLayout />}>
