@@ -353,7 +353,7 @@ const CrudQuotationPage = () => {
                     </div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
-                        <label htmlFor="observaciones">Observaciones</label>
+                        <label htmlFor="observaciones">Observaciones Generales</label>
                         <textarea 
                             name="Observation"
                             id="observaciones" 
@@ -365,7 +365,7 @@ const CrudQuotationPage = () => {
                     </div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
-                        <label htmlFor="InternObservation">Observaciones (Internas)</label>
+                        <label htmlFor="InternObservation">Observaciones Internas</label>
                         <textarea 
                             name="InternObservation"
                             id="InternObservation" 

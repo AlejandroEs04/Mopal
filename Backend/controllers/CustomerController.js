@@ -75,8 +75,6 @@ const updateCustomer = async(req, res) => {
     const { customer } = req.body
     const customerObj = new Customer(customer)
 
-    console.log(customerObj)
-
     const response = await customerObj.updateOne(customerObj);
 
     if(response) {

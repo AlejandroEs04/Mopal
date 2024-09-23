@@ -31,7 +31,6 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId, setImageUrl, completeBt
                 uwConfig, 
                 (error, result) => {
                     if(!error && result.event === "success") {
-                        console.log("Done! Here is the image info: ", result.info.url);
                         setPublicId(result.info.public_id);
                         setImageUrl(elementHandleChange, result.info.url);
                     }
