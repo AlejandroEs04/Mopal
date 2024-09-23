@@ -254,17 +254,6 @@ const ProductTableView = ({
                                             </svg>
                                         </button>
 
-                                        {/* {item.Discounts?.length > 0 && (
-                                            <>
-                                                <select name="Discount" onChange={e => handleChangeDiscounts(+e.target.value)} id="discount" className="form-select form-select-sm">
-                                                    <option value="0">0%</option>
-                                                    {discounts.map(discount => (
-                                                        <option value={discount.ID} key={discount.ID}>{discount.PercentageTotal}</option>
-                                                    ))}
-                                                </select>
-                                            </>
-                                        )} */}
-
                                         {item?.Accesories?.length > 0 && (
                                             <button
                                                 onClick={() => {

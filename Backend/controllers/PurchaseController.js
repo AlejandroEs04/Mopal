@@ -149,6 +149,7 @@ const updatePurchase = async(req, res) => {
         if(product.length === 0) {
             const productNew = new PurchaseProduct({
                 ...purchase.Products[i], 
+                ProductFolio : purchase.Products[i].Folio,
                 PurchaseFolio : purchaseObj.Folio, 
             })
 
@@ -238,8 +239,6 @@ const deletePurchase = async(req, res) => {
 
     const purchaseProducts = await purchaseProductObj.getByElementArray('PurchaseFolio', +id);
     for(let i=0;i<purchaseProducts.length;i++) {
-        const product = await productObj.getByFolio(purchaseProducts[i].ProductFolio)
-
         let sqlUpdateStock = ""
         
         if(purchase.StatusID === 1) {
@@ -257,7 +256,6 @@ const deletePurchase = async(req, res) => {
                 WHERE Folio = '${purchaseProducts[i].ProductFolio}'
             `
         }
-        
 
         const responseProduct = await productObj.exectQuery(sqlUpdateStock);
 
@@ -295,7 +293,7 @@ const deletePurchaseProduct = async(req, res) => {
         
         const sqlGetProducts = `
             SELECT * FROM PurchaseProduct 
-            WHERE ProductFolio = '${productId}' AND PurchaseFolio = ${purchaseId} AND AssemblyGroup = ${assemblyGroup}
+            WHERE ProductFolio = '${productId}' AND PurchaseFolio = ${purchaseId} ${assemblyGroup !== 'null' ? ` AND AssemblyGroup = ${assemblyGroup}` : ''}
         `
     
         const purchase = await purchaseProductObj.exectQueryInfo(sqlGetProducts);
@@ -303,8 +301,8 @@ const deletePurchaseProduct = async(req, res) => {
         const sqlUpdateStock = `
             UPDATE Product 
             SET 
-                StockOnWay = StockOnWay - ${purchase[0].Quantity}
-            WHERE Folio = '${purchase[0].ProductFolio}'
+                StockOnWay = StockOnWay - ${purchase[0]?.Quantity}
+            WHERE Folio = '${purchase[0]?.ProductFolio}'
         `
         
         const responseProduct = await productoObj.exectQuery(sqlUpdateStock);
@@ -313,11 +311,11 @@ const deletePurchaseProduct = async(req, res) => {
             return res.status(500).json({status : 500, msg: "Hubo un error al actualizar los productos"})
         }
     
-        const sqlDeleteProductDiscounts = `DELETE FROM PurchaseProductDiscount WHERE PurchaseID = ${purchaseId} AND ProductID = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
+        const sqlDeleteProductDiscounts = `DELETE FROM PurchaseProductDiscount WHERE PurchaseID = ${purchaseId} AND ProductID = '${productId}' ${assemblyGroup !== 'null' ? ` AND AssemblyGroup = ${assemblyGroup}` : ''}`
     
         await purchaseProductObj.exectQuery(sqlDeleteProductDiscounts)
         
-        const sqlDeleteProduct = `DELETE FROM PurchaseProduct WHERE PurchaseFolio = ${purchaseId} AND ProductFolio = '${productId}' AND AssemblyGroup = ${assemblyGroup}`
+        const sqlDeleteProduct = `DELETE FROM PurchaseProduct WHERE PurchaseFolio = ${purchaseId} AND ProductFolio = '${productId}' ${assemblyGroup !== 'null' ? ` AND AssemblyGroup = ${assemblyGroup}` : ''}`
     
         const response = await purchaseProductObj.exectQuery(sqlDeleteProduct);
     
@@ -332,6 +330,7 @@ const deletePurchaseProduct = async(req, res) => {
             return res.status(500).json({status : 500, msg: "Hubo un error al eliminar el producto"})
         }
     } catch (error) {
+        console.log(error)
         return res.status(500).json({
             msg: "La venta no puede quedar sin productos"
         })

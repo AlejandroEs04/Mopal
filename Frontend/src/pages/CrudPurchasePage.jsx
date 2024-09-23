@@ -121,8 +121,10 @@ const CrudPurchasePage = () => {
                 setAlerta(null)
             }, 5000)
         } catch (error) {
-            console.log(error)
-            
+            setAlerta({
+                error: true, 
+                msg: error.response.data.msg
+            })
         } finally {
             setLoading(false)
         }

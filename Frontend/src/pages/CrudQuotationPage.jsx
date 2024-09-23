@@ -11,6 +11,7 @@ import InputContainer from "../components/InputContainer";
 import ProductTableView from "../components/ProductTableView";
 import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
+import axios from "axios";
 
 const initialState = {
     Folio : '',
