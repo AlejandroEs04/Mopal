@@ -358,6 +358,10 @@ const AppProvider = ({children}) => {
             })
         } finally {
             setLoading(false)
+
+            setTimeout(() => {
+                setAlerta(null)
+            }, 3000)
         }
     }
 

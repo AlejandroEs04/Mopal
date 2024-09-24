@@ -635,3 +635,7 @@ table tr .table-yellow {
     padding: 2px;
     overflow-y: auto;
 }
+
+.fs-7 {
+    font-size: 13px;
+}
