@@ -16,6 +16,7 @@ class Sale extends ActiveRecord {
         this.Active = sale?.Active ?? true;
         this.Observation = sale?.Observation ?? "";
         this.InternObservation = sale?.InternObservation ?? "";
+        this.ContactName = sale?.ContactName ?? "";
     }
 }
 
