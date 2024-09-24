@@ -75,15 +75,18 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     doc.text(`RFC: ${cotizacion.RFC}`, 15, 68)
     
     doc.setFont("helvetica", "bold");
-    
     doc.text('Atencion a:', 15, 75)
+
+    if(cotizacion?.ContactName?.length > 0) {
+        doc.setFont("helvetica", "normal");
+        doc.text(cotizacion.ContactName, 50, 75)
+    }
     
+    doc.setFont("helvetica", "bold");
     doc.text('Contacto:', 15, 82)
     if(cotizacion.CustomerUserID) {
         doc.setFont("helvetica", "normal");
         doc.text(cotizacion.CustomerUserName, 50, 82)
-    } else if(cotizacion?.ContactName.length > 0) {
-
     }
 
     doc.setFont("helvetica", "normal");
