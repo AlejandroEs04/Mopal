@@ -85,7 +85,7 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     }
 
     doc.setFont("helvetica", "normal");
-    doc.text("Brenda Hernandez", 50, 75)
+    doc.text("", 50, 75)
 
     doc.autoTable(columns, rows, {
         startY: 88,
