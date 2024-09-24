@@ -25,6 +25,7 @@ const initialState = {
     Active : true, 
     Observation : '', 
     InternObservation: '', 
+    ContactName: '',
     Products : []
 }
 
@@ -47,6 +48,7 @@ const CrudQuotationPage = () => {
     const [customerDiscounts, setCustomerDiscounts] = useState([])
     const [show, setShow] = useState(false);
     const [modalShow, setModalShow] = useState(false);
+    const [modalSetUpShow, setModalSetUpShow] = useState(false);
     const [productFolio, setProductFolio] = useState('');
     const [productGroup, setProductGroup] = useState('');
     const [discount, setDiscount] = useState(0)
@@ -268,25 +270,32 @@ const CrudQuotationPage = () => {
                         <div>
                             <button
                                 disabled={checkInfo()}
-                                className={`btn ${checkInfo() ? 'bg-transparent text-success' : 'btn-success'} w-100`}
+                                className={`btn btn-success w-100 btn-sm`}
                                 onClick={() => id ? handleUpdateSale(sale) : handleGenerateSale(sale)}
                             >
-                                {sale.Folio ? 'Editar' : 'Generar'} Cotizacion
+                                {sale.Folio ? 'Editar' : 'Generar'} Cotización
+                            </button>
+                        </div>
+
+                        <div>
+                            <button
+                                className={`btn btn-primary w-100 btn-sm`}
+                                onClick={() => setModalSetUpShow(true)}
+                            >
+                                Configurar cotización
                             </button>
                         </div>
                         
                         {id && (
                             <div>
                                 <button
-                                    className="btn btn-secondary"
+                                    className="btn btn-sm btn-secondary"
                                     onClick={() => handleToggleSaleStatus(sale.Folio, 2)}
                                 >
                                     Finalizar Cotización
                                 </button>
                             </div>
                         )}
-
-                        
                     </div>
                 </div>
 
@@ -305,7 +314,7 @@ const CrudQuotationPage = () => {
                         disable
                     />
 
-                    <div className="col-lg-4 col-md-6 d-flex flex-column">
+                    <div className="col-lg-4 d-flex flex-column">
                         <label htmlFor="customer">Cliente</label>
                         <Select 
                             options={customerOptions} 
@@ -314,17 +323,7 @@ const CrudQuotationPage = () => {
                             className="w-100"
                         />
                     </div>
-                        
-                    <div className="col-lg-4 d-flex flex-column">
-                        <label htmlFor="user">Contacto</label>
-                        <select disabled={sale.Folio} id="user" name="CustomerUserID" className="form-select" value={sale.CustomerUserID} onChange={e => handleChangeInfo(e)}>
-                            <option value={0}>Sin Contacto</option>
-                            {customerUsers?.map(user => (
-                                <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
-                            ))}
-                        </select>
-                    </div>
-
+                    
                     <InputContainer 
                         label="Fecha de la cotizacion"
                         name="SaleDate"
@@ -333,14 +332,6 @@ const CrudQuotationPage = () => {
                         value={sale.SaleDate}
                         handleAction={handleChangeInfo}
                     />
-                    
-                    <div className="col-lg-4 col-md-6 d-flex flex-column">
-                        <label htmlFor="currency">Tipo de cambio</label>
-                            <select id="currency" defaultValue={'USD'} className="form-select">
-                            <option value="USD">Dolar Estadounidense</option>
-                            <option value="MXN">Peso Mexicano</option>
-                        </select>
-                    </div>
                     
                     <div className="col-lg-4 d-flex flex-column">
                         <label htmlFor="user">Usuario</label>
@@ -351,6 +342,8 @@ const CrudQuotationPage = () => {
                         ))}
                         </select>
                     </div>
+
+                    <div className="col-8"></div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="observaciones">Observaciones Generales</label>
@@ -375,6 +368,7 @@ const CrudQuotationPage = () => {
                             onChange={e => handleChangeInfo(e)}
                         ></textarea>
                     </div>
+
                 </form>
 
                 <ProductTableView 
@@ -397,6 +391,45 @@ const CrudQuotationPage = () => {
                     handleFunction={handleDeleteProduct}
                 />
             </div>
+
+            <AdminModal
+                show={modalSetUpShow}
+                onHide={() => {
+                    setModalSetUpShow(false)
+                }}
+                header={"Configura la cotización"}
+            >
+                <div className="row g-3">
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="currency">Tipo de cambio</label>
+                            <select id="currency" defaultValue={'USD'} className="form-select">
+                            <option value="USD">Dolar Estadounidense</option>
+                            <option value="MXN">Peso Mexicano</option>
+                        </select>
+                    </div>
+
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="user">Contacto del cliente</label>
+                        <select disabled={sale.Folio || sale?.ContactName.length > 0} id="user" name="CustomerUserID" className="form-select" value={sale.CustomerUserID} onChange={e => handleChangeInfo(e)}>
+                            <option value={0}>Sin Contacto</option>
+                            {customerUsers?.map(user => (
+                                <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <InputContainer  
+                        label="Nombre de contacto"
+                        name="ContactName"
+                        id="contactName"
+                        type="text"
+                        placeholder="Nombre de contacto"
+                        value={sale?.ContactName}
+                        disable={+sale.CustomerUserID !== 0}
+                        handleAction={handleChangeInfo}
+                    />
+                </div>
+            </AdminModal>
 
             <AdminModal
                 show={modalShow}    

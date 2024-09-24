@@ -82,6 +82,8 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     if(cotizacion.CustomerUserID) {
         doc.setFont("helvetica", "normal");
         doc.text(cotizacion.CustomerUserName, 50, 82)
+    } else if(cotizacion?.ContactName.length > 0) {
+
     }
 
     doc.setFont("helvetica", "normal");

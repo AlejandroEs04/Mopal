@@ -11,10 +11,11 @@ const InputContainer = ({
         type = 'text', 
         placeholder, 
         options, 
-        isMoney = false 
+        isMoney = false, 
+        className = ''
     }) => {
     return (
-        <div className="col-lg-4 d-flex flex-column">
+        <div className={`${className} col-lg-4 d-flex flex-column`}>
             <label htmlFor={id}>{label}</label>
 
             {type === 'select' ? (

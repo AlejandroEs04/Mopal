@@ -91,27 +91,11 @@ const InfoSalePage = () => {
             <div className="d-flex flex-column flex-lg-row justify-content-start justify-content-lg-between align-items-lg-center mb-2">
                 <h1>Informacion de la {+sale?.StatusID === 1 ? 'Cotizacion' : 'Venta'}</h1>
                 <div className="d-flex gap-2">
-                    {sale?.StatusID === 1 && (
-                        <>    
-                            <button
-                                className="btn btn-dark"
-                                onClick={() => generateQuotationPdf(sale, subtotal, iva, total, true)}
-                            >
-                                Descargar PDF
-                            </button>
-                            <button
-                                className="btn btn-success"
-                                onClick={() => sendQuotationPdf(sale.Folio, sale, subtotal, iva, total)}
-                            >
-                                Enviar Cotizacion
-                            </button>
-                        </>
-                    )}
-
-                    {+sale?.StatusID < 4 && sale?.Active === 1 && (
+                    {(+sale?.StatusID < 4 && sale?.Active === 1) && (
                         <button
                             className={`
                                 btn
+                                btn-sm
                                 ${+sale?.StatusID === 2 && 'btn-warning fw-bold'}
                                 ${+sale?.StatusID === 3 && 'btn-success fw-bold'}
                                 text-nowrap
@@ -122,6 +106,25 @@ const InfoSalePage = () => {
                             {+sale?.StatusID === 3 && 'Entregado'}
                         </button>
                     )}
+
+                    {sale?.StatusID === 1 && (
+                        <>    
+                            <button
+                                className="btn btn-dark btn-sm"
+                                onClick={() => generateQuotationPdf(sale, subtotal, iva, total, true)}
+                            >
+                                Descargar PDF
+                            </button>
+                            <button
+                                className="btn btn-success btn-sm"
+                                onClick={() => sendQuotationPdf(sale.Folio, sale, subtotal, iva, total)}
+                            >
+                                Enviar Cotizacion
+                            </button>
+                        </>
+                    )}
+
+                    
                     
                 </div>
             </div>
@@ -148,13 +151,18 @@ const InfoSalePage = () => {
                     <p className="mb-1 fw-bold">Razon social: <span className="fw-normal">{sale?.BusinessName}</span></p>
                     <p className="mb-1 fw-bold">RFC: <span className="fw-normal">{sale?.RFC}</span></p>
 
-                    {sale?.CustomerUserID && (
+                    {(sale?.CustomerUserID && sale?.ContactName.length < 0) ? (
                         <>
                             <h4 className="mt-3">Información del usuario</h4>
                             <p className="mb-1 fw-bold">ID del usuario: <span className="fw-normal">{sale?.CustomerUserID}</span></p>
                             <p className="mb-1 fw-bold">Nombre del usuario: <span className="fw-normal">{sale?.CustomerUserName}</span></p>
                             <p className="mb-1 fw-bold">Email del usuario: <span className="fw-normal">{sale?.CustomerUserEmail}</span></p>
                             <p className="mb-1 fw-bold">Dirección del usuario: <span className="fw-normal">{sale?.CustomerUserAddress}</span></p>
+                        </>
+                    ) : (
+                        <>
+                            <h4 className="mt-3">Información del usuario</h4>
+                            <p className="mb-1 fw-bold">Nombre de contacto: <span className="fw-normal">{sale?.ContactName}</span></p>
                         </>
                     )}
 
