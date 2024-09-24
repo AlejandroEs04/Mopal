@@ -142,10 +142,6 @@ const DiscountsForm = ({supplier, type}) => {
                 <h2 className="m-0">Descuentos</h2>
             </div>
 
-            {alerta && (
-                <p className='alert alert-success'>{alerta.msg}</p>
-            )}
-
             <h4 className="fw-light mt-2">Agregar un descuento</h4>
 
             <div className="row">
@@ -191,7 +187,7 @@ const DiscountsForm = ({supplier, type}) => {
                                 <td><div><button onClick={() => handleSaveDiscount()} className='btn btn-sm bgPrimary'>Guardar</button></div></td>
                             </tr>
 
-                            {supplier.Discounts?.map(discount => (
+                            {supplier?.Discounts?.map(discount => (
                                 <tr key={discount.ID}>
                                     <td>{discount?.ID}</td>
                                     <td>

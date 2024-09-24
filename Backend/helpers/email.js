@@ -228,7 +228,7 @@ export const quotationSend = async(datos) => {
             html: msgHtml, 
         });
     } catch (error) {
-        console.log("Aqui" + error)
+        console.log(error)
     }
 }
 

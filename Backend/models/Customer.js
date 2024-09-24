@@ -10,6 +10,7 @@ class Customer extends ActiveRecord {
         this.Address = customer?.Address;
         this.RFC = customer?.RFC;
         this.Email = customer?.Email;
+        this.ContactName = customer?.ContactName;
     }
 }
 

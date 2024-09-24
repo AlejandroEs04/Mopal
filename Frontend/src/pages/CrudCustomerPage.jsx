@@ -30,9 +30,7 @@ const CrudCustomerPage = () => {
 
     const checkInfo = useCallback(() => {
         return customer.BusinessName === '' ||
-        customer.Address === '' ||
-        customer.RFC === '' ||
-        customer.RFC.length < 12
+        customer.Address === ''
     }, [customer])
 
     useEffect(() => {
@@ -50,7 +48,15 @@ const CrudCustomerPage = () => {
         }
 
         try {
-            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/customers`, { customer }, config)
+            let data
+
+            if(id) {
+                const { data : response } = await axios.put(`${import.meta.env.VITE_API_URL}/api/customers`, { customer }, config)
+                data = response
+            } else {
+                const { data : response } = await axios.post(`${import.meta.env.VITE_API_URL}/api/customers`, { customer }, config)
+                data = response
+            }
 
             setAlerta({
                 error: false, 

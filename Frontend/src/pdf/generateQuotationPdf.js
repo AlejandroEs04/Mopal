@@ -7,22 +7,33 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     const doc = new jsPDF();
 
     // Crear Tabla Productos
-    const columns = ['#', 'Cant', 'Unid.', 'Clave', 'Descripcion', 'P.Unitario', 'Importe', 'Mon'];
+    const columns = ['#', 'Cant', 'Unid.', 'Descripcion', 'P.Unitario', 'Importe', 'Mon'];
 
     const rows = [];
 
     for(let i = 0; i < cotizacion?.Products.length+1; i++) {
         if(i === cotizacion.Products.length) {
-            rows[i] = ['', '', '', '', '', 'Subtotal:', formatearDinero(+subtotal), 'USD']
-            rows[i+1] = ['', '', '', '', '', 'IVA:', formatearDinero(+iva), 'USD']
-            rows[i+2] = ['', '', '', '', '', 'Total:', formatearDinero(+total), 'USD']
+            rows[i] = ['', '', '', '', 
+                { content: 'Subtotal:', styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: formatearDinero(+subtotal), styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: "USD", styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+            ]
+            rows[i+1] = ['', '', '', '', 
+                { content: 'IVA:', styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: formatearDinero(+iva), styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: "USD", styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+            ]
+            rows[i+2] = ['', '', '', '',
+                { content: 'Total:', styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: formatearDinero(+total), styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+                { content: "USD", styles: { fontStyle: 'bold', textDecoration: 'underline' } },
+            ]
         } else {
             rows[i] = [
                 `${i+1}`, 
                 `${cotizacion.Products[i].Quantity}`, 
                 'Pieza',
-                `${cotizacion.Products[i].Folio}`, 
-                `${cotizacion.Products[i].Name}\n${cotizacion.Products[i].Description}\n\n${cotizacion?.Products[i].Observations}`, 
+                `${cotizacion.Products[i].Folio}\n\n${cotizacion.Products[i].Name}\n${cotizacion.Products[i].Description}${cotizacion?.Products[i].Observations ? `\n\n${cotizacion?.Products[i].Observations}` : ''}`, 
                `${formatearDinero(+cotizacion.Products[i].PricePerUnit - (+cotizacion.Products[i].PricePerUnit * (+cotizacion.Products[i].Discount / 100)))}`, 
                 `${formatearDinero((+cotizacion.Products[i].PricePerUnit * +cotizacion.Products[i].Quantity) - ((+cotizacion.Products[i].PricePerUnit * +cotizacion.Products[i].Quantity) * (+cotizacion.Products[i].Discount / 100)))}`, 
                 'USD'
@@ -67,32 +78,22 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     
     doc.text('Atencion a:', 15, 75)
     
+    doc.text('Contacto:', 15, 82)
     if(cotizacion.CustomerUserID) {
-        doc.text('Contacto:', 15, 82)
         doc.setFont("helvetica", "normal");
         doc.text(cotizacion.CustomerUserName, 50, 82)
     } else if(cotizacion?.ContactName.length > 0) {
 
     }
 
-    
     doc.setFont("helvetica", "normal");
-    doc.text(cotizacion.User, 50, 75)
+    doc.text("", 50, 75)
 
     doc.autoTable(columns, rows, {
         startY: 88,
         styles: { overflow: "linebreak" },
         bodyStyles: { valign: "top" },
-        theme: "striped",
-        didDrawPage: function (data) {
-            doc.line(15, 283, 196, 283); 
-            doc.setFontSize(8)
-            doc.text('MOPAL GRUPO   RFC:MGR150224B26', 15, 287)
-            doc.setFontSize(6)
-            doc.setFont("helvetica", "italic");
-            doc.text('Carlos Salazar Poniente 1930, Monterrey Centro, Del Monterrey, Monterrey, Nuevo Leon, Mexico, CP. 64000', 15, 290)
-            
-        }
+        theme: "striped"
     })
 
     var finalY = doc.previousAutoTable.finalY;

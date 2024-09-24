@@ -5,6 +5,7 @@ import useAdmin from "../hooks/useAdmin"
 import Scroll from "./Scroll"
 import Spinner from "./Spinner"
 import DeletePop from "./DeletePop"
+import formatearFechaInput from "../helpers/formatearFechaInput"
 
 const TablePurchases = ({ purchase, startIndex, endIndex, actionStorage = false }) => {
   const [showPop, setShowPop] = useState(false);
@@ -60,6 +61,7 @@ const TablePurchases = ({ purchase, startIndex, endIndex, actionStorage = false 
             <thead className="table-light">
               <tr>
                 <th>Folio</th>
+                <th>Fecha</th>
                 <th>Proveedor</th>
                 <th>Usuario</th>
                 <th>Status</th>
@@ -77,6 +79,7 @@ const TablePurchases = ({ purchase, startIndex, endIndex, actionStorage = false 
               {purchase?.slice(startIndex, endIndex).sort((a,b) => b.Folio-a.Folio).map(Purchase => (
                 <tr onDoubleClick={() => navigate(`/info/purchases/${Purchase.Folio}`)} key={Purchase.Folio}>
                   <td>{Purchase.Folio}</td>
+                  <td>{formatearFechaInput(Purchase.PurchaseDate)}</td>
                   <td className="text-nowrap">{Purchase.BusinessName}</td>
                   <td className="text-nowrap">{Purchase.User}</td>
                   <td className={`${Purchase.Status === 'Realizada' ? 'text-warning' : 'text-success'}`}>{Purchase.Status}</td>

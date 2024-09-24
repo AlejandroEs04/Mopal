@@ -25,11 +25,9 @@ const CrudProductPage = () => {
         const { name, value } = e.target
         const isNumber = ['listPrice', 'typeID', 'classificationID', 'stock', 'minStock', 'maxStock'].includes(name)
 
-        const valueTrim = value.trim()
-
         setProduct({
             ...product, 
-            [name] : isNumber ? +valueTrim : valueTrim
+            [name] : isNumber ? +valueTrim : value
         })
     }
     // Inicializar alerta 

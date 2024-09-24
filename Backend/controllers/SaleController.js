@@ -156,8 +156,6 @@ const updateSale = async(req, res) => {
                     return res.status(500).json({status : 500, msg: "Hubo un error al agregar un producto"})
                 }
     
-                const productoOld = await productoObj.getByFolio(sale.Products[i].Folio);
-    
                 const sqlUpdateStock = `
                     UPDATE Product 
                     SET 
@@ -165,7 +163,7 @@ const updateSale = async(req, res) => {
                         StockOnHand = StockOnHand + ${productNew.Quantity}
                     WHERE Folio = '${productNew.ProductFolio}'
                 `
-    
+
                 const responseProduct = await productoObj.exectQuery(sqlUpdateStock);
     
                 if(!responseProduct) {
@@ -348,7 +346,7 @@ const deleteSaleProduct = async(req, res) => {
 
     const sqlGetProducts = `
         SELECT * FROM SaleProduct 
-        WHERE ProductFolio = '${productId}' AND SaleFolio = ${saleId} AND AssemblyGroup = ${group}
+        WHERE ProductFolio = '${productId}' AND SaleFolio = ${saleId} ${group !== 'null' ? `AND AssemblyGroup = ${group}` : ''}
     `
 
     const sale = await saleProductObj.exectQueryInfo(sqlGetProducts);
@@ -369,7 +367,7 @@ const deleteSaleProduct = async(req, res) => {
         return res.status(500).json({status : 500, msg: "Hubo un error al actualizar los productos"})
     }
     
-    const sqlDeleteProduct = `DELETE FROM SaleProduct WHERE SaleFolio = ${saleId} AND ProductFolio = '${productId}' AND AssemblyGroup = ${group}`
+    const sqlDeleteProduct = `DELETE FROM SaleProduct WHERE SaleFolio = ${saleId} AND ProductFolio = '${productId}' ${group !== 'null' ? `AND AssemblyGroup = ${group}` : ''}`
     const response = saleProductObj.exectQuery(sqlDeleteProduct);
 
     if(response) {

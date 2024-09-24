@@ -9,9 +9,10 @@ const Input = ({
     disable = false, 
     type = 'text', 
     placeholder, 
+    className = ''
 }) => {
     return (
-        <div className="d-flex flex-column">
+        <div className={`d-flex flex-column ${className}`}>
             <label htmlFor={id}>{label}</label>
             <input
                 type={type} 

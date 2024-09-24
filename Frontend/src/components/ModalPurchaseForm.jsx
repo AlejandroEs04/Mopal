@@ -50,7 +50,6 @@ const ModalPurchaseForm = () => {
     const handleSubmit = async(e) => {
         e.preventDefault()
         const response = await handleGetReportInformation(formInformation, 'purchase-report')
-        console.log(response)
         setReportInfo(response)
     }
 

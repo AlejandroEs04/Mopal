@@ -123,8 +123,6 @@ const CrudProductAccesoriesPage = () => {
     setAccesoriesOptions(options)
   }, [accesories])
 
-  console.log(product)
-
   return (
     <div className='my-4'>
       <button onClick={() => navigate(-1)} className="backBtn mt-1 p-0">

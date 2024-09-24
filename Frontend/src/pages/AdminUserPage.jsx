@@ -10,6 +10,7 @@ import Spinner from "../components/Spinner"
 export const UserTr = ({user, setId, setShow, show}) => {
   const { pathname } = useLocation();
   const { setLoading, setAlerta } = useApp();
+  const { roles } = useAdmin();
 
   const handleRecoveryUser = async(id) => {
     const token = localStorage.getItem('token');
@@ -51,11 +52,10 @@ export const UserTr = ({user, setId, setShow, show}) => {
   return (
     <tr>
       <td>{user.ID}</td>
-      <td className="text-nowrap">{user.FullName}</td>
+      <td className="text-nowrap">{user.Name + ' ' + user.LastName}</td>
       <td>{user.UserName}</td>
       <td>{user.Email}</td>
-      <td>{user.Number ?? 'N/A'}</td>
-      <td>{user.RolName}</td> 
+      <td>{roles.filter(rol => rol.ID === user.RolID)[0].Name}</td> 
       <td className={`${user.Active === 1 ? 'text-success' : 'text-danger'}`}>{user.Active === 1 ? 'Activo' : 'Inactivo'}</td>
       <td>
         <div className="d-flex justify-content-start gap-2">
@@ -167,7 +167,6 @@ const AdminUserPage = () => {
                   <th>Nombre</th>
                   <th>Usuario</th>
                   <th>Email</th>
-                  <th>Numero</th>
                   <th>Rol</th>
                   <th>Status</th>
                   <th>Acciones</th>

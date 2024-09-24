@@ -14,6 +14,7 @@ const Textarea = ({
                 id={id} 
                 className="form-control"
                 value={value}
+                name={name}
                 onChange={handleAction}
                 rows={5}
             ></textarea>

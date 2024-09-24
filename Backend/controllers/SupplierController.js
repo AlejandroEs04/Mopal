@@ -5,7 +5,7 @@ const getAllSupplier = async(req, res) => {
     const users = await supplierObj.getAllTable('SupplierUserView')
     const suppliers = await supplierObj.getAll();
 
-    if(suppliers.length > 0 && users.length > 0) {
+    if(suppliers.length > 0) {
         for(let i = 0; i<suppliers.length;i++) {
             const sqlDiscounts = `
                 SELECT * FROM SupplierDiscount
@@ -23,7 +23,6 @@ const getAllSupplier = async(req, res) => {
 
             suppliers[i].Discounts = discounts
 
-            
             const usersSupplier = users?.filter(user => user.SupplierID === suppliers[i].ID);
             suppliers[i].Users = usersSupplier;
         }

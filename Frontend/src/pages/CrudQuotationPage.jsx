@@ -11,6 +11,7 @@ import InputContainer from "../components/InputContainer";
 import ProductTableView from "../components/ProductTableView";
 import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
+import axios from "axios";
 
 const initialState = {
     Folio : '',
@@ -57,7 +58,7 @@ const CrudQuotationPage = () => {
     const { id } = useParams();
     const { pathname } = useLocation()
 
-    const { users, customers, sales, handleToggleSaleStatus, alerta, setAlerta, handleGenerateSale, handleUpdateSale, handleDeleteSaleProduct, loading } = useAdmin();
+    const { users, customers, sales,setLoading, handleToggleSaleStatus, alerta, setAlerta, handleGenerateSale, handleUpdateSale, loading } = useAdmin();
 
     // Inicializar Select
     const customerOptions = customers?.map(customer => {
@@ -80,7 +81,49 @@ const CrudQuotationPage = () => {
     };
 
     const handleDeleteProduct = () => {
-        handleDeleteSaleProduct(id, productFolio, productGroup)
+        if(id) {
+            const currentSalesProducts = sales.filter(sale => +sale.Folio === +id)[0].Products
+            
+            if(currentSalesProducts.filter(product => product.Folio === productFolio && product.AssemblyGroup === productGroup).length > 0) {
+                handleDeleteSaleProduct()
+                return
+            }
+        }
+        
+        setSale({
+            ...sale, 
+            Products: sale.Products.filter(product => !(product.AssemblyGroup === productGroup && product.Folio === productFolio))
+        })
+    }
+
+    const handleDeleteSaleProduct = async() => {
+        const token = localStorage.getItem('token');
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            setLoading(true)
+
+            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}/${productGroup}`, config);
+            
+            setAlerta({
+                error: false, 
+                msg : data.msg
+            })
+
+            setTimeout(() => {
+                setAlerta(null)
+            }, 5000)
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleGetQuotations = () => {
@@ -280,7 +323,7 @@ const CrudQuotationPage = () => {
                             className="w-100"
                         />
                     </div>
-
+                    
                     <InputContainer 
                         label="Fecha de la cotizacion"
                         name="SaleDate"
