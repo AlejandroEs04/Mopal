@@ -151,7 +151,7 @@ const InfoSalePage = () => {
                     <p className="mb-1 fw-bold">Razon social: <span className="fw-normal">{sale?.BusinessName}</span></p>
                     <p className="mb-1 fw-bold">RFC: <span className="fw-normal">{sale?.RFC}</span></p>
 
-                    {(sale?.CustomerUserID && sale?.ContactName.length < 0) ? (
+                    {sale?.CustomerUserID && (
                         <>
                             <h4 className="mt-3">Información del usuario</h4>
                             <p className="mb-1 fw-bold">ID del usuario: <span className="fw-normal">{sale?.CustomerUserID}</span></p>
@@ -159,7 +159,9 @@ const InfoSalePage = () => {
                             <p className="mb-1 fw-bold">Email del usuario: <span className="fw-normal">{sale?.CustomerUserEmail}</span></p>
                             <p className="mb-1 fw-bold">Dirección del usuario: <span className="fw-normal">{sale?.CustomerUserAddress}</span></p>
                         </>
-                    ) : (
+                    )}
+
+                    {sale?.ContactName?.length > 0 && (
                         <>
                             <h4 className="mt-3">Información del usuario</h4>
                             <p className="mb-1 fw-bold">Nombre de contacto: <span className="fw-normal">{sale?.ContactName}</span></p>

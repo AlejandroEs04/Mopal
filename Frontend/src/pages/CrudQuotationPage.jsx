@@ -219,6 +219,14 @@ const CrudQuotationPage = () => {
         }
     }, [sales, pathname])
 
+    useEffect(() => {
+        if(auth.ID)
+            setSale({
+                ...sale, 
+                UserID: auth.ID
+            })
+    }, [auth, sale])
+
     const checkInfo = useCallback(() => {
         return sale.UserID === 0 ||
           sale.CustomerID === 0 ||
@@ -335,7 +343,7 @@ const CrudQuotationPage = () => {
                     
                     <div className="col-lg-4 d-flex flex-column">
                         <label htmlFor="user">Usuario</label>
-                        <select id="user" name="UserID" className="form-select" disabled={id} value={sale.UserID} onChange={e => handleChangeInfo(e)}>
+                        <select id="user" name="UserID" className="form-select" disabled value={sale.UserID} onChange={e => handleChangeInfo(e)}>
                         <option value="0">Seleccione el usuario</option>
                         {users?.map(user => user.RolID <= 5 && user.Active === 1 && (
                             <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.Name + ' ' + user.LastName}`}</option>
