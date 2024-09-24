@@ -25,6 +25,17 @@ const AdminProvider = ({children}) => {
     const [sales, setSales] = useState([]);
     const [reportInfo, setReportInfo] = useState({});
 
+    const handleSetAlerta = (msg = '', error = false) => {
+        setAlerta({
+            error, 
+            msg
+        })
+
+        setTimeout(() => {
+            setAlerta(null)
+        }, 4500)
+    }
+
     const handleGetUsers = async() => {
         const token = localStorage.getItem('token');
 
@@ -203,11 +214,9 @@ const AdminProvider = ({children}) => {
         if(purchase.Folio === "") {
             try {
                 setLoading(true)
+
                 const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/purchases`, { purchase : purchase }, config);
-                setAlerta({
-                  error: false, 
-                  msg : data.msg
-                })
+                handleSetAlerta(data.msg, false)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -217,15 +226,9 @@ const AdminProvider = ({children}) => {
             try {
                 setLoading(true)
                 const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/purchases`, { purchase : purchase }, config);
-                setAlerta({
-                  error: false, 
-                  msg : data.msg
-                })
+                handleSetAlerta(data.msg, false)
             } catch (error) {
-                setAlerta({
-                    error: true, 
-                    msg: error.response.data.msg
-                })
+                handleSetAlerta(error.response.data.msg, true)
             } finally {
                 setLoading(false)
             }
@@ -324,24 +327,9 @@ const AdminProvider = ({children}) => {
             setLoading(true)
 
             const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/${modelName}/status/${id}`, { statusId }, config)
-
-            setAlerta({
-                error : false, 
-                msg : data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            handleSetAlerta(data.msg, false)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            handleSetAlerta(error.response.data.msg, true)
         } finally {
             setLoading(false)
         }
@@ -359,67 +347,9 @@ const AdminProvider = ({children}) => {
 
         try {
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${saleFolio}`, config);
-            setAlerta({
-                error : false, 
-                msg : "La venta de ha desactivado con exito"
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            handleSetAlerta("Venta eliminada correctamente", false)
         } catch (error) {
-            setAlerta({
-                error : true, 
-                msg : error.response.data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
-        }
-    }
-
-    const handleSaveItem = (modelName, item, id = null) => {
-        if(id) {
-            updateNewItem(modelName, item)
-        } else {
-            addNewItem(modelName, item)
-        }
-    }
-
-    const addNewItem = async(modelName, item) => {
-        const token = localStorage.getItem('token');
-  
-        const config = {
-            headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-            }
-        }
-
-        try {
-            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/${modelName}`, { item }, config);
-            console.log(data)
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const updateNewItem = async(modelName, item) => {
-        const token = localStorage.getItem('token');
-  
-        const config = {
-            headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-            }
-        }
-
-        try {
-            const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/${modelName}`, { item }, config);
-            console.log(data)
-        } catch (error) {
-            console.log(error)
+            handleSetAlerta(error.response.data.msg, true)
         }
     }
 
@@ -503,15 +433,7 @@ const AdminProvider = ({children}) => {
 
         try {
           const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/api/sales`, { sale }, config);
-
-          setAlerta({
-            error: false, 
-            msg : data.msg
-          })
-
-          setTimeout(() => {
-            setAlerta(null)
-          }, 5000)
+          handleSetAlerta(data.msg, false)
         } catch (error) {
           console.log(error)
         }
@@ -530,15 +452,7 @@ const AdminProvider = ({children}) => {
             setLoading(true)
 
             const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/sales`, { sale }, config);
-            
-            setAlerta({
-                error: false, 
-                msg : data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            handleSetAlerta(data.msg, false)
         } catch (error) {
             console.log(error)
         } finally {
@@ -560,15 +474,7 @@ const AdminProvider = ({children}) => {
             setLoading(true)
 
             const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}/${productGroup ?? 0}`, config);
-            
-            setAlerta({
-                error: false, 
-                msg : data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            handleSetAlerta(data.msg, false)
         } catch (error) {
             console.log(error)
         } finally {
@@ -583,11 +489,7 @@ const AdminProvider = ({children}) => {
         formData.append('pdf', pdfData, 'archivo.pdf');
 
         await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/requests/quotation/${id}`, formData);
-
-        setAlerta({
-            error: false, 
-            msg: "Correo enviado exitosamente"
-        })
+        handleSetAlerta("Correo enviado correctamente", false)
     }
 
     const handleSendQuotation = async(id, quotation, subtotal, iva, total) => {
@@ -598,10 +500,7 @@ const AdminProvider = ({children}) => {
 
         await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/quotation/${id}`, formData);
 
-        setAlerta({
-            error: false, 
-            msg: "Correo enviado exitosamente"
-        })
+        handleSetAlerta("Correo enviado correctamente", false)
     }
 
     const sendQuotationPdf = async(folio, quotation, subtotal, iva, total) => {
@@ -613,16 +512,9 @@ const AdminProvider = ({children}) => {
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/quotation/${folio}`, formData);
     
-            setAlerta({
-                error: false, 
-                msg: "Correo enviado exitosamente"
-            })
+            handleSetAlerta("Correo enviado correctamente", false)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
-
+            handleSetAlerta(error.response.data.msg, true)
             return
         }
 
@@ -721,7 +613,6 @@ const AdminProvider = ({children}) => {
                 message, 
                 id,
                 reportInfo, 
-                handleSaveItem, 
                 handleFilter, 
                 handleGenerateSale, 
                 handleUpdateSale,
@@ -729,7 +620,8 @@ const AdminProvider = ({children}) => {
                 handleSendQuotation, 
                 sendQuotationPdf, 
                 handleGetReportInformation, 
-                handleSendRequestQuotation
+                handleSendRequestQuotation, 
+                handleSetAlerta
             }}
         >
             {children}
