@@ -11,6 +11,7 @@ import InputContainer from "../components/InputContainer";
 import ProductTableView from "../components/ProductTableView";
 import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
+import axios from "axios";
 
 const initialState = {
     Folio : '',
@@ -352,7 +353,7 @@ const CrudQuotationPage = () => {
                     </div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
-                        <label htmlFor="observaciones">Observaciones</label>
+                        <label htmlFor="observaciones">Observaciones Generales</label>
                         <textarea 
                             name="Observation"
                             id="observaciones" 
@@ -364,7 +365,7 @@ const CrudQuotationPage = () => {
                     </div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
-                        <label htmlFor="InternObservation">Observaciones (Internas)</label>
+                        <label htmlFor="InternObservation">Observaciones Internas</label>
                         <textarea 
                             name="InternObservation"
                             id="InternObservation" 

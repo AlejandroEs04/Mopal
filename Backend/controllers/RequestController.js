@@ -95,7 +95,9 @@ const getUserRequest = async(req, res) => {
             requests
         })
     } else {
-        console.log("Algo fallo")
+        return res.status(500).json({
+            msg: "Hubo un error"
+        })
     }
 }
 
@@ -256,7 +258,6 @@ const acceptRequest = async(req, res) => {
             break;
         
         default : 
-            console.log('Hay un error');
             break;
     }
 

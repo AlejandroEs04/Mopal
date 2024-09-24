@@ -80,19 +80,6 @@ const AdminProvider = ({children}) => {
             console.log(error)
         }
     }
-    
-    const handleGetReport = async() => {
-        setLoading(true)
-
-        try {
-            const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/report/products_total`);
-            setReportInfo(data)
-        } catch (error) {
-            console.log(error)
-        } finally {
-            setLoading(false)
-        }
-    }
 
     const handleGetReportInformation = async(filters, type) => {
         setLoading(true)
@@ -533,7 +520,6 @@ const AdminProvider = ({children}) => {
         handleGetSpecification();
         handleBuildBuyEmail();
         handleGetRequest();
-        handleGetReport()
 
         socket.on('purchaseUpdate', response => {
             handleGetPurchase()

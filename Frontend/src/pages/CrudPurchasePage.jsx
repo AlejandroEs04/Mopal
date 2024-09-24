@@ -54,7 +54,7 @@ const CrudPurchasePage = () => {
 
     const { id } = useParams()
 
-    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta } = useAdmin();
+    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, handleSetAlerta } = useAdmin();
     const { auth } = useAuth();
 
     const [edit, setEdit] = useState(false);
@@ -121,7 +121,10 @@ const CrudPurchasePage = () => {
                 setAlerta(null)
             }, 5000)
         } catch (error) {
-            console.log(error)
+            setAlerta({
+                error: true, 
+                msg: error.response.data.msg
+            })
         } finally {
             setLoading(false)
         }
@@ -400,7 +403,7 @@ const CrudPurchasePage = () => {
                     </div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
-                        <label htmlFor="observaciones">Observaciones</label>
+                        <label htmlFor="observaciones">Observaciones Generales</label>
                         <textarea 
                             name="Observation"
                             id="observaciones" 
@@ -411,7 +414,7 @@ const CrudPurchasePage = () => {
                         ></textarea>
                     </div>
                     <div className="col-md-6 d-flex flex-column mb-2">
-                        <label htmlFor="InternObservation">Observaciones (Internas)</label>
+                        <label htmlFor="InternObservation">Observaciones Internas</label>
                         <textarea 
                             name="InternObservation"
                             id="InternObservation" 

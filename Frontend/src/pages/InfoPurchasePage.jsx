@@ -145,7 +145,6 @@ const InfoPurchasePage = () => {
                                             ))}
                                         </div>
                                     </td>
-                                    {console.log(product)}
                                     <td>{product.AssemblyGroup === 0 ? 'N/A' : product.AssemblyGroup ?? 'N/A'}</td>
                                     <td>{product.Quantity}</td>
                                     <td>{product.Observations ?? 'N/A'}</td>
