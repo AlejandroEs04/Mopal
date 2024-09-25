@@ -24,7 +24,7 @@ const addNewProduct = async(req, res) => {
     if(product) {
         const productObj = new Product(product);
 
-        const response = await productObj.addOne(productObj)
+        const response = await productObj.addOne(productObj);
         
         if(response) {
             return res.status(200).json({

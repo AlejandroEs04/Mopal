@@ -36,7 +36,7 @@ const AdminLayout = () => {
         <>
           <AdminHeader />
           <main className="container">
-            {!pathname.includes("form") && (
+            {!(pathname.includes("form") || pathname === '/admin/user') && (
               <AdminNav />
             )}
   

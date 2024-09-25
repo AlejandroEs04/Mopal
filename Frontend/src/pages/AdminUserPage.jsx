@@ -51,24 +51,24 @@ export const UserTr = ({user, setId, setShow, show}) => {
 
   return (
     <tr>
-      <td>{user.ID}</td>
-      <td className="text-nowrap">{user.Name + ' ' + user.LastName}</td>
-      <td>{user.UserName}</td>
-      <td>{user.Email}</td>
-      <td>{roles.filter(rol => rol.ID === user.RolID)[0].Name}</td> 
-      <td className={`${user.Active === 1 ? 'text-success' : 'text-danger'}`}>{user.Active === 1 ? 'Activo' : 'Inactivo'}</td>
+      <td>{user?.ID}</td>
+      <td className="text-nowrap">{user?.Name + ' ' + user?.LastName}</td>
+      <td>{user?.UserName}</td>
+      <td>{user?.Email}</td>
+      <td>{roles.filter(rol => rol.ID === user?.RolID)[0]?.Name}</td> 
+      <td className={`${user?.Active === 1 ? 'text-success' : 'text-danger'}`}>{user?.Active === 1 ? 'Activo' : 'Inactivo'}</td>
       <td>
         <div className="d-flex justify-content-start gap-2">
-          <Link to={`${pathname}/form/${user.ID}`}>
+          <Link to={`${pathname}/form/${user?.ID}`}>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-100 h-100 iconTable editar">
               <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
             </svg>
           </Link>
 
-          {user.Active === 1 ? (
+          {user?.Active === 1 ? (
             <button
               onClick={() => {
-                setId(user.ID)
+                setId(user?.ID)
                 setShow(!show)
               }}
             >
@@ -79,7 +79,7 @@ export const UserTr = ({user, setId, setShow, show}) => {
           ) : (
             <button
               onClick={() => {
-                handleRecoveryUser(user.ID);
+                handleRecoveryUser(user?.ID);
               }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-100 h-100 iconTable text-success">
@@ -174,9 +174,9 @@ const AdminUserPage = () => {
               </thead>
 
               <tbody>
-                {users?.map(user => user.Active === 1 && (
+                {users?.map(user => user?.Active === 1 && (
                   <UserTr 
-                    key={user.ID}
+                    key={user?.ID}
                     setId={setId}
                     setShow={setShow}
                     show={show}

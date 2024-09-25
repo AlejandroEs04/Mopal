@@ -3,6 +3,7 @@ import useAuth from '../hooks/useAuth'
 import Input from '../components/Input';
 import Textarea from '../components/Textarea';
 import useApp from '../hooks/useApp';
+import BackButton from '../components/BackButton';
 
 const UserPage = () => {
     const [passwordInputType, setPasswordInputType] = useState('password')
@@ -60,7 +61,8 @@ const UserPage = () => {
     }, [userInfo])
 
     return (
-        <div className='mt-2'>
+        <div className='mt-4'>
+            <BackButton url='/admin' />
             <h1 className='m-0'>Porfile Information</h1>
             <p>See your porfile information, and setting your system</p>
 
