@@ -110,6 +110,17 @@ const updateUser = async(req, res) => {
     } else {
         userObj.Password = oldUser.Password
     }
+
+    if(user.supplier) {
+        const typeObj = new SupplierUser({UserID : userObj.ID, SupplierID : user.supplier});
+        await typeObj.addOne(typeObj)
+    }
+
+    if(user.customer) {
+        const typeObj = new CustomerUser({UserID : userObj.ID, CustomerID : user.customer});
+        await typeObj.addOne(typeObj)
+    }
+
     const response = await userObj.updateOne(userObj);
 
     if(response) {

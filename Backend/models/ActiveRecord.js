@@ -108,6 +108,7 @@ class ActiveRecord {
             return { msg: `${tableName} Creado Correctamente`, response };
         } catch (error) {
             console.log(error);
+            
             return;
         }
     }

@@ -80,20 +80,13 @@ const generateQuotationPdf = (cotizacion, subtotal, iva, total, save = false) =>
     if(cotizacion?.ContactName?.length > 0) {
         doc.setFont("helvetica", "normal");
         doc.text(cotizacion.ContactName, 50, 75)
-    }
-    
-    doc.setFont("helvetica", "bold");
-    doc.text('Contacto:', 15, 82)
-    if(cotizacion.CustomerUserID) {
+    } else if(cotizacion.CustomerUserID) {
         doc.setFont("helvetica", "normal");
-        doc.text(cotizacion.CustomerUserName, 50, 82)
+        doc.text(cotizacion.CustomerUserName, 50, 75)
     }
-
-    doc.setFont("helvetica", "normal");
-    doc.text("", 50, 75)
 
     doc.autoTable(columns, rows, {
-        startY: 88,
+        startY: 82,
         styles: { overflow: "linebreak" },
         bodyStyles: { valign: "top" },
         theme: "striped"

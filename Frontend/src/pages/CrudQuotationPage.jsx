@@ -225,7 +225,7 @@ const CrudQuotationPage = () => {
                 ...sale, 
                 UserID: auth.ID
             })
-    }, [auth, sale])
+    }, [auth, sales])
 
     const checkInfo = useCallback(() => {
         return sale.UserID === 0 ||

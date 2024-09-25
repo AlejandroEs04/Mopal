@@ -164,6 +164,8 @@ const CrudUserPage = () => {
     }
   }, [])
 
+  console.log(user)
+
   return (
     <div className="container mt-4">
       <button onClick={() => navigate(-1)} className="backBtn mb-2">
