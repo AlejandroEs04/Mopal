@@ -20,6 +20,8 @@ import ContactRoutes from './routes/ContactRoutes.js';
 import ReportRoutes from './routes/ReportRoutes.js'
 import SendEmail from './routes/SendEmailRoutes.js'
 import DiscountsRoutes from './routes/DiscountRoutes.js';
+import ObservationRoutes from './routes/ObservationRoutes.js';
+import PendingRequestRoutes from './routes/PendingRequestRoutes.js';
 
 dotenv.config();
 
@@ -64,6 +66,8 @@ app.use('/api/contact', ContactRoutes);
 app.use('/api/report', ReportRoutes);
 app.use('/api/sendEmail', SendEmail);
 app.use('/api/discounts', DiscountsRoutes);
+app.use('/api/observations', ObservationRoutes);
+app.use('/api/pending-requests', PendingRequestRoutes);
 
 const server = createServer(app);
 

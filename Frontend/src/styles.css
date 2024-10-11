@@ -58,6 +58,11 @@ button.max-w-btn {
         max-width: 200px;
     }
 }
+.text-xs-gray {
+    font-size: 12px;
+    font-weight: bold;
+    color: #6b7280;
+}
 .containerCompleteImageBackgound {
     background-color: var(--gray);
     color: var(--black);

@@ -4,6 +4,8 @@ import Input from '../components/Input';
 import Textarea from '../components/Textarea';
 import useApp from '../hooks/useApp';
 import BackButton from '../components/BackButton';
+import ObservationForm from '../components/ObservationForm';
+import UserNotificationsContainer from '../components/UserNotificationsContainer';
 
 const UserPage = () => {
     const [passwordInputType, setPasswordInputType] = useState('password')
@@ -61,14 +63,16 @@ const UserPage = () => {
     }, [userInfo])
 
     return (
-        <div className='mt-4'>
+        <div className='my-4'>
             <BackButton url='/admin' />
             <h1 className='m-0'>Porfile Information</h1>
             <p>See your porfile information, and setting your system</p>
 
             <div className='row g-5'>
                 <div className='col-md-8'>
-                    <h3>Personal information</h3>
+                    <UserNotificationsContainer />
+
+                    <h3 className='mt-3'>Personal information</h3>
 
                     {alerta && (
                         <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
@@ -114,23 +118,27 @@ const UserPage = () => {
                     <p className='m-0'><span className='fw-bold'>User Name: </span>{auth.UserName}</p>
                     <p className='m-0'><span className='fw-bold'>Rol: </span>{auth.RolName}</p>
                 </div>
+                
+                <div className='col-md-4 text-start text-white'>
+                    <div className='bg-secondary rounded px-3 py-4 shadow sticky top-0'>
+                        <h3 className='m-0'>Personalization</h3>
+                        <p>You can set your preferences for the system</p>
 
-                <div className='col-md-4 text-end bg-light rounded py-3 shadow'>
-                    <h3 className='m-0'>Personalization</h3>
-                    <p>You can set your preferences for the system</p>
+                        <ObservationForm />
 
-                    {(auth.RolID === 1 || auth.RolID === 3) && (
-                        <div>
-                            <Textarea 
-                                label={'Terms and conditions'}
-                                name={'TermsAndConditions'}
-                            />
+                        {/* {(auth.RolID === 1 || auth.RolID === 3) && (
+                            <div>
+                                <Textarea 
+                                    label={'Terms and conditions'}
+                                    name={'TermsAndConditions'}
+                                />
 
-                            <button className='btn btn-sm btn-primary mt-2'>Save terms and conditions</button>
+                                <button className='btn btn-sm btn-primary mt-2'>Save terms and conditions</button>
 
-                            <p className='fw-light mt-2 m-0'>This informations will be on your quotations or sales</p>
-                        </div>
-                    )}
+                                <p className='fw-light mt-2 m-0'>This informations will be on your quotations or sales</p>
+                            </div>
+                        )} */}
+                    </div>
                 </div>
             </div>
 

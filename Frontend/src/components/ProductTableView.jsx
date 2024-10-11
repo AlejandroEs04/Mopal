@@ -154,6 +154,7 @@ const ProductTableView = ({
                                     )}
                                 </div>
                             </th>
+                            <th>T. Cambio</th>
                         </tr>
                     </thead>
 
@@ -269,20 +270,34 @@ const ProductTableView = ({
                                         )}
                                     </div>
                                 </td>
+                                <td>
+                                    <div>
+                                        <select 
+                                            className={`${styles.input_table}`}
+                                            name="CurrencyId" 
+                                            id="currencyId"
+                                            value={item.CurrencyId}
+                                            onChange={e => handleChange(e, item.Folio, item.AssemblyGroup)}
+                                        >
+                                            <option value={1}>USD</option>
+                                            <option value={2}>MXN</option>
+                                        </select>
+                                    </div>
+                                </td>
                             </tr>
                         ))}
 
                         <tr>
-                            <td colSpan={11} className='text-end fw-bold'>Subtotal:</td>
-                            <td>{formatearDinero(+subtotal)}</td>
+                            <td colSpan={10} className='text-end fw-bold'>Subtotal:</td>
+                            <td colSpan={3}>{formatearDinero(+subtotal)}</td>
                         </tr>
                         <tr>
-                            <td colSpan={11} className='text-end fw-bold'>IVA:</td>
-                            <td>{formatearDinero(+iva)}</td>
+                            <td colSpan={10} className='text-end fw-bold'>IVA:</td>
+                            <td colSpan={3}>{formatearDinero(+iva)}</td>
                         </tr>
                         <tr>
-                            <td colSpan={11} className='text-end fw-bold'>Importe total:</td>
-                            <td>{formatearDinero(+total)}</td>
+                            <td colSpan={10} className='text-end fw-bold'>Importe total:</td>
+                            <td colSpan={3}>{formatearDinero(+total)}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -36,7 +36,7 @@ export const emailCreateUser = async(datos) => {
 
     try {
         await transport.sendMail({
-            from: "Mopal Grupo <accounts@mopalgrupo.com>", 
+            from: "Mopal Grupo <it@mopalgrupo.com>", 
             to: email, 
             subject: "Respues a solicitud de crear usuario para el sistema de Inventario de Mopal Grupo", 
             text: "Claves para inicio de sesion en el sistema de inventario de Mopal", 
@@ -81,7 +81,7 @@ export const emailUpdateUser = async(datos) => {
 
     try {
         await transport.sendMail({
-            from: "Mopal Grupo <accounts@mopalgrupo.com>", 
+            from: "Mopal Grupo <it@mopalgrupo.com>", 
             to: email, 
             subject: "Respues a solicitud de crear usuario para el sistema de Inventario de Mopal Grupo", 
             text: "Claves para inicio de sesion en el sistema de inventario de Mopal", 

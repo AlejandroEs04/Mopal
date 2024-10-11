@@ -27,6 +27,8 @@ const addNewProduct = async(req, res) => {
         const response = await productObj.addOne(productObj);
         
         if(response) {
+            io.emit('productsUpdate')
+            
             return res.status(200).json({
                 status : 200, 
                 msg: response.msg, 
@@ -61,6 +63,8 @@ const addNewProduct = async(req, res) => {
 
         if(productsArray.length > 0) {
             const response = await productObj.addMany(productsArray);
+
+            io.emit('productsUpdate')
 
             if(response) {
                 return res.status(200).json({
@@ -127,8 +131,6 @@ const addProductInfo = async(req, res) => {
         }
     }
 
-    
-
     return res.status(200).json({msg: "Información actualizada correctamente"})
 }
 
@@ -157,6 +159,7 @@ const deleteProduct = async(req, res) => {
     const response = await productObj.updateOneColumn(folio, 'Active', false)
 
     if(response) {
+        io.emit('productsUpdate')
         return res.status(200).json({msg: "Producto desactivado correctamente"})
     } else {
         const error = new Error("Hubo un error")

@@ -4,7 +4,7 @@ const Input = ({
     label, 
     name, 
     id = name, 
-    value, 
+    value = '', 
     handleAction, 
     disable = false, 
     type = 'text', 

@@ -13,6 +13,7 @@ class SaleProduct extends ActiveRecord {
         this.Discount = saleProduct?.Discount ?? 0;
         this.PricePerUnit = saleProduct?.PricePerUnit;
         this.Observations = saleProduct?.Observations ?? '';
+        this.CurrencyId = saleProduct?.CurrencyId ?? 1;
     }
 }
 

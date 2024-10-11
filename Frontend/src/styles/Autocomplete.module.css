@@ -1,0 +1,32 @@
+.autocomplete_container {
+    position: relative;
+    width: 100%;
+    color: #000;
+  }
+    
+  .autocomplete_container textarea {
+    width: 100%;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+    
+  .dropdown {
+    position: absolute;
+    top: 110px;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    z-index: 10;
+    max-height: 150px;
+    overflow-y: auto;
+    border-radius: 4px;
+  }
+    
+  .dropdown_item {
+    padding: 10px;
+    cursor: pointer;
+  }
+    
+  .dropdown_item:hover, .highlighted {
+    background-color: #3172ff1c;
+  }

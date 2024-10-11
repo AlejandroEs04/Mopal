@@ -6,6 +6,7 @@ import DeletePop from '../components/DeletePop';
 import TableProducts from '../components/TableProducts';
 import useAdmin from '../hooks/useAdmin';
 import useAuth from '../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const AdminProductsPage = () => {
     const [show, setShow] = useState(false);
@@ -29,31 +30,10 @@ const AdminProductsPage = () => {
 
         try {
             const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${folio}`, config)
-            setAlerta({
-                error: true, 
-                msg: data.msg
-            })
-
-            const productsArrray = products.map(product => {
-                if(product.Folio === folio) {
-                    product.Active = 0
-                }
-                
-                return product
-            })
-
-            setProducs(productsArrray)
-
+            toast.success(data.msg)
             setFolio('')
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 2500)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: 'Error al eliminar el producto'
-            })
+            toast.error(error.response.data.msg)
         }
     }
 

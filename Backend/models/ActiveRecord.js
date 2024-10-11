@@ -16,6 +16,18 @@ class ActiveRecord {
         }
     }
 
+    /** NEW METHOD */
+    async getAllItems() {
+        const query = `SELECT * FROM ${this.tableName}`;
+
+        try {
+            const [results, fields] = await pool.execute(query);
+            return results;
+        } catch (error) {
+            throw new Error('Hubo un error')
+        }
+    }
+
     async getAllTable(name) {
         const query = `SELECT * FROM ${name}`;
         try {
@@ -46,6 +58,18 @@ class ActiveRecord {
         } catch (error) {
             console.log(error);
             return;
+        }
+    }
+
+    /** NEW METHOD */
+    async getItemById(id) {
+        const query = `SELECT * FROM ${this.tableName} WHERE id = ?`
+
+        try {
+            const [results, fields] = await pool.execute(query, [id])
+            return results[0]
+        } catch (error) {
+            throw new Error('Hubo un error')
         }
     }
 
@@ -97,7 +121,7 @@ class ActiveRecord {
     }
 
     async addOne(object) {
-        const { tableName, ID, ...item } = object;
+        const { tableName, ID, id, ...item } = object;
         const claves = Object.keys(item);
         const values = Object.values(item);
 
@@ -110,6 +134,22 @@ class ActiveRecord {
             console.log(error);
             
             return;
+        }
+    }
+
+    /** NEW METHOD */
+    async addItem(object) {
+        const { tableName, id, ...item } = object;
+        const claves = Object.keys(item);
+        const values = Object.values(item);
+
+        let query = `INSERT INTO ${tableName} (${claves.join(', ')}) VALUES (${claves.map(() => '?').join(', ')})`;
+
+        try {
+            await pool.execute(query, values);
+        } catch (error) {
+            console.log(error)
+            throw new Error('Hubo un error')
         }
     }
 
@@ -167,6 +207,22 @@ class ActiveRecord {
         }
     }
 
+    /** NEW METHOD */
+    async updateItem(object) {
+        const { tableName, id, ...item } = object;
+        const claves = Object.keys(item);
+        const values = Object.values(item);
+
+        let query = `UPDATE ${this.tableName} SET ${claves.map(clave => `${clave} = ?`).join(', ')} WHERE id = ?`;
+
+        try {
+            await pool.execute(query, [...values, id]);
+        } catch (error) {
+            console.log(error)
+            throw new Error('Hubo un error')
+        }
+    }
+
     async updateOneColumn(id, columnName, value) {
         const query = `UPDATE ${this.tableName} SET ${columnName} = ? WHERE ${typeof id === 'string' ? 'Folio' : 'ID'} = ?`;
 
@@ -200,6 +256,17 @@ class ActiveRecord {
         } catch (error) {
             console.log(error);
             return;
+        }
+    }
+
+    /** NEW METHOD */
+    async deleteById(id) {
+        const query = `DELETE FROM ${this.tableName} WHERE id = ?`
+
+        try {
+            await pool.execute(query, [id])
+        } catch (error) {
+            throw new Error('Hubo un error')
         }
     }
 
