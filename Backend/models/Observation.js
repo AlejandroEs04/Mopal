@@ -1,7 +1,7 @@
 import ActiveRecord from "./ActiveRecord.js";
 
 class Observation extends ActiveRecord {
-    tableName = 'Observation'
+    tableName = 'observation'
 
     static validActions = ['sale', 'purchase', 'quotation', 'request', 'all'];
     static validTypes = ['internal', 'external', 'all'];
