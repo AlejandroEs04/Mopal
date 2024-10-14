@@ -13,6 +13,7 @@ import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
 import axios from "axios";
 import TextAreaWithAutocomplete from "../components/TextAreaWithAutocomplete";
+import { toast } from "react-toastify";
 
 const initialState = {
     Folio : '',
@@ -59,7 +60,7 @@ const CrudQuotationPage = () => {
     const { id } = useParams();
     const { pathname } = useLocation()
 
-    const { users, customers, sales, setLoading, handleToggleSaleStatus, alerta, setAlerta, handleGenerateSale, handleUpdateSale, observations } = useAdmin();
+    const { users, customers, sales, setLoading, handleToggleSaleStatus, handleGenerateSale, handleUpdateSale, observations } = useAdmin();
 
     // Inicializar Select
     const customerOptions = customers?.map(customer => {
@@ -82,19 +83,7 @@ const CrudQuotationPage = () => {
     };
 
     const handleDeleteProduct = () => {
-        if(id) {
-            const currentSalesProducts = sales.filter(sale => +sale.Folio === +id)[0].Products
-            
-            if(currentSalesProducts.filter(product => product.Folio === productFolio && product.AssemblyGroup === productGroup).length > 0) {
-                handleDeleteSaleProduct()
-                return
-            }
-        }
-        
-        setSale({
-            ...sale, 
-            Products: sale.Products.filter(product => !(product.AssemblyGroup === productGroup && product.Folio === productFolio))
-        })
+        handleDeleteSaleProduct(id, productFolio, productGroup)
     }
 
     const handleDeleteSaleProduct = async() => {
@@ -109,17 +98,8 @@ const CrudQuotationPage = () => {
 
         try {
             setLoading(true)
-
             const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}/${productGroup}`, config);
-            
-            setAlerta({
-                error: false, 
-                msg : data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.info(data.msg)
         } catch (error) {
             console.log(error)
         } finally {
@@ -211,8 +191,6 @@ const CrudQuotationPage = () => {
                 label : `${saleDB?.CustomerID} - ${saleDB?.BusinessName}`
             })
 
-            console.log(auth.ID)
-            
             setSale({
                 ...saleDB,
                 SaleDate: formatearFechaInput(new Date(saleDB?.SaleDate)),
@@ -268,7 +246,7 @@ const CrudQuotationPage = () => {
 
                 <div className="row mb-2">
                     <div className="col-lg-7">
-                        <h2>Generar Cotización</h2>
+                        <h2>{id ? 'Editar' : 'Generar'} Cotización</h2>
                         <p>Ingresa los datos que se solicitan para dar de alta una nueva cotización</p>
                     </div>
 
@@ -304,10 +282,6 @@ const CrudQuotationPage = () => {
                         )}
                     </div>
                 </div>
-
-                {alerta && (
-                    <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-                )}
 
                 <form className="row g-3">
                     <InputContainer 

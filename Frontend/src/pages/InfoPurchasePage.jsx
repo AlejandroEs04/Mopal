@@ -12,7 +12,7 @@ import findNextID from "../helpers/findNextID";
 const InfoPurchasePage = () => {
     const [purchase, setPurchase] = useState({});
     const { id } = useParams();
-    const { purchases, handleChangeStatus, alerta, loading } = useAdmin();
+    const { purchases, handleChangeStatus, loading } = useAdmin();
 
     const handleGetPurchase = () => setPurchase(purchases?.filter(purchase => +purchase?.Folio === +id)[0]);
 
@@ -82,10 +82,6 @@ const InfoPurchasePage = () => {
                     )}
                 </div>
             </div>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             {loading ? (
                 <Spinner />

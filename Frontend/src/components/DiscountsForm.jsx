@@ -1,7 +1,7 @@
 import axios from 'axios'
-import React, { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import useAdmin from '../hooks/useAdmin'
-import { socket } from '../socket'
+import { toast } from 'react-toastify'
 
 const initialState = {
     ID: null, 
@@ -13,7 +13,7 @@ const DiscountsForm = ({supplier, type}) => {
     const [discount, setDiscount] = useState('')
     const [currentDiscount, setCurrentDiscount] = useState(initialState)
 
-    const { setAlerta, alerta, setLoading } = useAdmin();
+    const { setLoading } = useAdmin();
 
     const handleSetFavorite = async(id) => {
         const discountrUpdating = supplier.Discounts?.filter(discount => discount.ID === +id)[0]
@@ -35,15 +35,7 @@ const DiscountsForm = ({supplier, type}) => {
 
         try {
             const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/discounts/supplier/${discountrUpdating.ID}`, { discount : discountrUpdating }, config)
-            
-            setAlerta({
-                error: false, 
-                msg: data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 3500)
+            toast.success(data.msg)
         } catch (error) {
             console.log(error)
         }
@@ -85,17 +77,10 @@ const DiscountsForm = ({supplier, type}) => {
                 const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/discounts/customer`, currentDiscount, config)
                 response = data
             }
-            
-            setAlerta({
-                error: false, 
-                msg: response.msg
-            })
+
+            toast.success(response.msg)
 
             setCurrentDiscount(initialState)
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 3500)
         } catch (error) {
             console.log(error)
         }
@@ -113,16 +98,9 @@ const DiscountsForm = ({supplier, type}) => {
                 response = data
             }
             
-            setAlerta({
-                error: false, 
-                msg: response.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 3500)
+            toast.success(response.msg)
         } catch (error) {
-            console.log(error)
+            toast.error('Hubo un error')
         } finally {
             setLoading(false)
         }

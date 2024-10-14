@@ -12,6 +12,7 @@ import formatearDinero from "../helpers/formatearDinero";
 import generateQuotation from "../helpers/generateQuotation";
 import getRequestStatusName from "../helpers/getRequestStatusName";
 import ProductTableForm from "../components/ProductTableForm";
+import { toast } from "react-toastify";
 
 const AdminRequestPage = () => {
     const [request, setRequest] = useState({});
@@ -21,7 +22,7 @@ const AdminRequestPage = () => {
     const [show, setShow] = useState(false);
     const [showAccept, setShowAccept] = useState(false);
     const { loading, setLoading } = useApp()
-    const { handleChangeStatus, alerta, setAlerta, handleSendRequestQuotation } = useAdmin();
+    const { handleChangeStatus, handleSendRequestQuotation } = useAdmin();
     const { id } = useParams();
 
     const subtotal = useMemo(() => request?.Products?.reduce((total, product) => total + ((product.Quantity * product.ListPrice) * (product.Percentage / 100)), 0), [request])
@@ -70,25 +71,10 @@ const AdminRequestPage = () => {
             setLoading(true)
 
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/request/${id}`, config);
-            setAlerta({
-                error : true, 
-                msg : "Se ha cancelado la solicitud con exito"
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
-
+            toast.success('Se ha cancelado la solicitud con exito')
             navigate(-1)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.error(error.response.data.msg)
         } finally {
             setLoading(false)
         }
@@ -113,25 +99,10 @@ const AdminRequestPage = () => {
             if(request.ActionID === 1) {
                 handleSendQuotation(id, request, subtotal, iva, total);
             } 
-
-            setAlerta({
-                error : false, 
-                msg : data.msg
-            })
-            
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.success(data.msg)
         } catch (error) {
             console.log(error)
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.error(error.response.data.msg)
         } finally {
             setLoading(false)
         }
@@ -158,9 +129,7 @@ const AdminRequestPage = () => {
 
                 <p>Back</p>
             </button>
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'} fw-bold`}>{alerta.msg}</p>
-            )}
+            
             <div className="row">
                 <div className="col-xl-9 col-md-8 col-sm-6">
                     <h1 className="text textPrimary">Informacion de la solicitud</h1>

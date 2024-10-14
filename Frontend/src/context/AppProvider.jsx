@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import axios from "axios";
 import { socket } from "../socket";
+import { toast } from "react-toastify";
 
 const AppContext = createContext();
 
@@ -31,7 +32,6 @@ const AppProvider = ({children}) => {
     const [specifications, setSpecifications] = useState([]);
     const [show, setShow] = useState(false)
     const [showCanva, setShowCanva] = useState(false)
-    const [alerta, setAlerta] = useState(null)
     const [loading, setLoading] = useState(false)
     const [requests, setRequests] = useState([])
 
@@ -126,15 +126,7 @@ const AppProvider = ({children}) => {
                     actionID
                 }
             }, config)
-
-            setAlerta({
-                error : false, 
-                msg : data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.success(data.msg)
 
             setRequestProducts([])
         } catch (error) {
@@ -158,25 +150,11 @@ const AppProvider = ({children}) => {
             setLoading(true)
 
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/request/${id}`, config);
-            setAlerta({
-                error : true, 
-                msg : "Se ha cancelado la solicitud con exito"
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.info('Se ha cancelado la solicitud con exito')
 
             navigate(-1)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.error(error.response.data.msg)
         } finally {
             setLoading(false)
         }
@@ -184,31 +162,17 @@ const AppProvider = ({children}) => {
 
     const handleChangeQuantity = (quantity, currentStock) => {
         if(quantity > currentStock) {
-            setAlerta({
-                error : true, 
-                msg : "La cantidad es mayor al stock actual, esto puede causar tiempos de entrega elevados", 
-                msgEnglish : "The quantity is greater than the current stock, this may cause long delivery times"
-            })
-
+            toast.info(language ? 
+                'The quantity is greater than the current stock, this may cause long delivery times' : 
+                'La cantidad es mayor al stock actual, esto puede causar tiempos de entrega elevados')
             setQuantity(quantity)
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 4000)
         } else {
             if(quantity < 0) {
                 setQuantity(1)
-                setAlerta({
-                    error : true, 
-                    msg : "La cantidad no puede ser menor a 0", 
-                    msgEnglish : "The quantity cannot be less than 0"
-                })
-    
-                setTimeout(() => {
-                    setAlerta(null)
-                }, 4000)
+                toast.info(language ? 
+                    'The quantity cannot be less than 0' : 
+                    'La cantidad no puede ser menor a 0')
             } else {
-                setAlerta(null)
                 setQuantity(quantity)
             }
         }
@@ -346,22 +310,11 @@ const AppProvider = ({children}) => {
                 const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/users`, { user }, config);
                 response = data
             }
-        
-            setAlerta({
-                error: false, 
-                msg : response.msg
-            })
+            toast.success(response.msg) 
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg : error.response.data.msg
-            })
+            toast.error(error.response.data.msg)
         } finally {
             setLoading(false)
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 3000)
         }
     }
 
@@ -403,8 +356,7 @@ const AppProvider = ({children}) => {
                 setLanguage, 
                 language, 
                 handleClose, 
-                handleShow, 
-                alerta, setAlerta, 
+                handleShow,  
                 show, 
                 handleAddNewRequest, 
                 setLoading, 

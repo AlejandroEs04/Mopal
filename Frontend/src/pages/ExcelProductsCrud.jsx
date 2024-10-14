@@ -3,12 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import axios from "axios";
 import * as XLSX from 'xlsx/xlsx.mjs';
 import useAdmin from "../hooks/useAdmin";
+import { toast } from "react-toastify";
 
 const ExcelProductsCrud = () => {
     const [file, setFile] = useState(null);
     const [productsArray, setProductsArray] = useState([]);
-
-    const { alerta, setAlerta } = useAdmin();
 
     const navigate = useNavigate();
 
@@ -26,24 +25,9 @@ const ExcelProductsCrud = () => {
             const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, {
                 products : productsArray
             }, config)
-
-            setAlerta({
-                error: false, 
-                msg: data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 3000)
+            toast.success(data.msg)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 3000)
+            toast.error(error.response.data.msg)
         }
     }
 
@@ -77,14 +61,7 @@ const ExcelProductsCrud = () => {
         if(file) {
             excelToJson();
         } else {
-            setAlerta({
-                error: true, 
-                msg: 'No se ha seleccionado ningun archivo'
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 4000)
+            toast.error('No se ha seleccionado ningun archivo')
         }
     }
 
@@ -104,10 +81,6 @@ const ExcelProductsCrud = () => {
             </button>
 
             <h1 className='mt-2'>Subir Excel</h1>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'} my-2`} >{alerta.msg}</p>
-            )}
 
             <form 
                 className='mt-3'

@@ -6,8 +6,6 @@ import useApp from '../hooks/useApp';
 const AdminProductsListPage = () => {
   const [searchBar, setSearchBar] = useState("");
   const [showDeleted, setShowDeleted] = useState(false);
-
-  const { alerta } = useAdmin();
   const { productsList } = useApp();
 
   return (
@@ -28,10 +26,6 @@ const AdminProductsListPage = () => {
           >{showDeleted ? 'Ocultar' : 'Mostrar'} inactivos</button>
         </div>
       </div>
-
-      {alerta && (
-        <p className={`alert mt-3 ${alerta.error ? 'alert-warning' : 'alert-success'}`}>{alerta.msg}</p>
-      )}
 
       <table className='table table-hover mt-2'>
         <thead className='table-light'>

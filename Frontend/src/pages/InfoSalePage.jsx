@@ -14,7 +14,7 @@ const InfoSalePage = () => {
     const [sale, setSale] = useState({});
 
     const { id } = useParams();
-    const { sales, handleChangeStatus, alerta, loading, sendQuotationPdf } = useAdmin();
+    const { sales, handleChangeStatus, loading, sendQuotationPdf } = useAdmin();
     
     const handleGetTypes = () => {
         let array = []
@@ -128,10 +128,6 @@ const InfoSalePage = () => {
                     
                 </div>
             </div>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             {loading ? (
                 <Spinner />

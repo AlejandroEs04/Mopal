@@ -11,7 +11,7 @@ const AdminRequestsPage = () => {
     const [showPendingRequest, setShowPendingRequest] = useState(true)
     const [pendingRequest, setPendingRequest] = useState([])
     const [showFilters, setShowFilters] = useState(false)
-    const { request, alerta, handleFilter } = useAdmin();
+    const { request, handleFilter } = useAdmin();
 
     const handleFilterArray = (e) => {
         if(+e.target.value === 0 && e.target.name === 'statusID') {
@@ -71,10 +71,6 @@ const AdminRequestsPage = () => {
             <h1 className='m-0 mt-2 pt-2'>Solicitudes</h1>
             {/* <Link to={'form'}>Agregar solicitud</Link> */}
             
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'} fw-bold`}>{alerta.msg}</p>
-            )}
-
             <div className="mt-2 mb-3">
                 <SearchBar 
                     handleFunction={handleFilterArray}

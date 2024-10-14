@@ -4,6 +4,7 @@ import useApp from '../hooks/useApp'
 import axios from 'axios';
 import useAdmin from '../hooks/useAdmin';
 import ProductViewForm from '../components/ProductViewForm';
+import { toast } from 'react-toastify';
 
 const CrudProductListPage = () => {
     const [productList, setProductList] = useState({
@@ -15,7 +16,6 @@ const CrudProductListPage = () => {
         ClassificationID: 0
     })
     const { types, classifications, productsList } = useApp();
-    const { alerta, setAlerta } = useAdmin()
 
     const { id } = useParams();
 
@@ -52,10 +52,7 @@ const CrudProductListPage = () => {
 
         try {
             const { data } = axios.post(`${import.meta.env.VITE_API_URL}/api/productsList`, { productList }, config)
-            setAlerta({
-                error: false, 
-                msg: data.msg
-            })
+            toast.success(data.msg)
         } catch (error) {
             console.log(error)
         }
@@ -80,10 +77,6 @@ const CrudProductListPage = () => {
 
             <h2>Crear un listado de Productos</h2>
             <p className='mb-1'>Ingresa los datos que se solicitan para dar de alta un nuevo listado de productos</p>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
             
             <form 
                 className='row g-3 mt-3'
@@ -142,9 +135,6 @@ const CrudProductListPage = () => {
             <form>
                 {id && (
                     <div className="mt-5">
-                        {alerta && (
-                            <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-                        )}
                         <div>
                             <ProductViewForm 
                                 productList={productList}

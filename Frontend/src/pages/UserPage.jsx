@@ -16,7 +16,7 @@ const UserPage = () => {
         Password: ''
     })
     const { auth } = useAuth();
-    const { handleSaveUser, alerta, setAlerta } = useApp();
+    const { handleSaveUser } = useApp();
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -73,10 +73,6 @@ const UserPage = () => {
                     <UserNotificationsContainer />
 
                     <h3 className='mt-3'>Personal information</h3>
-
-                    {alerta && (
-                        <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-                    )}
 
                     <form onSubmit={handleSubmit} className='d-flex flex-column gap-2'>
                         <div className="row g-2">

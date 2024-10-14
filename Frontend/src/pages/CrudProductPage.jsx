@@ -30,8 +30,6 @@ const CrudProductPage = () => {
             [name] : isNumber ? +valueTrim : value
         })
     }
-    // Inicializar alerta 
-    const [alerta, setAlerta] = useState(null);
 
     // Get informacion
     const { types, classifications, products } = useApp();
@@ -97,10 +95,6 @@ const CrudProductPage = () => {
             </button>
             <h2>Crear Producto</h2>
             <p className="mb-3">Ingresa los datos que se solicitan para dar de alta un nuevo producto</p>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <form className="row">
                 <div className="col-lg-6 d-flex flex-column gap-3">

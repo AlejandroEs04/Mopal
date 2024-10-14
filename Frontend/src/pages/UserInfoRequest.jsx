@@ -8,7 +8,7 @@ import Spinner from '../components/Spinner';
 
 const UserInfoRequest = () => {
     const [request, setRequest] = useState();
-    const { requests, handleDeteleRequest, alerta, loading } = useApp();
+    const { requests, handleDeteleRequest, loading } = useApp();
     const { id } = useParams();
     const navigation = useNavigate();
 
@@ -30,10 +30,6 @@ const UserInfoRequest = () => {
             </div>
         
             <h2>Informacion de la solicitud</h2>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <div className='row row-md-reverse'>
                 <div className='col-md-8'>

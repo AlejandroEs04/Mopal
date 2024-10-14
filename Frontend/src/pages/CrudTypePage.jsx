@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useState } from 'react'
 import BackButton from '../components/BackButton'
+import { toast } from 'react-toastify'
 
 const CrudTypePage = () => {
     const [type, setType] = useState({
@@ -30,11 +31,7 @@ const CrudTypePage = () => {
 
         try {
             const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/types`, { type }, config);
-            
-            setAlerta({
-                error: false, 
-                msg : data.msg
-            })
+            toast.success(data.msg)
         } catch (error) {
             console.log(error)
         }

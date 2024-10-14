@@ -9,7 +9,7 @@ import formatearDinero from "../helpers/formatearDinero"
 const InventoryContainer = ({ handleAddProduct, productsFiltered, setProductsFiltered }) => {
     const [msg, setMsg] = useState('Favor de seleccionar un producto')
     const [folioBtn, setFolioBtn] = useState('')
-    const { products, language, alerta, loading, folio, quantity, handleChangeQuantity, setFolio } = useApp();
+    const { products, language, loading, folio, quantity, handleChangeQuantity, setFolio } = useApp();
     const { auth } = useAuth();
 
     const handleSetProducto = () => {
@@ -51,10 +51,6 @@ const InventoryContainer = ({ handleAddProduct, productsFiltered, setProductsFil
                     </button>
                 </div>
             </div>
-
-            {alerta && (
-                <p className={`alert my-3 ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{language ? alerta.msgEnglish : alerta.msg}</p>
-            )}
 
             {loading ? (
                 <Spinner />

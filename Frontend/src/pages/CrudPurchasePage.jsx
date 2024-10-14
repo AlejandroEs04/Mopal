@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
 import axios from "axios";
 import Select from 'react-select';
@@ -13,6 +13,7 @@ import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
 import ProductTableView from "../components/ProductTableView";
 import TextAreaWithAutocomplete from "../components/TextAreaWithAutocomplete";
+import { toast } from "react-toastify";
 
 const initialState = {
     Folio : 0,
@@ -46,15 +47,17 @@ const CrudPurchasePage = () => {
     const [supplierDiscounts, setSupplierDiscounts] = useState([])
     const [show, setShow] = useState(false);
     const [modalShow, setModalShow] = useState(false);
+    const [modalSetUpShow, setModalSetUpShow] = useState(false);
     const [productFolio, setProductFolio] = useState('');
     const [productGroup, setProductGroup] = useState('');
     const [discount, setDiscount] = useState(0)
 
     const [selectedSupplierOption, setSelectedSupplierOption] = useState(null)
 
+    const { pathname } = useLocation()
     const { id } = useParams()
 
-    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, observations } = useAdmin();
+    const { users, suppliers, purchases, loading, setLoading, observations } = useAdmin();
     const { auth } = useAuth();
 
     const [edit, setEdit] = useState(false);
@@ -111,20 +114,9 @@ const CrudPurchasePage = () => {
             setLoading(true)
 
             const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/purchases/${id}/${productFolio}/${productGroup}`, config);
-            
-            setAlerta({
-                error: false, 
-                msg : data.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.success(data.msg)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
+            toast.error(error.response.data.msg)
         } finally {
             setLoading(false)
         }
@@ -155,15 +147,7 @@ const CrudPurchasePage = () => {
                 const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/purchases`, { purchase }, config);
                 response = data
             }
-            
-            setAlerta({
-                error: false, 
-                msg : response.msg
-            })
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 5000)
+            toast.success(response.msg)
         } catch (error) {
             console.log(error)
         } finally {
@@ -236,7 +220,7 @@ const CrudPurchasePage = () => {
     }, [purchase.Products])
 
     useEffect(() => {
-        if(id && purchases.length) {
+        if(id && purchases.length  && auth.ID) {
             let purchaseDB = purchases?.filter(purchase => purchase.Folio === +id)[0];
                 
             setSelectedSupplierOption({
@@ -246,12 +230,16 @@ const CrudPurchasePage = () => {
             
             setPurchase({
                 ...purchaseDB,
-                PurchaseDate: formatearFechaInput(new Date(purchaseDB?.PurchaseDate))
+                PurchaseDate: formatearFechaInput(new Date(purchaseDB?.PurchaseDate)), 
+                UserID: auth.ID
             })
-        } else {
-            setPurchase(initialState)
+        } else if(auth.ID) {
+            setPurchase({
+                ...initialState, 
+                UserID: auth.ID
+            })
         }
-    }, [purchases])
+    }, [purchases, pathname, auth])
 
     const checkInfo = useCallback(() => {
         return +purchase.UserID === 0 ||
@@ -289,7 +277,7 @@ const CrudPurchasePage = () => {
                                     <div>
                                         <button 
                                             onClick={() => handleSavePurchase()}
-                                            className="btn btn-secondary"
+                                            className="btn btn-secondary btn-sm"
                                         >
                                             Editar Compra
                                         </button>
@@ -305,18 +293,23 @@ const CrudPurchasePage = () => {
                                 <div>
                                     <button
                                         disabled={checkInfo()}
-                                        className={`btn ${checkInfo() ? 'bg-transparent text-success' : 'btn-success'} w-100`}
+                                        className={`btn ${checkInfo() ? 'bg-transparent text-success' : 'btn-success'} btn-sm w-100`}
                                         onClick={() => handleSavePurchase()}
                                     >{id ? 'Editar' : 'Generar'} Compra</button>
+                                </div>
+                                
+                                <div>
+                                    <button
+                                        className={`btn btn-primary w-100 btn-sm`}
+                                        onClick={() => setModalSetUpShow(true)}
+                                    >
+                                        Configurar compra
+                                    </button>
                                 </div>
                             </>
                         )}
                     </div>
                 </div>
-
-                {alerta && (
-                    <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'} mt-2`}>{alerta.msg}</p>
-                )}
 
                 <form className="row g-2">
                     <InputContainer 
@@ -339,24 +332,6 @@ const CrudPurchasePage = () => {
                         />
                     </div>
 
-                    <div className="col-lg-4 d-flex flex-column">
-                        <label htmlFor="user">Usuario</label>
-                        <select 
-                            disabled={id || supplierUsers.length === 0} 
-                            id="user" 
-                            name="SupplierUserID"
-                            className="form-select" 
-                            value={purchase.SupplierUserID} 
-                            onChange={e => handleChangeInfo(e)}
-                        >
-                            <option value={0}>Sin Contacto</option>
-                            {supplierUsers?.map(user => (
-                                <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
-                            ))}
-                        </select>
-                    </div>
-                    
-
                     <InputContainer 
                         label="Fecha de la compra"
                         name="PurchaseDate"
@@ -377,30 +352,6 @@ const CrudPurchasePage = () => {
                         handleAction={handleChangeInfo}
                     /> */}
                     
-                    <div className="col-lg-4 col-md-6 d-flex flex-column">
-                        <label htmlFor="currency">Tipo de cambio</label>
-                        <select id="currency" defaultValue={'USD'} className="form-select">
-                            <option value="USD">Dolar Estadounidense</option>
-                            <option value="MXN">Peso Mexicano</option>
-                        </select>
-                    </div>
-                    
-                    <div className="col-lg-4 d-flex flex-column">
-                        <label htmlFor="user">Usuario</label>
-                        <select 
-                            disabled={id} 
-                            id="user"
-                            name="UserID" 
-                            className="form-select" 
-                            value={purchase.UserID} 
-                            onChange={e => handleChangeInfo(e)}
-                        >
-                            <option value="0">Seleccione el usuario</option>
-                            {users?.map(user => user.RolID <= 5 && user.Active === 1 && (
-                                <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.Name + ' ' + user.LastName}`}</option>
-                            ))}
-                        </select>
-                    </div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="observaciones">Observaciones Generales</label>
@@ -451,6 +402,55 @@ const CrudPurchasePage = () => {
                     handleFunction={handleDeleteProduct}
                 />
             </div>
+
+            <AdminModal
+                show={modalSetUpShow}
+                onHide={() => {
+                    setModalSetUpShow(false)
+                }}
+                header={"Configura la cotización"}
+            >
+                <div className="row g-3">
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="user">Usuario</label>
+                        <select id="user" name="UserID" className="form-select" disabled defaultValue={purchase.UserID} onChange={e => handleChangeInfo(e)}>
+                            <option value="0">Seleccione el usuario</option>
+                            {users?.map(user => user.RolID <= 5 && user.Active === 1 && (
+                                <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.Name + ' ' + user.LastName}`}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="currency">Tipo de cambio</label>
+                            <select id="currency" defaultValue={'USD'} className="form-select">
+                            <option value="USD">Dolar Estadounidense</option>
+                            <option value="MXN">Peso Mexicano</option>
+                        </select>
+                    </div>
+
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="user">Contacto del proveedor</label>
+                        <select disabled={purchase.Folio || purchase?.ContactName?.length > 0} id="user" name="CustomerUserID" className="form-select" value={purchase.SupplierUserID} onChange={e => handleChangeInfo(e)}>
+                            <option value={0}>Sin Contacto</option>
+                            {supplierUsers?.map(user => (
+                                <option key={user.UserID} value={user.UserID}>{`${user.UserID} - ${user.FullName}`}</option>
+                            ))}
+                        </select>
+                    </div>
+
+                    <InputContainer  
+                        label="Nombre de contacto"
+                        name="ContactName"
+                        id="contactName"
+                        type="text"
+                        placeholder="Nombre de contacto"
+                        value={purchase?.ContactName}
+                        disable={+purchase.CustomerUserID !== 0}
+                        handleAction={handleChangeInfo}
+                    />
+                </div>
+            </AdminModal>
 
             <AdminModal 
                 show={modalShow}

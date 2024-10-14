@@ -6,12 +6,13 @@ import Scroll from "./Scroll"
 import Spinner from "./Spinner"
 import DeletePop from "./DeletePop"
 import formatearFechaInput from "../helpers/formatearFechaInput"
+import { toast } from "react-toastify"
 
 const TablePurchases = ({ purchase, startIndex, endIndex, actionStorage = false }) => {
   const [showPop, setShowPop] = useState(false);
   const [folio, setFolio] = useState(null)
   
-  const { handleChangeStatus, loading, setAlerta } = useAdmin()
+  const { handleChangeStatus, loading } = useAdmin()
   const { pathname } = useLocation();
 
   const navigate = useNavigate()
@@ -28,26 +29,10 @@ const TablePurchases = ({ purchase, startIndex, endIndex, actionStorage = false 
 
     try {
       const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/purchases/${folio}`, config)
-        
-      setAlerta({
-        error: false, 
-        msg: data.msg
-      })
-        
+      toast.success(data.msg)
       setFolio(null)
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
     } catch (error) {
-      setAlerta({
-        error: true, 
-        msg: error.response.data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
+      toast.error(error.response.data.msg)
     }
   }
 
