@@ -4,6 +4,7 @@ import axios from "axios";
 import useAdmin from "../hooks/useAdmin";
 import Scroll from "../components/Scroll";
 import DiscountsForm from "../components/DiscountsForm";
+import { toast } from "react-toastify";
 
 const CrudSupplierPage = () => {
     const [supplier, setSupplier] = useState({
@@ -16,7 +17,6 @@ const CrudSupplierPage = () => {
         Users : [], 
         Discounts: []
     })
-    const [alerta, setAlerta] = useState(null)
     const { suppliers } = useAdmin()
 
     const navigate = useNavigate();
@@ -58,16 +58,9 @@ const CrudSupplierPage = () => {
                 const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/suppliers`, { supplier }, config)
                 response = data
             }
-
-            setAlerta({
-                error: false, 
-                msg: response.msg
-            })
+            toast.success(response.msg)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
+            toast.error(error.response.data.msg)
         }
     }
 
@@ -91,10 +84,6 @@ const CrudSupplierPage = () => {
             </button>
             <h2>Crear Proveedor</h2>
             <p>Ingresa los datos que se solicitan para dar de alta un nuevo proveedor</p>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <form>
                 <div className="row g-2">

@@ -3,11 +3,11 @@ import axios from "axios";
 import { socket } from "../socket";
 import generateQuotation from "../helpers/generateQuotation";
 import generateQuotationPdf from "../pdf/generateQuotationPdf";
+import { toast } from "react-toastify";
 
 const AdminContext = createContext();
 
 const AdminProvider = ({children}) => {
-    const [alerta, setAlerta] = useState(null)
     const [loading, setLoading] = useState(false)
     const [showToast, setShowToast] = useState(false)
     const [message, setMessage] = useState('');
@@ -25,17 +25,6 @@ const AdminProvider = ({children}) => {
     const [specifications, setSpecifications] = useState([]);
     const [sales, setSales] = useState([]);
     const [reportInfo, setReportInfo] = useState({});
-
-    const handleSetAlerta = (msg = '', error = false) => {
-        setAlerta({
-            error, 
-            msg
-        })
-
-        setTimeout(() => {
-            setAlerta(null)
-        }, 4500)
-    }
 
     const handleGetUsers = async() => {
         const token = localStorage.getItem('token');
@@ -222,7 +211,7 @@ const AdminProvider = ({children}) => {
                 setLoading(true)
 
                 const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/purchases`, { purchase : purchase }, config);
-                handleSetAlerta(data.msg, false)
+                toast.success(data.msg)
             } catch (error) {
                 console.log(error)
             } finally {
@@ -232,9 +221,9 @@ const AdminProvider = ({children}) => {
             try {
                 setLoading(true)
                 const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/purchases`, { purchase : purchase }, config);
-                handleSetAlerta(data.msg, false)
+                toast.success(data.msg)
             } catch (error) {
-                handleSetAlerta(error.response.data.msg, true)
+                toast.error(error.response.data.msg)
             } finally {
                 setLoading(false)
             }
@@ -253,16 +242,9 @@ const AdminProvider = ({children}) => {
 
         try {
             const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/sales/${folio}`, { status }, config);
-
-            setAlerta({
-                error: false, 
-                msg : data.msg
-            })
+            toast.success(data.msg)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
+            toast.error(error.response.data.msg)
         }
     }
 
@@ -333,9 +315,9 @@ const AdminProvider = ({children}) => {
             setLoading(true)
 
             const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/${modelName}/status/${id}`, { statusId }, config)
-            handleSetAlerta(data.msg, false)
+            toast.success(data.msg)
         } catch (error) {
-            handleSetAlerta(error.response.data.msg, true)
+            toast.error(error.response.data.msg)
         } finally {
             setLoading(false)
         }
@@ -353,9 +335,9 @@ const AdminProvider = ({children}) => {
 
         try {
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${saleFolio}`, config);
-            handleSetAlerta("Venta eliminada correctamente", false)
+            toast.success(data.msg)
         } catch (error) {
-            handleSetAlerta(error.response.data.msg, true)
+            toast.error(error.response.data.msg)
         }
     }
 
@@ -439,7 +421,7 @@ const AdminProvider = ({children}) => {
 
         try {
           const {data} = await axios.post(`${import.meta.env.VITE_API_URL}/api/sales`, { sale }, config);
-          handleSetAlerta(data.msg, false)
+          toast.success(data.msg)
         } catch (error) {
           console.log(error)
         }
@@ -458,7 +440,7 @@ const AdminProvider = ({children}) => {
             setLoading(true)
 
             const { data } = await axios.put(`${import.meta.env.VITE_API_URL}/api/sales`, { sale }, config);
-            handleSetAlerta(data.msg, false)
+            toast.success(data.msg)
         } catch (error) {
             console.log(error)
         } finally {
@@ -480,7 +462,7 @@ const AdminProvider = ({children}) => {
             setLoading(true)
 
             const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/sales/${id}/${productFolio}/${productGroup ?? 0}`, config);
-            handleSetAlerta(data.msg, false)
+            toast.success(data.msg)
         } catch (error) {
             console.log(error)
         } finally {
@@ -495,7 +477,7 @@ const AdminProvider = ({children}) => {
         formData.append('pdf', pdfData, 'archivo.pdf');
 
         await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/requests/quotation/${id}`, formData);
-        handleSetAlerta("Correo enviado correctamente", false)
+        toast.success('Correo enviado correctamente')
     }
 
     const handleSendQuotation = async(id, quotation, subtotal, iva, total) => {
@@ -505,8 +487,7 @@ const AdminProvider = ({children}) => {
         formData.append('pdf', pdfData, 'archivo.pdf');
 
         await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/quotation/${id}`, formData);
-
-        handleSetAlerta("Correo enviado correctamente", false)
+        toast.success('Correo enviado correctamente')
     }
 
     const sendQuotationPdf = async(folio, quotation, subtotal, iva, total) => {
@@ -517,16 +498,11 @@ const AdminProvider = ({children}) => {
 
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/sendEmail/quotation/${folio}`, formData);
-    
-            handleSetAlerta("Correo enviado correctamente", false)
+            toast.success('Correo enviado correctamente')
         } catch (error) {
-            handleSetAlerta(error.response.data.msg, true)
+            toast.error(error.response.data.msg)
             return
         }
-
-        setTimeout(() => {
-            setAlerta(null)
-        }, 3000)
     }
 
     useEffect(() => {
@@ -606,8 +582,6 @@ const AdminProvider = ({children}) => {
                 roles, 
                 observations,
                 specifications, 
-                alerta, 
-                setAlerta,
                 savePurchase, 
                 handleChangeQuantityProduct, 
                 handleChangeDiscountProduct, 
@@ -630,8 +604,7 @@ const AdminProvider = ({children}) => {
                 handleSendQuotation, 
                 sendQuotationPdf, 
                 handleGetReportInformation, 
-                handleSendRequestQuotation, 
-                handleSetAlerta
+                handleSendRequestQuotation
             }}
         >
             {children}

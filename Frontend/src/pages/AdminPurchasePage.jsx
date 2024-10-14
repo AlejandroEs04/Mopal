@@ -13,7 +13,7 @@ const AdminPurchasePage = () => {
     const [purchaseFiltered, setPurchaseFiltered] = useState([])
 
     const { pathname } = useLocation();
-    const { purchases, alerta, handleFilter } = useAdmin()
+    const { purchases, handleFilter } = useAdmin()
     const { setModalShow, setModalInfo, modalInfo } = useApp()
 
     const handleFilterArray = (e) => {
@@ -120,10 +120,6 @@ const AdminPurchasePage = () => {
                     </div>
                 )}
             </div>
-
-            {alerta && (
-                <p className={`alert mt-3 ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <PaginationList 
                 items={purchaseFiltered.sort((a,b) => b.Folio-a.Folio)}

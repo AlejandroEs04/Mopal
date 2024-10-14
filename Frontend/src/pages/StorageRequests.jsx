@@ -5,7 +5,7 @@ import PaginationList from '../components/PaginationList';
 
 const StorageRequests = () => {
     const [requestsFiltered, setRequestFiltered] = useState([])
-    const { request, alerta } = useAdmin();
+    const { request } = useAdmin();
 
     const navigate = useNavigate();
 
@@ -25,10 +25,6 @@ const StorageRequests = () => {
             </button>
 
             <h1>Solicitudes</h1>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <PaginationList 
                 items={requestsFiltered}

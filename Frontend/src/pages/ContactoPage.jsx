@@ -3,6 +3,7 @@ import axios from 'axios';
 import useApp from '../hooks/useApp'
 import motivos from '../data/motivos';
 import Spinner from '../components/Spinner';
+import { toast } from 'react-toastify';
 
 const ContactoPage = () => {
   const [stock, setStock] = useState(null);
@@ -11,9 +12,8 @@ const ContactoPage = () => {
   const [name, setName] = useState(null);
   const [lastName, setLastName] = useState(null);
   const [motivo, setMotivo] = useState(null);
-  const [motivoId, setMotivoId] = useState(null);
   const [detalles, setDetalles] = useState(null);
-  const { folio, quantity, setFolio, products, alerta, setAlerta, handleChangeQuantity, loading, setLoading } = useApp();
+  const { folio, quantity, setFolio, products, handleChangeQuantity, loading, setLoading } = useApp();
 
   const handleSetStock = () => {
     const product = products?.filter(product => product.Folio === folio);
@@ -36,14 +36,7 @@ const ContactoPage = () => {
       setLoading(true)
 
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/contact`, emailData);
-      setAlerta({
-        error: false, 
-        msg : data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
+      toast.success(data.msg)
     } catch (error) {
       console.log(error)
     } finally {
@@ -60,11 +53,7 @@ const ContactoPage = () => {
       <div className="row">
         <div className="col-lg-6 p-4">
           <h1>Contacto</h1>
-
-          {alerta && (
-            <p className={`alert my-3 ${alerta.error ? 'alert-warning' : 'alert-success'}`}>{alerta.msg}</p>
-          )}
-
+          
           {loading ? (
             <Spinner />
           ) : (

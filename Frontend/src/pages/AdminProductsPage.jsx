@@ -15,8 +15,7 @@ const AdminProductsPage = () => {
     const [folio, setFolio] = useState('')
     const [showDeleted, setShowDeleted] = useState(false)
 
-    const { products, setProducs } = useApp();
-    const { alerta, setAlerta } = useAdmin();
+    const { products } = useApp();
     const { pathname } = useLocation();
 
     const handleDeleteProduct = async() => {
@@ -86,10 +85,6 @@ const AdminProductsPage = () => {
                     >{showDeleted ? 'Ocultar' : 'Mostrar'} inactivos</button>
                 </div>
             </div>
-
-            {alerta && (
-                <p className={`alert mt-3 ${alerta.error ? 'alert-warning' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <TableProducts 
                 products={productsFiltered}

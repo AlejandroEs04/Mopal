@@ -6,6 +6,7 @@ import MainFooter from '../components/MainFooter'
 import useAuth from '../hooks/useAuth'
 import NavOffCanva from '../components/NavOffCanva'
 import Spinner from '../components/Spinner'
+import { ToastContainer } from 'react-toastify'
 
 const InventoryLayout = () => {
     const { pathname } = useLocation();
@@ -121,6 +122,8 @@ const InventoryLayout = () => {
                 <NavOffCanva />
             </main>
             <MainFooter />
+
+            <ToastContainer />
         </div>
   )
 }

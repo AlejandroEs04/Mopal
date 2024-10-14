@@ -5,7 +5,7 @@ import useAdmin from '../hooks/useAdmin'
 
 const StorageSales = () => {
     const [salesFiltered, setSalesFiltered] = useState([])
-    const { sales, alerta } = useAdmin()
+    const { sales } = useAdmin()
 
     const navigate = useNavigate();
 
@@ -25,10 +25,6 @@ const StorageSales = () => {
             </button>
 
             <h1>Ventas</h1>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <PaginationList 
                 items={salesFiltered}

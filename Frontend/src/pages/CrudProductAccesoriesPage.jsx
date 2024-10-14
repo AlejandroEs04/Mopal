@@ -4,6 +4,7 @@ import Select from 'react-select'
 import { useEffect, useState } from "react"
 import useAdmin from "../hooks/useAdmin"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 const CrudProductAccesoriesPage = () => {
   const [product, setProduct] = useState({})
@@ -12,7 +13,6 @@ const CrudProductAccesoriesPage = () => {
   const [accesoriesOptions, setAccesoriesOptions] = useState({}); 
   const [accesorySelected, setAccesorySelected] = useState(null)
   const { products } = useApp();
-  const { alerta, setAlerta } = useAdmin();
   const { id } = useParams()
 
   const navigate = useNavigate()
@@ -27,10 +27,7 @@ const CrudProductAccesoriesPage = () => {
     const existAccesoriy = product?.accessories?.filter(accesory => accesory.Folio === newAccesory.Folio)
 
     if(existAccesoriy) {
-      setAlerta({
-        error: true, 
-        msg: "El accesorio ya existe"
-      })
+      toast.error('El accesorio ya existe')
     } else {
       setAccesoriesNew([
         ...accesoriesNew, 
@@ -61,16 +58,7 @@ const CrudProductAccesoriesPage = () => {
 
     try {
       const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/products/${id}/accesories`, { accesories : accesoriesNew }, config);
-      
-      setAlerta({
-        error : false, 
-        msg : data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
-
+      toast.success(data.msg)
       setAccesoriesNew([])
     } catch (error) {
       console.log(error)
@@ -89,15 +77,7 @@ const CrudProductAccesoriesPage = () => {
 
     try {
       const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}/accesories/${accesoryFolio}`, config);
-      
-      setAlerta({
-        error : false, 
-        msg : data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
+      toast.success(data.msg)
     } catch (error) {
       console.log(error)
     }
@@ -135,10 +115,6 @@ const CrudProductAccesoriesPage = () => {
 
       <h1 className="fw-light mt-3">Configura la pieza <span className="fw-medium">{id}</span></h1>
       <p>Selecciona los accesorios que puede tener un producto</p>
-
-      {alerta && (
-        <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-      )}
 
       <div className="d-flex gap-2">
         <Select 

@@ -4,9 +4,9 @@ import axios from "axios";
 import formatearDinero from "../helpers/formatearDinero";
 import Scroll from "./Scroll";
 import { useMemo } from "react";
+import { toast } from "react-toastify";
 
 export const ProductTr = ({ product, setShow, setFolio }) => {
-    const { setAlerta } = useAdmin();
     const { pathname } = useLocation();
 
     const checkPathname = () => {
@@ -29,23 +29,11 @@ export const ProductTr = ({ product, setShow, setFolio }) => {
 
         try {
             const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/products/activate/${actFolio}`, config)
-            
-            setAlerta({
-                error: false, 
-                msg: data.msg
-            })
-
+            toast.success(data.msg)
             setFolio('')
-
-            setTimeout(() => {
-                setAlerta(null)
-            }, 2500)
         } catch (error) {
             console.log(error)
-            setAlerta({
-                error: true, 
-                msg: 'Error al activar el producto'
-            })
+            toast.error('Error al activar el producto')
         }
     }
 

@@ -6,10 +6,11 @@ import useApp from "../hooks/useApp"
 import Scroll from "../components/Scroll"
 import DeletePop from "../components/DeletePop"
 import Spinner from "../components/Spinner"
+import { toast } from "react-toastify"
 
 export const UserTr = ({user, setId, setShow, show}) => {
   const { pathname } = useLocation();
-  const { setLoading, setAlerta } = useApp();
+  const { setLoading } = useApp();
   const { roles } = useAdmin();
 
   const handleRecoveryUser = async(id) => {
@@ -25,25 +26,9 @@ export const UserTr = ({user, setId, setShow, show}) => {
     try {
       setLoading(true)
       const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/users/recovery/${id}`, config);
-
-      setAlerta({
-        error: false, 
-        msg : data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
+      toast.success(data.msg)
     } catch (error) {
-      console.log(error)
-      setAlerta({
-        error: true, 
-        msg : error.response.data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
+      toast.error(error.response.data.msg)
     } finally {
       setLoading(false)
     }
@@ -99,7 +84,7 @@ const AdminUserPage = () => {
   const [showInactive, setShowInactive] = useState(false)
   const [id, setId] = useState(null);
   const { users } = useAdmin();
-  const { loading, setLoading, alerta, setAlerta } = useApp();
+  const { loading, setLoading } = useApp();
   
 
   const handleDeleteUser = async() => {
@@ -115,23 +100,9 @@ const AdminUserPage = () => {
     try {
       setLoading(true)
       const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${id}`, config);
-      setAlerta({
-        error: false, 
-        msg : data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
+      toast.success(data.msg)
     } catch (error) {
-      setAlerta({
-        error: true, 
-        msg : error.response.data.msg
-      })
-
-      setTimeout(() => {
-        setAlerta(null)
-      }, 5000)
+      toast.error(error.response.data.msg)
     } finally {
       setLoading(false)
     }
@@ -149,11 +120,6 @@ const AdminUserPage = () => {
           <button className="btn btn-secondary btn-sm" onClick={() => setShowInactive(!showInactive)}>{showInactive ? 'Ocultar' : 'Mostrar'} Inactivos</button>
         </div>
       </div>
-
-      {alerta && (
-        <p className={`alert mt-3 ${alerta.error ? 'alert-warning' : 'alert-success'}`}>{alerta.msg}</p>
-      )}
-      
     
       {loading ? (
         <Spinner />

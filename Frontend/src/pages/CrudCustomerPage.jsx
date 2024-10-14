@@ -4,6 +4,7 @@ import axios from "axios"
 import useAdmin from "../hooks/useAdmin"
 import Scroll from "../components/Scroll"
 import DiscountsForm from "../components/DiscountsForm"
+import { toast } from "react-toastify"
 
 const CrudCustomerPage = () => {
     const [customer, setCustomer] = useState({
@@ -24,7 +25,7 @@ const CrudCustomerPage = () => {
         })
     }
 
-    const { alerta, setAlerta, customers } = useAdmin()
+    const { customers } = useAdmin()
     const { id } = useParams();
     const navigate = useNavigate();
 
@@ -57,16 +58,9 @@ const CrudCustomerPage = () => {
                 const { data : response } = await axios.post(`${import.meta.env.VITE_API_URL}/api/customers`, { customer }, config)
                 data = response
             }
-
-            setAlerta({
-                error: false, 
-                msg: data.msg
-            })
+            toast.success(data.msg)
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
+            toast.error(error.response.data.msg)
         }
     }
 
@@ -90,10 +84,6 @@ const CrudCustomerPage = () => {
             </button>
             <h2>Crear Cliente</h2>
             <p>Ingresa los datos que se solicitan para dar de alta un nuevo cliente</p>
-
-            {alerta && (
-                <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <form>
                 <div className="row g-2">

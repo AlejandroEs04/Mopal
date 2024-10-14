@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react"
 import { Link, useLocation } from "react-router-dom"
-import Scroll from "../components/Scroll"
 import useAdmin from "../hooks/useAdmin"
 import DeletePop from "../components/DeletePop"
 import SearchBar from "../components/SearchBar"
-import QuotationTr from "../components/QuotationTr"
 import PaginationList from "../components/PaginationList"
 import useApp from "../hooks/useApp"
 
@@ -14,7 +12,7 @@ const AdminQuotationPage = () => {
     const [folio, setFolio] = useState(null)
     const [quotationsFiltered, setQuotationsFiltered] = useState([])
     const { pathname } = useLocation();
-    const { sales, handleDeleteSale, alerta, handleFilter } = useAdmin();
+    const { sales, handleDeleteSale, handleFilter } = useAdmin();
     const { setModalInfo, modalInfo, setModalShow } = useApp()
 
     const handleBtnDelete = () => {
@@ -100,11 +98,6 @@ const AdminQuotationPage = () => {
                     </div>
                 )}
             </div>
-
-
-            {alerta && (
-                <p className={`alert mt-3 ${alerta.error ? 'alert-warning' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <PaginationList 
                 items={quotationsFiltered.sort((a, b) => b.Folio-a.Folio)}

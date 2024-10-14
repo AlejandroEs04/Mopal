@@ -4,6 +4,7 @@ import useAdmin from "../hooks/useAdmin";
 import CloudinaryWidget from "./CloudinaryWidget";
 import Select from 'react-select'
 import Accordion from 'react-bootstrap/Accordion';
+import { toast } from "react-toastify";
 
 const ProductViewForm = ({productList, handleChangeNoInput}) => {
     const [characteristicItem, setCharacteristicItem] = useState({
@@ -19,7 +20,7 @@ const ProductViewForm = ({productList, handleChangeNoInput}) => {
     const [newIconImage, setNewIconImage] = useState("");
     const [cloudinaryHeader, setCloudinaryHeader] = useState(false);
 
-    const { specifications, setAlerta, alerta } = useAdmin();
+    const { specifications } = useAdmin();
 
     // Inicializar select
     const [speSelected, setSpeSelected] = useState(null)
@@ -53,10 +54,7 @@ const ProductViewForm = ({productList, handleChangeNoInput}) => {
                 }
             ])
         } else {
-            setAlerta({
-                error: true, 
-                msg: "La especificación ya existe"
-            })
+            toast.error('La especificación la existe')
         }
 
         setSpeSelected(null)
@@ -102,10 +100,7 @@ const ProductViewForm = ({productList, handleChangeNoInput}) => {
                 id : productList.ID
             }, config)
 
-            setAlerta({
-                error: false, 
-                msg: data.msg
-            })
+            toast.success(data.msg)
         } catch (error) {
             console.log(error)
         }

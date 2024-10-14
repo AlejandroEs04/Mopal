@@ -4,6 +4,7 @@ import useAuth from '../hooks/useAuth';
 import InventoryContainer from './InventoryContainer'
 import Scroll from './Scroll';
 import actions from '../data/actions';
+import { toast } from 'react-toastify';
 
 const InventoryForm = ({bg = false}) => {
     const [accesoryQuantity, setAccesoryQuantity] = useState(1);
@@ -13,7 +14,7 @@ const InventoryForm = ({bg = false}) => {
     const [showProductFolio, setShowProductFolio] = useState('')
     const [showProductAssemblyGroup, setShowProductAssemblyGroup] = useState(null)
     const [productsFiltered, setProductsFiltered] = useState([])
-    const { alerta, products, setAlerta, setQuantity, handleAddNewRequest, requestProducts, setRequestProducts, setFolio, language } = useApp();
+    const { products, setQuantity, handleAddNewRequest, requestProducts, setRequestProducts, setFolio, language } = useApp();
     const { auth } = useAuth();
 
     const handleAddProduct = (folio, quantity, assembly = '', assemblyGroup = null) => {
@@ -98,14 +99,7 @@ const InventoryForm = ({bg = false}) => {
 
         switch (+action) {
             case 0 : 
-                setAlerta({
-                    error : true, 
-                    msg : "Debe seleccionar una acción"
-                })
-
-                setTimeout(() => {
-                    setAlerta(null)
-                }, 4000)
+                toast.info('Debe seleccionar una acción')
             break;  
 
             case 1 :
@@ -123,8 +117,6 @@ const InventoryForm = ({bg = false}) => {
     return (
         <div className={`${bg && 'bg-white py-4 px-5 rounded shadow'} mt-3`}>
             <InventoryContainer 
-                alerta={alerta}
-                setAlerta={setAlerta}
                 requestProducts={requestProducts}
                 setRequestProducts={setRequestProducts}
                 handleAddProduct={handleAddProduct}

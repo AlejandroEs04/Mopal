@@ -4,17 +4,16 @@ import axios from 'axios';
 import useAuth from '../hooks/useAuth';
 import useApp from '../hooks/useApp';
 import Spinner from '../components/Spinner';
+import { toast } from 'react-toastify';
 
 const LoginPage = () => {
   const [name, setName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [number, setNumber] = useState("");
   const [bussiness, setBussiness] = useState("");
 
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
-  const [alerta, setAlerta] = useState(null)
 
   const [newAccount, setNewAccount] = useState(false)
 
@@ -32,23 +31,16 @@ const LoginPage = () => {
         UserName: userName, 
         Password: password
       });
-
       setAuth(data)
-
       localStorage.setItem('token', data.token);
-
-      setAlerta(null)
-
+      
       if(data.RolID >= 1 && data.RolID <= 5) {
         navigate('/admin')
       } else {
         navigate('/inventory')
       }
     } catch (error) {
-      setAlerta({
-        error: true, 
-        msg: error.response.data.msg
-      })
+      toast.error(error.response.data.msg)
     } finally {
       setLoading(false)
     }
@@ -62,11 +54,6 @@ const LoginPage = () => {
             <div>
               <h1 className='text-start'>Solicitar Accesso</h1>
               <p>Complete el formulario para solicitad acceso al sistema</p>
-
-              {alerta && (
-                <p className='alert alert-danger'>{alerta.msg}</p>
-              )}
-
             </div>
 
             <label htmlFor="name" className='form-label'>Nombre(s)</label>
@@ -91,10 +78,6 @@ const LoginPage = () => {
             <div>
               <h1 className='text-start'>Iniciar Sesión</h1>
               <p>Ingrese sus licencias para iniciar sesión</p>
-
-              {alerta && (
-                <p className='alert alert-danger'>{alerta.msg}</p>
-              )}
             </div>
             
             <div className={`d-flex flex-column mt-1`}>

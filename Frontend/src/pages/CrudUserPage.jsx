@@ -12,7 +12,7 @@ const CrudUserPage = () => {
   const [userType, setUserType] = useState(0)
   const [disableRol, setDisableRol] = useState(false)
   const { roles, customers, suppliers, users } = useAdmin()
-  const { loading, alerta, handleSaveUser, user, setUser } = useApp();
+  const { loading, handleSaveUser, user, setUser } = useApp();
   const { id } = useParams();
   
   const handleChange = (e) => {
@@ -178,10 +178,6 @@ const CrudUserPage = () => {
 
       <h2>Crear Usuario</h2>
       <p>Ingresa los datos que se solicitan para dar de alta un nuevo usuario</p>
-
-      {alerta && (
-        <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
-      )}
 
       {loading ? (
         <Spinner />

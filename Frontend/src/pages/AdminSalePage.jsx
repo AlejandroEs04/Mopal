@@ -9,7 +9,7 @@ const AdminSalePage = () => {
     const [showFilters, setShowFilters] = useState(false)
     const [saleFiltered, setSaleFiltered] = useState([])
     const { pathname } = useLocation();
-    const { sales, alerta, handleFilter } = useAdmin()
+    const { sales, handleFilter } = useAdmin()
     const { setModalShow, setModalInfo, modalInfo } = useApp();
 
     const handleGetStatusSales = () => {
@@ -105,10 +105,6 @@ const AdminSalePage = () => {
                     </div>
                 )}
             </div>
-
-            {alerta && (
-                <p className={`alert mt-3 ${alerta.error ? 'alert-warning' : 'alert-success'}`}>{alerta.msg}</p>
-            )}
 
             <PaginationList 
                 items={saleFiltered.sort((a, b) => b.Folio-a.Folio)}
