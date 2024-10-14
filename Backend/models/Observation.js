@@ -10,8 +10,8 @@ class Observation extends ActiveRecord {
         super();
         this.id = item?.id;
         this.description = item?.description;
-        this.action = Observation.validActions.includes(item?.action) ? item.action : 'sale';
-        this.type = Observation.validTypes.includes(item?.type) ? item.type : 'internal';
+        this.action = Observation.validActions.includes(item?.action) ? item.action : 'all';
+        this.type = Observation.validTypes.includes(item?.type) ? item.type : 'all';
     }
 }
 

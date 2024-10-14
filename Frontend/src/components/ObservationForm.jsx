@@ -4,6 +4,7 @@ import useAdmin from '../hooks/useAdmin'
 import { actionDictionary } from '../locales/observation'
 import { typeDictionary } from '../locales/observation'
 import { toast } from 'react-toastify'
+import Spinner from './Spinner'
 
 const observationInitialValues = {
     id: 0,
@@ -15,7 +16,7 @@ const observationInitialValues = {
 export default function ObservationForm() {
     const [observation, setObservation] = useState(observationInitialValues)
 
-    const { observations } = useAdmin();
+    const { observations, loading, setLoading } = useAdmin();
 
     const handleChange = (e) => {
         const { value, name } = e.target
@@ -38,6 +39,8 @@ export default function ObservationForm() {
             }
         }
 
+        setLoading(true)
+
         try {
             let response
 
@@ -51,6 +54,31 @@ export default function ObservationForm() {
             toast.success(response.data)
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const handleDeleteObservation = async(id) => {
+        const token = localStorage.getItem('token');
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        setLoading(true)
+
+        try {
+            const { data } = await axios.delete(`${import.meta.env.VITE_API_URL}/api/observations/${id}`, config);
+            toast.success(data)
+            setObservation(observationInitialValues)
+        } catch (error) {
+            toast.error(error.response.data.msg)
+        } finally {
+            setLoading(false)
         }
     }
 
@@ -101,12 +129,20 @@ export default function ObservationForm() {
                         ))}
                     </select>
                 </div>
-                
-                <input type="submit" value={`${observation.id ? 'Actualizar' : 'Guardar'} observación`} className='btn btn-primary btn-sm w-100 mt-3' />
 
-                {observation.id !== 0 && (
-                    <button onClick={() => setObservation(observationInitialValues)} className='btn btn-danger btn-sm w-100 mt-1' type='button'>Cancelar</button>
+                {loading ? <Spinner /> : (
+                    <>
+                        <input type="submit" value={`${observation.id ? 'Actualizar' : 'Guardar'} observación`} className='btn btn-primary btn-sm w-100 mt-3' />
+        
+                        {observation.id !== 0 && (
+                            <>
+                                <button onClick={() => handleDeleteObservation(observation.id)} className='btn btn-danger btn-sm w-100 mt-1' type='button'>Eliminar</button>
+                                <button onClick={() => setObservation(observationInitialValues)} className='btn btn-dark btn-sm w-100 mt-1' type='button'>Cancelar</button>
+                            </>
+                        )}
+                    </>
                 )}
+                
             </form>
             
             <div className='mt-3 text-start'>
