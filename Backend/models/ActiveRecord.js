@@ -266,6 +266,19 @@ class ActiveRecord {
         try {
             await pool.execute(query, [id])
         } catch (error) {
+            console.log(error)
+            throw new Error('Hubo un error')
+        }
+    }
+
+    /** NEW METHOD */
+    async deleteByElement(element, value) {
+        const query = `DELETE FROM ${this.tableName} WHERE ${element} = ?`
+
+        try {
+            await pool.execute(query, [value])
+        } catch (error) {
+            console.log(error)
             throw new Error('Hubo un error')
         }
     }

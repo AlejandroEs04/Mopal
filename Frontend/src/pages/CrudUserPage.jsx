@@ -89,6 +89,7 @@ const CrudUserPage = () => {
       }
     } else {
       setDisableRol(false)
+      setUser({...user, supplier: null, customer: null})
     }
   }, [userType])
 
@@ -163,8 +164,6 @@ const CrudUserPage = () => {
       setUser({ ...user, Password : generatePSWD() })
     }
   }, [])
-
-  console.log(user)
 
   return (
     <div className="container mt-4">

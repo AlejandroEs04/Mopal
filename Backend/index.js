@@ -40,8 +40,7 @@ const corsOptions = {
             callback(null, true);
         } else {
             // No esta permitido a consultar la API
-            console.log(origin)
-            callback(new Error('Error de cors'));
+            callback(new Error(`Cors error from: ${origin}`).message);
         }
     }
 }

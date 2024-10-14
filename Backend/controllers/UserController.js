@@ -8,7 +8,7 @@ import User from "../models/User.js"
 
 const getAllUsers = async(req, res) => {
     const userObj = new User();
-    let users = await userObj.getAll();
+    let users = await userObj.getAllUserInfo();
 
     for(let i = 0;i<users.length;i++) {
         const { Password, ...userCopy } = users[i];
@@ -94,7 +94,7 @@ const addNewUser = async(req, res) => {
 }
 
 const updateUser = async(req, res) => {
-    const { user } = req.body;
+    const { user } = req.body
     const userObj = new User(user) 
 
     const oldUser = await userObj.getByID(user.ID);
@@ -112,13 +112,21 @@ const updateUser = async(req, res) => {
     }
 
     if(user.supplier) {
-        const typeObj = new SupplierUser({UserID : userObj.ID, SupplierID : user.supplier});
-        await typeObj.addOne(typeObj)
+        if(await new SupplierUser().getByElementArray('UserID', userObj.ID).length === 0) {
+            const typeObj = new SupplierUser({UserID : userObj.ID, SupplierID : user.supplier});
+            await typeObj.addOne(typeObj)
+        }
+    } else {
+        if(await new SupplierUser().getByElement('UserID', userObj.ID)) await new SupplierUser().deleteByElement('UserID', userObj.ID)
     }
 
     if(user.customer) {
-        const typeObj = new CustomerUser({UserID : userObj.ID, CustomerID : user.customer});
-        await typeObj.addOne(typeObj)
+        if(await new CustomerUser().getByElementArray('UserID', userObj.ID).length === 0) {
+            const typeObj = new CustomerUser({UserID : userObj.ID, CustomerID : user.customer});
+            await typeObj.addOne(typeObj)
+        }
+    } else {
+        if(await new CustomerUser().getByElement('UserID', userObj.ID)) await new CustomerUser().deleteByElement('UserID', userObj.ID)
     }
 
     const response = await userObj.updateOne(userObj);
