@@ -2,9 +2,9 @@ import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import axios from "axios";
 import useApp from "../hooks/useApp";
-import InputContainer from "../components/InputContainer";
 import Input from "../components/Input";
 import Textarea from "../components/Textarea";
+import { toast } from 'react-toastify'
 
 const productInitialState = {
     Folio: '', 
@@ -72,15 +72,10 @@ const CrudProductPage = () => {
                 response = data
             }
 
-            setAlerta({
-                error: false, 
-                msg: response.msg
-            })
+            toast.success(response.msg)
+            navigate('/admin')
         } catch (error) {
-            setAlerta({
-                error: true, 
-                msg: error.response.data.msg
-            })
+            toast.error(error.response.data.msg)
         }
     }
 

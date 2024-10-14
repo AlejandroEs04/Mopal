@@ -6,13 +6,13 @@ import Select from 'react-select';
 import PurchasePdf from "../pdf/PurchasePdf";
 import Spinner from 'react-bootstrap/Spinner';
 import DeletePop from "../components/DeletePop";
-import ProductTableForm from "../components/ProductTableForm";
 import InputContainer from "../components/InputContainer";
 import formatearFechaInput from "../helpers/formatearFechaInput";
 import useAuth from "../hooks/useAuth";
 import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
 import ProductTableView from "../components/ProductTableView";
+import TextAreaWithAutocomplete from "../components/TextAreaWithAutocomplete";
 
 const initialState = {
     Folio : 0,
@@ -54,7 +54,7 @@ const CrudPurchasePage = () => {
 
     const { id } = useParams()
 
-    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, handleSetAlerta } = useAdmin();
+    const { users, suppliers, purchases, loading, setLoading, alerta, setAlerta, observations } = useAdmin();
     const { auth } = useAuth();
 
     const [edit, setEdit] = useState(false);
@@ -404,25 +404,30 @@ const CrudPurchasePage = () => {
 
                     <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="observaciones">Observaciones Generales</label>
-                        <textarea 
-                            name="Observation"
-                            id="observaciones" 
-                            rows={4} 
-                            className="form-control" 
-                            value={purchase.Observation} 
-                            onChange={e => handleChangeInfo(e)}
-                        ></textarea>
+                        <TextAreaWithAutocomplete 
+                            options={observations.filter(observation => 
+                                (observation.type === 'external' || observation.type === 'all') && 
+                                (observation.action === 'purchase' || observation.action === 'all')
+                            )}
+                            className="form-control"
+                            text={purchase.Observation}
+                            name={'Observation'}
+                            handleChangeProp={handleChangeInfo}
+                        />
                     </div>
+
                     <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="InternObservation">Observaciones Internas</label>
-                        <textarea 
-                            name="InternObservation"
-                            id="InternObservation" 
-                            rows={4} 
-                            className="form-control" 
-                            value={purchase.InternObservation} 
-                            onChange={e => handleChangeInfo(e)}
-                        ></textarea>
+                        <TextAreaWithAutocomplete 
+                            options={observations.filter(observation => 
+                                (observation.type === 'internal' || observation.type === 'all') && 
+                                (observation.action === 'purchase' || observation.action === 'all')
+                            )}
+                            className="form-control"
+                            text={purchase.InternObservation}
+                            name={'InternObservation'}
+                            handleChangeProp={handleChangeInfo}
+                        />
                     </div>
                 </form>
 

@@ -16,6 +16,7 @@ const AdminProvider = ({children}) => {
 
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
+    const [observations, setObservations] = useState([]);
     const [suppliers, setSuppliers] = useState([]);
     const [customers, setCustomers] = useState([]);
     const [purchases, setPurchases] = useState([]);
@@ -107,6 +108,24 @@ const AdminProvider = ({children}) => {
         try {
             const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/roles`, config);
             setRoles(data.roles)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleGetObservations = async() => {
+        const token = localStorage.getItem('token');
+
+        const config = {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        try {
+            const { data } = await axios(`${import.meta.env.VITE_API_URL}/api/observations`, config);
+            setObservations(data.observations)
         } catch (error) {
             console.log(error)
         }
@@ -520,6 +539,7 @@ const AdminProvider = ({children}) => {
         handleGetSpecification();
         handleBuildBuyEmail();
         handleGetRequest();
+        handleGetObservations();
 
         socket.on('purchaseUpdate', response => {
             handleGetPurchase()
@@ -560,6 +580,9 @@ const AdminProvider = ({children}) => {
         socket.on('supplierDiscountDeleted', () => {
             handleGetSuppliers();
         })
+        socket.on('observationReload', () => {
+            handleGetObservations();
+        })
     }, [])
 
     useEffect(() => {
@@ -581,6 +604,7 @@ const AdminProvider = ({children}) => {
                 sales, 
                 handleGetSales,
                 roles, 
+                observations,
                 specifications, 
                 alerta, 
                 setAlerta,

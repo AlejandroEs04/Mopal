@@ -12,6 +12,7 @@ import ProductTableView from "../components/ProductTableView";
 import AdminModal from "../components/AdminModal";
 import ModalForm from "../components/ModalForm";
 import axios from "axios";
+import TextAreaWithAutocomplete from "../components/TextAreaWithAutocomplete";
 
 const initialState = {
     Folio : '',
@@ -58,7 +59,7 @@ const CrudQuotationPage = () => {
     const { id } = useParams();
     const { pathname } = useLocation()
 
-    const { users, customers, sales,setLoading, handleToggleSaleStatus, alerta, setAlerta, handleGenerateSale, handleUpdateSale, loading } = useAdmin();
+    const { users, customers, sales, setLoading, handleToggleSaleStatus, alerta, setAlerta, handleGenerateSale, handleUpdateSale, observations } = useAdmin();
 
     // Inicializar Select
     const customerOptions = customers?.map(customer => {
@@ -202,30 +203,28 @@ const CrudQuotationPage = () => {
     }, [sale.Products])
     
     useEffect(() => {
-        if(id && sales.length) {
+        if(id && sales.length && auth.ID) {
             let saleDB = sales?.filter(sale => sale.Folio === +id)[0];
                 
             setSelectedCustomerOption({
                 value : saleDB?.CustomerID, 
                 label : `${saleDB?.CustomerID} - ${saleDB?.BusinessName}`
             })
+
+            console.log(auth.ID)
             
             setSale({
                 ...saleDB,
-                SaleDate: formatearFechaInput(new Date(saleDB?.SaleDate))
-            })
-        } else {
-            setSale(initialState)
-        }
-    }, [sales, pathname])
-
-    useEffect(() => {
-        if(auth.ID)
-            setSale({
-                ...sale, 
+                SaleDate: formatearFechaInput(new Date(saleDB?.SaleDate)),
                 UserID: auth.ID
             })
-    }, [auth, sales])
+        } else if(auth.ID) {
+            setSale({
+                ...initialState, 
+                UserID: auth.ID
+            })
+        }
+    }, [sales, pathname, auth])
 
     const checkInfo = useCallback(() => {
         return sale.UserID === 0 ||
@@ -239,7 +238,6 @@ const CrudQuotationPage = () => {
 
     return (
         <>
-        
             <div className="container my-4">
                 <div className="d-flex justify-content-between mb-4">
                     <Link to={'/admin/quotation'} className="backBtn text-decoration-none text-black">
@@ -311,7 +309,7 @@ const CrudQuotationPage = () => {
                     <p className={`alert ${alerta.error ? 'alert-danger' : 'alert-success'}`}>{alerta.msg}</p>
                 )}
 
-                <form className="row g-2">
+                <form className="row g-3">
                     <InputContainer 
                         label="Folio"
                         name="Folio"
@@ -340,43 +338,34 @@ const CrudQuotationPage = () => {
                         value={sale.SaleDate}
                         handleAction={handleChangeInfo}
                     />
-                    
-                    <div className="col-lg-4 d-flex flex-column">
-                        <label htmlFor="user">Usuario</label>
-                        <select id="user" name="UserID" className="form-select" disabled value={sale.UserID} onChange={e => handleChangeInfo(e)}>
-                        <option value="0">Seleccione el usuario</option>
-                        {users?.map(user => user.RolID <= 5 && user.Active === 1 && (
-                            <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.Name + ' ' + user.LastName}`}</option>
-                        ))}
-                        </select>
-                    </div>
-
-                    <div className="col-8"></div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="observaciones">Observaciones Generales</label>
-                        <textarea 
-                            name="Observation"
-                            id="observaciones" 
-                            rows={4} 
-                            className="form-control" 
-                            value={sale.Observation} 
-                            onChange={e => { handleChangeInfo(e)}}>    
-                        </textarea>
+                        <TextAreaWithAutocomplete 
+                            options={observations.filter(observation => 
+                                (observation.type === 'external' || observation.type === 'all') && 
+                                (observation.action === 'quotation' || observation.action === 'all')
+                            )}
+                            className="form-control"
+                            text={sale.Observation}
+                            name={'Observation'}
+                            handleChangeProp={handleChangeInfo}
+                        />
                     </div>
 
                     <div className="col-md-6 d-flex flex-column mb-2">
                         <label htmlFor="InternObservation">Observaciones Internas</label>
-                        <textarea 
-                            name="InternObservation"
-                            id="InternObservation" 
-                            rows={4} 
-                            className="form-control" 
-                            value={sale.InternObservation} 
-                            onChange={e => handleChangeInfo(e)}
-                        ></textarea>
+                        <TextAreaWithAutocomplete 
+                            options={observations.filter(observation => 
+                                (observation.type === 'internal' || observation.type === 'all') && 
+                                (observation.action === 'quotation' || observation.action === 'all')
+                            )}
+                            className="form-control"
+                            text={sale.InternObservation}
+                            name={'InternObservation'}
+                            handleChangeProp={handleChangeInfo}
+                        />
                     </div>
-
                 </form>
 
                 <ProductTableView 
@@ -408,6 +397,16 @@ const CrudQuotationPage = () => {
                 header={"Configura la cotización"}
             >
                 <div className="row g-3">
+                    <div className="col-lg-4 d-flex flex-column">
+                        <label htmlFor="user">Usuario</label>
+                        <select id="user" name="UserID" className="form-select" disabled defaultValue={sale.UserID} onChange={e => handleChangeInfo(e)}>
+                            <option value="0">Seleccione el usuario</option>
+                            {users?.map(user => user.RolID <= 5 && user.Active === 1 && (
+                                <option key={user.ID} value={user.ID}>{`${user.ID} - ${user.Name + ' ' + user.LastName}`}</option>
+                            ))}
+                        </select>
+                    </div>
+
                     <div className="col-lg-4 d-flex flex-column">
                         <label htmlFor="currency">Tipo de cambio</label>
                             <select id="currency" defaultValue={'USD'} className="form-select">

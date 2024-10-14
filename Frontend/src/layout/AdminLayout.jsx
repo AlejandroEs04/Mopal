@@ -1,14 +1,13 @@
-import { useState, useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AdminProvider } from "../context/AdminProvider";
 import useAuth from "../hooks/useAuth";
 import AdminHeader from "../components/AdminHeader";
 import AdminNav from "../components/AdminNav";
-import Toast from "../components/Toast";
 import Loader from "../components/Loader";
 import CenterModalContainer from "../components/CenterModalContainer";
-import useAdmin from "../hooks/useAdmin";
 import useApp from "../hooks/useApp";
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
 
 const AdminLayout = () => {
   const { auth, loading } = useAuth();
@@ -48,9 +47,10 @@ const AdminLayout = () => {
             onHide={() => setModalShow(false)}
             modalInfo={modalInfo}
           />
-          <Toast />
+
+          <ToastContainer />
         </>
-      ) : navigate(auth.ID ? '/' : '/login')}
+      ) : navigate(auth.ID ? '/' : '/login')}      
     </AdminProvider>
   )
 }
