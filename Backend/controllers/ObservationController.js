@@ -13,9 +13,7 @@ export const getAll = async(req, res) => {
 
 export const createObservation = async(req, res) => {
     const observationObj = new Observation(req.body)
-
     const response = await observationObj.addOne(observationObj)
-
     if(response) {
         io.emit('observationReload')
         return res.status(200).send('Observación creada correctamente')
@@ -29,9 +27,7 @@ export const updateObservation = async(req, res) => {
 
     try {
         await observationObj.updateItem(observationObj)
-
         io.emit('observationReload')
-        
         return res.status(200).send('Observación actualizado correctamente')
     } catch (error) {
         return res.status(500).json({status : 500, msg: "Ocurrio un error"})
@@ -39,5 +35,12 @@ export const updateObservation = async(req, res) => {
 }
 
 export const deleteObservation = async(req, res) => {
-
+    const { id } = req.params
+    try {
+        const observationObj = await new Observation().deleteById(id)
+        io.emit('observationReload')
+        return res.status(200).send('Observación eliminada correctamente')
+    } catch (error) {
+        return res.status(500).json({status: 500, msg: 'Ocurrio un error'})
+    }
 }
