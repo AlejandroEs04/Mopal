@@ -1,7 +1,9 @@
 import axios from 'axios'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
 import BackButton from '../components/BackButton'
 import { toast } from 'react-toastify'
+import useApp from '../hooks/useApp'
 
 const CrudTypePage = () => {
     const [type, setType] = useState({
@@ -9,6 +11,9 @@ const CrudTypePage = () => {
         Name: '', 
         Description: ''
     })
+
+    const { id } = useParams()
+    const { types } = useApp()
 
     const handleChange = (e) => {
         setType({
@@ -30,12 +35,24 @@ const CrudTypePage = () => {
         }
 
         try {
-            const { data } = await axios.post(`${import.meta.env.VITE_API_URL}/api/types`, { type }, config);
-            toast.success(data.msg)
+            let res 
+
+            if(id) {
+                res = await axios.put(`${import.meta.env.VITE_API_URL}/api/types`, { type }, config);
+            } else {
+                res = await axios.post(`${import.meta.env.VITE_API_URL}/api/types`, { type }, config);
+            }
+            toast.success(res.data.msg)
         } catch (error) {
             console.log(error)
         }
     }
+
+    useEffect(() => {
+        if(id) {
+            setType(types?.filter(type => +type.ID === +id)[0])
+        }
+    }, [id, types])
 
     return (
         <div className='my-4'>

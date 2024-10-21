@@ -97,6 +97,7 @@ function App() {
               <Route index element={<AdminProductsPage />} />
               <Route path="type" element={<AdminTypePage />} />
               <Route path="type/form" element={<CrudTypePage />} />
+              <Route path="type/form/:id" element={<CrudTypePage />} />
               <Route path="products" element={<AdminProductsPage />} />
               <Route path="products/excel" element={<ExcelProductsCrud />} />
               <Route path="productsList" element={<AdminProductsListPage />} />

@@ -39,7 +39,7 @@ const AdminNav = () => {
                   <>
                     <li className={`${pathname === '/admin/quotation' && styles.linkActive}`}><Link className={`${styles.link}`} to="/admin/quotation">Cotizaciones</Link></li>
                     <li className={`${pathname === '/admin/sales' && styles.linkActive}`}><Link className={styles.link} to="/admin/sales">Ventas</Link></li>
-                    <li className={`${pathname === '/admin/request' && styles.linkActive} position-relative`}>
+                    {/* <li className={`${pathname === '/admin/request' && styles.linkActive} position-relative`}>
                       <Link className={styles.link} to="/admin/request">
                         Solicitudes
 
@@ -50,12 +50,12 @@ const AdminNav = () => {
                           </span>
                         )}
                       </Link>
-                    </li>
+                    </li> */}
                   </>
                 ) : null}
 
                 {(auth.RolID === 1 | auth.RolID === 4 | auth.RolID === 5) ? (
-                  <li className={`${pathname === '/admin/storage' && styles.linkActive}`}><Link className={styles.link} to="/admin/storage">Pedidos</Link></li>
+                  <li className={`${pathname === '/admin/storage' && styles.linkActive}`}><Link className={styles.link} to="/admin/storage">Gestión de entregas y pedidos</Link></li>
                 ) : null}
 
                 {(auth.RolID === 1 | auth.RolID === 2 | auth.RolID === 5) ? (
@@ -74,7 +74,7 @@ const AdminNav = () => {
                   <></>
                 )}
                 <li className={`${pathname === '/admin/type' && styles.linkActive}`}><Link className={styles.link} to="type">Tipos</Link></li>
-                <li className={`${pathname === '/admin/statistics' && styles.linkActive}`}><Link className={styles.link} to="statistics">Estadisticas</Link></li>
+                {/* <li className={`${pathname === '/admin/statistics' && styles.linkActive}`}><Link className={styles.link} to="statistics">Estadisticas</Link></li> */}
                 
             </ul>
         </Scroll>
