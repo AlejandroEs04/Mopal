@@ -5,29 +5,53 @@ import Spinner from "../components/Spinner";
 import Scroll from "../components/Scroll";
 import formatearDinero from "../helpers/formatearDinero";
 import formatearFecha from "../helpers/formatearFecha";
+import formatearFechaInput from "../helpers/formatearFechaInput";
 import generatePurchasePdf from "../pdf/generatePurchasePdf";
 import findLastID from "../helpers/findLastID ";
 import findNextID from "../helpers/findNextID";
+import useApp from "../hooks/useApp";
 
 const InfoPurchasePage = () => {
     const [purchase, setPurchase] = useState({});
+    const [currency, setCurrency] = useState(1)
     const { id } = useParams();
+    const { currentCurrency } = useApp()
     const { purchases, handleChangeStatus, loading } = useAdmin();
 
     const handleGetPurchase = () => setPurchase(purchases?.filter(purchase => +purchase?.Folio === +id)[0]);
 
-    const handleGetImporte = (price, quantity, discount) => (price * quantity) - ((discount / 100) * (price * quantity)).toFixed(2)
+    const handleGetImporte = (price, quantity, discount) => {
+        const importe = ((price * quantity) - ((discount / 100) * (price * quantity)))
+        return importe.toFixed(2) * currency
+    }
 
     const handleNextQuotation = () => purchases.length > 0 && findNextID(purchases, id)
     const handleLastQuotation = () => purchases.length > 0 && findLastID(purchases, id)
 
-    const subtotal = useMemo(() => purchase?.Products?.reduce((total, product) => total + (+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount)), 0), [purchase])
-    const iva = useMemo(() => purchase?.Products?.reduce((total, product) => total + (+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount) * .16), 0), [purchase])
-    const total = useMemo(() => subtotal + iva, [purchase])
+    const subtotal = useMemo(() => purchase?.Products?.reduce((total, product) => total + (+handleGetImporte(product.PricePerUnit, product.Quantity, product.Discount)), 0), [purchase, currency])
+    const iva = useMemo(() => subtotal * .16, [purchase, currency])
+    const total = useMemo(() => subtotal + iva, [purchase, currency])
 
     useEffect(() => {
         handleGetPurchase();
     }, [purchases, id])
+
+    useEffect(() => {
+        const getCurrency = async() => {
+            try {
+                const currency = await handleGetCurrency(formatearFechaInput(purchase?.PurchaseDate))
+                setCurrency(currency?.data?.MXN?.value)
+            } catch (error) {
+                setCurrency(1)
+            }
+        }
+
+        if(purchase?.Acronym === 'MXN') {
+            getCurrency()
+        } else {
+            setCurrency(1)
+        }
+    }, [purchase, id])
 
     return (
         <div className="container my-4">
@@ -94,6 +118,10 @@ const InfoPurchasePage = () => {
                     </p>
                     <p className="mb-1 fw-bold">Observaciones: <span className="fw-normal">{purchase?.Observation}</span></p>
                     <p className="mb-1 fw-bold">Observaciones (Internas): <span className="fw-normal">{purchase?.InternObservation}</span></p>
+
+                    {(purchase?.Acronym === 'MXN' && currentCurrency?.meta) && (
+                        <p className="fs-7 fw-semibold">Fecha de cambio: {formatearFecha(currentCurrency?.meta?.last_updated_at)}</p>
+                    )}
 
                     <h4 className="mt-4">Informacion del proveedor</h4>
                     <p className="mb-1 fw-bold">Direccion de entrega: <span className="fw-normal">{purchase?.Address}</span></p>

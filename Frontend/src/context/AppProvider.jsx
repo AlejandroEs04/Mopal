@@ -34,6 +34,7 @@ const AppProvider = ({children}) => {
     const [showCanva, setShowCanva] = useState(false)
     const [loading, setLoading] = useState(false)
     const [requests, setRequests] = useState([])
+    const [currentCurrency, setCurrentCurrency] = useState({})
 
     const [assemblyCount, setAssemblyCount] = useState(0)
 
@@ -103,6 +104,17 @@ const AppProvider = ({children}) => {
           setRequests(data.requests)
         } catch (error) {
           console.log(error)
+        }
+    }
+
+    const handleGetCurrency = async(date = '2024-10-18') => {
+        try {
+            const { data } = await axios(`https://api.currencyapi.com/v3/historical?apikey=cur_live_xeHDXOZGadsRfZSfDmKTHoizHf6ySUuNlTFUJmxY&currencies=MXN&date=${date}`);
+            setCurrentCurrency(data)
+            return data
+        } catch (error) {
+            toast.error('No se pudo obtener información del precio del dolar')
+            throw new Error('Hubo un error')
         }
     }
 
@@ -319,11 +331,11 @@ const AppProvider = ({children}) => {
     }
 
     useEffect(() => {
-        handleGetTypes();
-        handleGetClassifications();
-        handleGetSpecification();
-        handleGetProducts();
-        getUserRequest();
+        handleGetTypes()
+        handleGetClassifications()
+        handleGetSpecification()
+        handleGetProducts()
+        getUserRequest()
 
         socket.on('saleUpdate', () => {
             handleGetProducts()
@@ -351,6 +363,8 @@ const AppProvider = ({children}) => {
                 products, 
                 productsList,
                 specifications, 
+                currentCurrency,
+                handleGetCurrency,
                 handleGetProducts, 
                 setProducts, 
                 setLanguage, 

@@ -49,7 +49,6 @@ const addNewUser = async(req, res) => {
     const { user } = req.body;
     const userObj = new User(user);
 
-    /** FALTA VALIDACION DEL NOMBRE DE USUARIO Y CORREO */
     const existEmail = await userObj.getByElement('Email', userObj.Email)
     const existUserName = await userObj.getByElement('UserName', userObj.UserName)
 
@@ -112,7 +111,9 @@ const updateUser = async(req, res) => {
     }
 
     if(user.supplier) {
-        if(await new SupplierUser().getByElementArray('UserID', userObj.ID).length === 0) {
+        const supplierUser = await new SupplierUser().getByElementArray('UserID', userObj.ID)
+
+        if(supplierUser.length === 0) {
             const typeObj = new SupplierUser({UserID : userObj.ID, SupplierID : user.supplier});
             await typeObj.addOne(typeObj)
         }
@@ -121,7 +122,9 @@ const updateUser = async(req, res) => {
     }
 
     if(user.customer) {
-        if(await new CustomerUser().getByElementArray('UserID', userObj.ID).length === 0) {
+        const customerUser = await new CustomerUser().getByElementArray('UserID', userObj.ID)
+
+        if(customerUser.length === 0) {
             const typeObj = new CustomerUser({UserID : userObj.ID, CustomerID : user.customer});
             await typeObj.addOne(typeObj)
         }

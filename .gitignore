@@ -1,5 +1,8 @@
 Backend/.env
 Backend/node_modules
 
+mopal-api/.env
+mopal-api/node_modules
+
 Frontend/.env
 Frontend/node_modules

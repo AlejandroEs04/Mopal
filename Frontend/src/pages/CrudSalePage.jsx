@@ -351,9 +351,9 @@ const CrudSalePage = () => {
 
                     <div className="col-lg-4 d-flex flex-column">
                         <label htmlFor="currency">Tipo de cambio</label>
-                            <select id="currency" defaultValue={'USD'} className="form-select">
-                            <option value="USD">Dolar Estadounidense</option>
-                            <option value="MXN">Peso Mexicano</option>
+                            <select id="currency" name="CurrencyID" defaultValue={'USD'} onChange={handleChangeInfo} className="form-select">
+                            <option value={1}>Dolar Estadounidense</option>
+                            <option value={2}>Peso Mexicano</option>
                         </select>
                     </div>
 

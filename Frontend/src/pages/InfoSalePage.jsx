@@ -1,7 +1,6 @@
 import { useParams, Link } from "react-router-dom"
 import { useEffect, useState, useMemo } from "react";
 import useAdmin from "../hooks/useAdmin";
-import formatearFecha from "../helpers/formatearFecha";
 import formatearDinero from "../helpers/formatearDinero";
 import Spinner from "../components/Spinner";
 import findLastID from "../helpers/findLastID ";
@@ -9,11 +8,15 @@ import findNextID from "../helpers/findNextID";
 import generateQuotationPdf from "../pdf/generateQuotationPdf";
 import Scroll from "../components/Scroll";
 import formatearFechaInput from "../helpers/formatearFechaInput";
+import useApp from "../hooks/useApp";
+import formatearFecha from "../helpers/formatearFecha";
 
 const InfoSalePage = () => {
     const [sale, setSale] = useState({});
+    const [currency, setCurrency] = useState(1)
 
     const { id } = useParams();
+    const { currentCurrency, handleGetCurrency } = useApp()
     const { sales, handleChangeStatus, loading, sendQuotationPdf } = useAdmin();
     
     const handleGetTypes = () => {
@@ -41,24 +44,40 @@ const InfoSalePage = () => {
         }
     }
     
-
     const handleGetSale = () => {
         const saleId = sales?.filter(sale => +sale?.Folio === +id)
         setSale(saleId[0]);
     }
    
     const handleGetImporte = (price, quantity, discount) => {
-        const importe = (price * quantity) - ((discount / 100) * (price * quantity))
-        return importe.toFixed(2)
+        const importe = ((price * quantity) - ((discount / 100) * (price * quantity)))
+        return importe.toFixed(2) * currency
     }
 
-    const subtotal = useMemo(() => sale?.Products?.reduce((total, product) => total + ((product.Quantity * product.PricePerUnit) - ((product.Discount / 100) * (product.Quantity * product.PricePerUnit))), 0), [sale])
-    const iva = useMemo(() => subtotal * .16, [sale])
-    const total = useMemo(() => subtotal + iva, [sale])
+    const subtotal = useMemo(() => sale?.Products?.reduce((total, product) => total + currency * ((product.Quantity * product.PricePerUnit) - ((product.Discount / 100) * (product.Quantity * product.PricePerUnit))), 0), [sale, currency])
+    const iva = useMemo(() => subtotal * .16, [sale, currency])
+    const total = useMemo(() => subtotal + iva, [sale, currency])
 
     useEffect(() => {
         handleGetSale();
     }, [sales, id])
+
+    useEffect(() => {
+        const getCurrency = async() => {
+            try {
+                const currency = await handleGetCurrency(formatearFechaInput(sale?.SaleDate))
+                setCurrency(currency?.data?.MXN?.value)
+            } catch (error) {
+                setCurrency(1)
+            }
+        }
+
+        if(sale?.Acronym === 'MXN') {
+            getCurrency()
+        } else {
+            setCurrency(1)
+        }
+    }, [sale, id])
 
     return (
         <div className="container my-4">
@@ -123,9 +142,6 @@ const InfoSalePage = () => {
                             </button>
                         </>
                     )}
-
-                    
-                    
                 </div>
             </div>
 
@@ -141,6 +157,10 @@ const InfoSalePage = () => {
                     <p className="mb-1 fw-bold">Activo: <span className={`fw-normal ${sale?.Active === 1 ? 'text-success' : 'text-danger'}`}>{sale?.Active === 1 ? 'Activo' : 'Inactivo'}</span></p>
                     <p className="mb-1 fw-bold">Observaciones: <span className="fw-normal">{sale?.Observation}</span></p>
                     <p className="mb-1 fw-bold">Observaciones (Internas): <span className="fw-normal">{sale?.InternObservation}</span></p>
+
+                    {(sale?.Acronym === 'MXN' && currentCurrency?.meta) && (
+                        <p className="fs-7 fw-semibold">Fecha de cambio: {formatearFecha(currentCurrency?.meta?.last_updated_at)}</p>
+                    )}
 
                     <h3 className="mt-4">Informacion del cliente</h3>
                     <p className="mb-1 fw-bold">Direccion de entrega: <span className="fw-normal">{sale?.Address}</span></p>

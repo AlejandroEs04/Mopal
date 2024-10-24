@@ -131,8 +131,6 @@ class ActiveRecord {
             const response = await pool.execute(query, values);
             return { msg: `${tableName} Creado Correctamente`, response };
         } catch (error) {
-            console.log(error);
-            
             return;
         }
     }
